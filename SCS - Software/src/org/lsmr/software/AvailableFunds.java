@@ -314,7 +314,7 @@ public class AvailableFunds {
 			}
 		}
 		else {
-			bnChangeIndex--;
+			bnChangeIndex--; 
 			
 			if(bnChangeIndex < 0) {
 				disburseCoins();
