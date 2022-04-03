@@ -28,7 +28,6 @@ hs_err_pid*
 
 #Intellij files
 .idea
-SCS - Hardware - v1.0.iml
+SCS - Hardware - v3.0.iml
 .DS_store
-SENG-300-It1.iml
 /bin/
