@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>SCS - Hardware - v3.0</name>
+	<name>SCS - Software - Test</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1648951046937</id>
+			<id>1648953811248</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
