@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.devices.CardReader;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.SimulationException;
 
@@ -28,8 +29,18 @@ public class payWithCardTest {
 		test = new Checkout(station);
 		reader = new CardReader();
 		
-		station.printer.addInk(500);
-		station.printer.addPaper(500);
+		try {
+			station.printer.addInk(500);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(500);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 	
 	/*
@@ -57,7 +68,7 @@ public class payWithCardTest {
  		Card custCard = new Card("debit", "123456", "Vincent", "121", "1234", true, true);
  		try { 
  			//interface stub is used to end phases that would otherwise trigger sim error
- 			station.scanningArea.endConfigurationPhase();
+ 			//station.scanningArea.endConfigurationPhase();
  			test = new Checkout(station);
  			test.wouldLikeToCheckOut(50.00);
  			double amtDue = test.getAmountDue();
@@ -95,7 +106,7 @@ public class payWithCardTest {
  	public void testCardTapped_configuration_normal() throws IOException {
  		Card custCard = new Card("debit", "123456", "Vincent", "121", "1234", true, true);
  		try { 
- 			station.scanningArea.endConfigurationPhase();
+ 			//station.scanningArea.endConfigurationPhase();
  			test = new Checkout(station);
  			test.wouldLikeToCheckOut(50.00);
  			double amtDue = test.getAmountDue();
@@ -133,7 +144,7 @@ public class payWithCardTest {
  	public void testCardInsert_configuration_normal() throws IOException {
  		Card custCard = new Card("debit", "123456", "Vincent", "121", "1234", true, true);
  		try { 
- 			station.scanningArea.endConfigurationPhase();
+ 			//station.scanningArea.endConfigurationPhase();
  			test = new Checkout(station);
  			test.wouldLikeToCheckOut(50.00);
  			double amtDue = test.getAmountDue();
@@ -155,7 +166,7 @@ public class payWithCardTest {
 	@Test (expected = SimulationException.class)
  	public void testCard_InvalidCard() throws IOException {
  		Card custCard = new Card(null, "123456", "Vincent", "121", "1234", true, true);
- 		station.scanningArea.endConfigurationPhase();
+ 		//station.scanningArea.endConfigurationPhase();
  		test = new Checkout(station);
  		
 	}
@@ -168,7 +179,7 @@ public class payWithCardTest {
 	@Test (expected = SimulationException.class)
  	public void testCardInsert_configuration_invalidpin() throws IOException {
  		Card custCard = new Card("debit", "123456", "Vincent", "121", null, true, true);
- 		station.scanningArea.endConfigurationPhase();
+ 		//station.scanningArea.endConfigurationPhase();
  		test = new Checkout(station);		
 	}
 	
@@ -180,7 +191,7 @@ public class payWithCardTest {
 	@Test (expected = SimulationException.class)
  	public void testCardSwiped_normal_noname() throws IOException {
  		Card custCard = new Card("debit", "123456", null , "121", "1234", true, true); 
- 		station.scanningArea.endConfigurationPhase();
+ 		//station.scanningArea.endConfigurationPhase();
  		test = new Checkout(station);
 
  		}

@@ -19,7 +19,7 @@ import org.lsmr.selfcheckout.devices.BanknoteSlot;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.SimulationException;
+import org.lsmr.selfcheckout.SimulationException;// was previously in devices packages.
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
 
@@ -56,7 +56,7 @@ public class AvailableFundsTest {
 		}
 
 		@Override
-		public void banknoteEjected(BanknoteSlot slot) {
+		public void banknotesEjected(BanknoteSlot slot) {
 			// TODO Auto-generated method stub
 			// Remove the banknote immediately
 			//banknotes.add(slot.removeDanglingBanknote());
@@ -66,13 +66,16 @@ public class AvailableFundsTest {
 				public void run() {
 					//taskCount++;
 					taskCount.set(taskCount.get()+1);
-					banknotes.add(slot.removeDanglingBanknote());
+					Banknote[] temp = slot.removeDanglingBanknotes();
+					for(Banknote oneBankNote : temp)
+						banknotes.add(oneBankNote);
+						
 					taskCount.set(taskCount.get()-1);
 					//taskCount--;
 				}
 			};
 			
-			removeBanknoteTimer.schedule(task, 1);
+			removeBanknoteTimer.schedule(task, 0);
 		}
 
 		@Override
@@ -128,7 +131,7 @@ public class AvailableFundsTest {
 			BigDecimal stored = funds.getTotalFundsStored();
 			
 			assertEquals("Coin amount stored not the same.", new BigDecimal("8.85"), stored);
-		} catch (DisabledException e) {
+		} catch (DisabledException | OverloadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -143,11 +146,10 @@ public class AvailableFundsTest {
 			BigDecimal expected = new BigDecimal("0.05");
 			expected = expected.multiply(new BigDecimal(SelfCheckoutStation.COIN_DISPENSER_CAPACITY));
 			assertEquals("Number of nickels stored incorrect.", expected, funds.getTotalFundsStored());
-		} catch (DisabledException e) {
+		} catch (DisabledException | OverloadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Test
