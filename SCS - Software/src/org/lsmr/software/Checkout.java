@@ -37,8 +37,6 @@ public class Checkout implements CoinValidatorObserver, BanknoteValidatorObserve
 		station.cardReader.disable();
 
 		// Will Throw Exception If Not Enough Materials Are Left
-		station.printer.addPaper(500);
-		station.printer.addInk(500);
 		printReceipt = new ShoppingCartReceiptPrinter(station);
 	}
 

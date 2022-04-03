@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.lsmr.selfcheckout.Card.CardData;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.EmptyException;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
@@ -58,7 +60,7 @@ public class ShoppingCartReceiptPrinter implements ReceiptPrinterObserver {
 			printString(priceStr);
 			
 			// New line
-			station.printer.print('\n');
+			printNewline();
 		}
 		
 		// End message
@@ -71,11 +73,11 @@ public class ShoppingCartReceiptPrinter implements ReceiptPrinterObserver {
 		
 		// Print the membership card number.
 		if (membershipInfo != null ){
-			station.printer.print('\n');
+			printNewline();
 			printLine();
 			printString("Member Number: ");
 			printString(membershipInfo.getNumber());
-			station.printer.print('\n');
+			printNewline();
 		}
 		
 		//printLine();
@@ -87,17 +89,30 @@ public class ShoppingCartReceiptPrinter implements ReceiptPrinterObserver {
 	private void printString(String str) {
 		for(int i = 0; i < str.length(); i++) {
 			if(canPrint())
-				station.printer.print(str.charAt(i));
-			// Not sure how to handle the case where the receipt printer ran out of paper or ink mid-print
-			// Need to wait for paper/ink to be reloaded before continuing...
+				try {
+					station.printer.print(str.charAt(i));
+				} catch (EmptyException | OverloadException e) {
+					// TODO THIS NEEDS TO BE HANDLED (Empty = no more paper; overload = need a new line)
+					e.printStackTrace();
+				}
 			else
 				throw new IllegalStateException("Receipt printer is out of paper or ink"); // For now, just throw an exception
 		}
 	}
 	
+	private void printNewline() {
+		try {
+			station.printer.print('\n');
+		}
+		catch (OverloadException | EmptyException e) {
+			// Should not happen
+			e.printStackTrace();
+		}
+	}
+	
 	private void printLine() {
 		printString("_".repeat(ReceiptPrinter.CHARACTERS_PER_LINE));
-		station.printer.print('\n');
+		printNewline();
 	}
 	
 	private void printEmpty(int count) {
