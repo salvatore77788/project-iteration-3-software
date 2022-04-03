@@ -34,13 +34,19 @@ public class payWithCoinTest {
  		Coin testCoin = new Coin(currencyTest, value);
  		
  		try {
- 			station.coinSlot.accept(testCoin);
+ 			
+			station.coinSlot.accept(testCoin);
+			
  			
  			assertEquals("Coin was not paid.", new BigDecimal("0.05"), testCoinPayment.totalPaid);
  		}
  		catch(DisabledException e) {
  			e.printStackTrace();
  		}
+ 		catch(OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
  	}
  	
  	@Test
@@ -54,6 +60,10 @@ public class payWithCoinTest {
  		} catch(DisabledException e) {
  			e.printStackTrace();
  		}
+ 		catch(OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
  	}
  	
  	@Test
