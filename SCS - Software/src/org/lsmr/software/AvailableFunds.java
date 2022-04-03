@@ -57,10 +57,6 @@ public class AvailableFunds {
 			
 		}
 
-		public void banknoteEjected(BanknoteSlot slot) { //OVERRIDE REMOVED TO IGNORE ERROS NEEDS TO BE LOOKED AT
-			// TODO Auto-generated method stub
-		}
-
 		@Override
 		public void banknoteRemoved(BanknoteSlot slot) {
 			// TODO Auto-generated method stub
@@ -182,7 +178,7 @@ public class AvailableFunds {
 		@Override
 		public void coinsFull(CoinDispenser dispenser) {
 			// TODO Auto-generated method stub
-			count = station.COIN_DISPENSER_CAPACITY;
+			count = SelfCheckoutStation.COIN_DISPENSER_CAPACITY;
 		}
 
 		@Override

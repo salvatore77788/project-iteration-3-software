@@ -65,20 +65,17 @@ public class AvailableFundsTest {
 				@Override
 				public void run() {
 					//taskCount++;
-					
+					taskCount.set(taskCount.get()+1);
 					Banknote[] temp = slot.removeDanglingBanknotes();
-					
-					for(Banknote oneBankNote : temp) {
-						taskCount.set(taskCount.get()+1);
+					for(Banknote oneBankNote : temp)
 						banknotes.add(oneBankNote);
-						taskCount.set(taskCount.get()-1);
-					}
-					
+						
+					taskCount.set(taskCount.get()-1);
 					//taskCount--;
 				}
 			};
 			
-			removeBanknoteTimer.schedule(task, 1);
+			removeBanknoteTimer.schedule(task, 0);
 		}
 
 		@Override
@@ -134,17 +131,10 @@ public class AvailableFundsTest {
 			BigDecimal stored = funds.getTotalFundsStored();
 			
 			assertEquals("Coin amount stored not the same.", new BigDecimal("8.85"), stored);
-		} catch (DisabledException e) {
+		} catch (DisabledException | OverloadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (OverloadException e) {
-			
 		}
-		
-		
-		
-		
-		
 	}
 	
 	@Test
@@ -156,17 +146,10 @@ public class AvailableFundsTest {
 			BigDecimal expected = new BigDecimal("0.05");
 			expected = expected.multiply(new BigDecimal(SelfCheckoutStation.COIN_DISPENSER_CAPACITY));
 			assertEquals("Number of nickels stored incorrect.", expected, funds.getTotalFundsStored());
-		} catch (DisabledException e) {
+		} catch (DisabledException | OverloadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch (OverloadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
 	}
 	
 	@Test
