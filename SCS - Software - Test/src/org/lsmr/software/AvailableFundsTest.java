@@ -19,7 +19,7 @@ import org.lsmr.selfcheckout.devices.BanknoteSlot;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.SimulationException;
+import org.lsmr.selfcheckout.SimulationException;// was previously in devices packages.
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
 
@@ -56,7 +56,7 @@ public class AvailableFundsTest {
 		}
 
 		@Override
-		public void banknoteEjected(BanknoteSlot slot) {
+		public void banknotesEjected(BanknoteSlot slot) {
 			// TODO Auto-generated method stub
 			// Remove the banknote immediately
 			//banknotes.add(slot.removeDanglingBanknote());
@@ -65,9 +65,15 @@ public class AvailableFundsTest {
 				@Override
 				public void run() {
 					//taskCount++;
-					taskCount.set(taskCount.get()+1);
-					banknotes.add(slot.removeDanglingBanknote());
-					taskCount.set(taskCount.get()-1);
+					
+					Banknote[] temp = slot.removeDanglingBanknotes();
+					
+					for(Banknote oneBankNote : temp) {
+						taskCount.set(taskCount.get()+1);
+						banknotes.add(oneBankNote);
+						taskCount.set(taskCount.get()-1);
+					}
+					
 					//taskCount--;
 				}
 			};
@@ -131,7 +137,14 @@ public class AvailableFundsTest {
 		} catch (DisabledException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (OverloadException e) {
+			
 		}
+		
+		
+		
+		
+		
 	}
 	
 	@Test
@@ -147,6 +160,12 @@ public class AvailableFundsTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
 	
