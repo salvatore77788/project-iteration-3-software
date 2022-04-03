@@ -14,6 +14,7 @@ import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.MagneticStripeFailureException;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.Card.CardData;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.SimulationException;
@@ -87,8 +88,18 @@ public class MemberCardPrintTest {
 	@Test
 	public void simpleMemberReceipt() throws SimulationException {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("0");
 		// where Add takes a Product and productWeight.
@@ -126,8 +137,22 @@ public class MemberCardPrintTest {
 	@Test
 	public void memberPrintReceipt() throws SimulationException {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		
+		// 
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 		float[] WeightofItem = {500,4000,1000,1800,725,1360,4000,250,272,300,310};
@@ -186,8 +211,18 @@ public class MemberCardPrintTest {
 	@Test(expected = MagneticStripeFailureException.class)
 	public void memberTestPrintReceipt2() throws SimulationException, MagneticStripeFailureException {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("0");
 		ShoppingCart.getInstance().Add(ProductDatabase.Instance.LookupItemViaBarcode(bc), 0);
@@ -229,8 +264,18 @@ public class MemberCardPrintTest {
 	@Test
 	public void notA_member() throws MagneticStripeFailureException{
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("0");
 		// where Add takes a Product and productWeight.
@@ -273,8 +318,18 @@ public class MemberCardPrintTest {
 	@Test
 	public void differentClassCardData() throws SimulationException {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("8");
 		// where Add takes a Product and productWeight.
@@ -316,8 +371,18 @@ public class MemberCardPrintTest {
 	@Test
 	public void differentTypeCard() throws SimulationException {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("9");
 		// where Add takes a Product and productWeight.
