@@ -18,12 +18,12 @@ import org.lsmr.selfcheckout.products.Product;
 public class ShoppingCartReceiptPrinter implements ReceiptPrinterObserver {
 	private SelfCheckoutStation station;
 	
-	private boolean lowPaper;
-	private boolean lowInk;
+	private boolean noPaper;
+	private boolean noInk;
 	public CardData membershipInfo;
 
 	public ShoppingCartReceiptPrinter(SelfCheckoutStation station) {
-		lowPaper = lowInk = true; // Assume this is created at the same time as the receipt printer
+		noPaper = noInk = true; // Assume this is created at the same time as the receipt printer
 		
 		this.station = station;
 		station.printer.attach(this);
@@ -133,26 +133,26 @@ public class ShoppingCartReceiptPrinter implements ReceiptPrinterObserver {
 
 	@Override
 	public void outOfPaper(ReceiptPrinter printer) {
-		lowPaper = true;
+		noPaper = true;
 	}
 
 	@Override
 	public void outOfInk(ReceiptPrinter printer) {
-		lowInk = true;
+		noInk = true;
 	}
 
 	@Override
 	public void paperAdded(ReceiptPrinter printer) {
-		lowPaper = false;
+		noPaper = false;
 	}
 
 	@Override
 	public void inkAdded(ReceiptPrinter printer) {
-		lowInk = false;
+		noInk = false;
 	}
 	
 	private boolean canPrint() {
-		return !(lowPaper || lowInk);
+		return !(noPaper || noInk);
 	}
 	
 	
