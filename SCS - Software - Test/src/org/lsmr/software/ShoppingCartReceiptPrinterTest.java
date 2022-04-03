@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.Numeral;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
@@ -47,8 +48,18 @@ public class ShoppingCartReceiptPrinterTest {
 	@Test
 	public void testPrintSimpleReceipt() {
 		// Load paper and ink
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Barcode bc = createBarcodeFromString("0");
 		ShoppingCart.getInstance().Add(ProductDatabase.Instance.LookupItemViaBarcode(bc), 0);
@@ -64,8 +75,18 @@ public class ShoppingCartReceiptPrinterTest {
 	
 	@Test
 	public void testPrintEmptyShoppingCartReceipt() {
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		printer.printReceipt();
 		
@@ -77,8 +98,18 @@ public class ShoppingCartReceiptPrinterTest {
 	
 	@Test
 	public void testFullShoppingCartReceipt() {
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		for(int i = 0; i < 8; i++) {
 			Barcode bc = createBarcodeFromString(Integer.toString(i%4));
@@ -94,16 +125,36 @@ public class ShoppingCartReceiptPrinterTest {
 	
 	@Test(expected = IllegalStateException.class)
 	public void testOutOfPaper() {
-		station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
-		station.printer.addPaper(1);
+		try {
+			station.printer.addInk(ReceiptPrinter.MAXIMUM_INK);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(1);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		printer.printReceipt();
 	}
 	
 	@Test(expected = IllegalStateException.class)
 	public void testOutOfInk() {
-		station.printer.addInk(5);
-		station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		try {
+			station.printer.addInk(5);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			station.printer.addPaper(ReceiptPrinter.MAXIMUM_PAPER);
+		} catch (OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		printer.printReceipt();
 		
