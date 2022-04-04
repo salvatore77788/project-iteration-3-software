@@ -9,7 +9,6 @@ import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.SimulationException;
 
 //This is the class that boots up and then has a gui.
 public class SelfCheckoutStationSoftware {
@@ -35,7 +34,7 @@ public class SelfCheckoutStationSoftware {
 	protected ReturnChangeSoftware returnChangeSoftware;
 	protected BigDecimal amountReturned;
 
-	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws SimulationException, OverloadException {
+	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws Exception {
 		this.itemsScanned = new ArrayList<ItemInfo>();
 		this.amountPaid = new BigDecimal[1];
 		this.amountPaid[0] = BigDecimal.ZERO;
@@ -74,7 +73,7 @@ public class SelfCheckoutStationSoftware {
 
 	public BigDecimal getAmountReturned() {
 		return amountReturned;
-	} 
+	}
 
 	/**
 	 * Purpose: return the correct amount of change to the user, giving them the
@@ -103,7 +102,7 @@ public class SelfCheckoutStationSoftware {
 					// get the dispenser that holds the denomination we need and emit the banknote.
 					this.scs.banknoteDispensers.get(removed).emit();
 					// remove the banknote so we can release another one.
-					this.scs.banknoteOutput.removeDanglingBanknote();
+					this.scs.banknoteOutput.removeDanglingBanknotes();
 					// update amountToBeReturned
 					amountToBeReturned = amountToBeReturned.subtract(BigDecimal.valueOf(removed));
 					amountReturned = amountReturned.add(BigDecimal.valueOf(removed));
@@ -142,7 +141,7 @@ public class SelfCheckoutStationSoftware {
 					}
 					counter--;
 				}
- 
+
 			} else {
 				break;
 			}
@@ -174,7 +173,7 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
-	private void print(BigDecimal total) {
+	private void print(BigDecimal total) throws EmptyException, OverloadException {
 
 		int widthOfReceipt = 60;
 		int spaceBetweenPriceAndDesc = 3;
@@ -233,7 +232,7 @@ public class SelfCheckoutStationSoftware {
 		System.out.println(changeLine);
 	}
 
-	public void checkout() {
+	public void checkout() throws EmptyException, OverloadException {
 		promptForBags();
 
 		BigDecimal total = total();
@@ -253,7 +252,7 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
-	public boolean checkBaggingAreaAll() throws OverloadException{
+	public boolean checkBaggingAreaAll() throws OverloadException {
 		double expectedWeight = 0;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
@@ -263,7 +262,7 @@ public class SelfCheckoutStationSoftware {
 			expectedWeight = Double.sum(i.weight, expectedWeight);
 			System.out.println(i.weight);
 		}
-		
+
 		System.out.println("Expected weight:");
 		System.out.println(expectedWeight);
 		System.out.println(currentWeight);
@@ -277,8 +276,8 @@ public class SelfCheckoutStationSoftware {
 		return true;
 
 	}
- 
-	public boolean checkBaggingAreaItem(ItemInfo item) throws OverloadException{
+
+	public boolean checkBaggingAreaItem(ItemInfo item) throws OverloadException {
 		double itemWeight = item.weight;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
@@ -290,9 +289,9 @@ public class SelfCheckoutStationSoftware {
 			if (item.weight == i.weight) {
 				existsInScannedList = true;
 				System.out.format("%f == %f", i.weight, item.weight);
-			} 
+			}
 		}
-		
+
 		System.out.println("Previous weight:");
 		System.out.println(previousWeight);
 		System.out.println(currentWeight);

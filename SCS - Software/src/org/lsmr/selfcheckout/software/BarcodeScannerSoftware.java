@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.BarcodeScanner;
-import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.BarcodeScannerObserver;
 
