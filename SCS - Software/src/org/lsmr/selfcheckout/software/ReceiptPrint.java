@@ -1,5 +1,6 @@
 package org.lsmr.selfcheckout.software;
 
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.Listeners.ReceiptPrintListener;
@@ -39,12 +40,12 @@ public class ReceiptPrint {
         }
     }
 
-    public void addingInk(int ink) {
+    public void addingInk(int ink) throws OverloadException {
         scs.printer.addInk(ink);
         promptInkAdded(ink);
     }
 
-    public void addingPaper(int paper) {
+    public void addingPaper(int paper) throws OverloadException {
         scs.printer.addPaper(paper);
         promptPaperAdded(paper);
     }

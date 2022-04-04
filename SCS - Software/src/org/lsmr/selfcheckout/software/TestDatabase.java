@@ -20,7 +20,6 @@ public class TestDatabase {
 		this.db.put(new Barcode(new Numeral[] {Numeral.seven}), new ItemInfo(new BigDecimal("3.21"), 12, ""));								//Empty String
 		this.db.put(new Barcode(new Numeral[] {Numeral.eight}), new ItemInfo(new BigDecimal("19.98"), 1800, "This is a super long line. This is a super long line. This is a super long line"));
 		this.db.put(new Barcode(new Numeral[] {Numeral.nine}), new ItemInfo(new BigDecimal("60.00"), 2000, "Guitar"));
-		this.db.put(new Barcode(new Numeral[] {Numeral.ten}), new ItemInfo(new BigDecimal("4.80"), 240, "Pikachu Keychain"));
 		System.out.println("Database Created!");
 	}
 	
