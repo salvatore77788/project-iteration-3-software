@@ -186,8 +186,8 @@ public class SelfCheckoutStationSoftware {
 	}
 
 	public void detectLowInkPaper(){
-		rp.detectLowOnInk(rp.getinkAmount());
-		rp.detectLowOnPaper(rp.getpaperAmount());
+		rp.detectLowInk(rp.getinkAmount());
+		rp.detectLowPaper(rp.getpaperAmount());
 	}
 	
 	
@@ -281,8 +281,8 @@ public class SelfCheckoutStationSoftware {
 				// e.printStackTrace();
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
-			rp.detectLowOnInk(rp.getinkAmount());
-			rp.detectLowOnPaper(rp.getpaperAmount());
+			rp.detectLowInk(rp.getinkAmount());
+			rp.detectLowPaper(rp.getpaperAmount());
 			print(total);
 			resetVars();
 		} else {

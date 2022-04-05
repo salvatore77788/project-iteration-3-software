@@ -4,9 +4,9 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 
 public interface ReceiptPrintListener {
 
-	void noPaper(ReceiptPrinter printer);
+	void outOfPaper(ReceiptPrinter printer);
 
-	void noInk(ReceiptPrinter printer);
+	void outOfInk(ReceiptPrinter printer);
 
 	void paperAdded(ReceiptPrinter printer);
 

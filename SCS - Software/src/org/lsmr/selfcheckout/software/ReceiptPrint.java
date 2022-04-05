@@ -22,7 +22,7 @@ public class ReceiptPrint {
         return scs.printer.removeReceipt();
     }
 
-    public void detectLowOnInk(int inkLevel) {
+    public void detectLowInk(int inkLevel) {
         int lowPercentageInk = MAXIMUM_INK % 10;
 
         if (inkLevel < lowPercentageInk) {
@@ -31,7 +31,7 @@ public class ReceiptPrint {
         }
     }
 
-    public void detectLowOnPaper(int paperLevel) {
+    public void detectLowPaper(int paperLevel) {
         int lowPercentagePaper = MAXIMUM_PAPER % 10;
 
         if (paperLevel < lowPercentagePaper) {
@@ -41,18 +41,20 @@ public class ReceiptPrint {
     }
 
     // You cannot replace ink by simply pouring more ink into the unit
-    //  therefore, in order to replace the ink you will have to remove
-    //  the cartridge and add a new catridge (max allowable ink allowed)
+    // therefore, in order to replace the ink you will have to remove
+    // the cartridge and add a new catridge (max allowable ink allowed)
     public void addingInk(int ink) throws OverloadException {
         scs.printer.addInk(ink);
         promptInkAdded(ink);
     }
+
     // equivalent to of a paper roll
-    public int paperRoll(){
+    public int paperRoll() {
         return MAXIMUM_PAPER;
     }
+
     // equivalent of a new ink cartridge
-    public int inkCartridge(){
+    public int inkCartridge() {
         return MAXIMUM_INK;
     }
 
@@ -129,7 +131,6 @@ public class ReceiptPrint {
         return this.printerListener.noInk;
     }
 
-
     public class ReceiptPrinterListenerInterface implements ReceiptPrintListener {
         boolean noPaper;
         boolean noInk;
@@ -137,7 +138,7 @@ public class ReceiptPrint {
         boolean addInk;
 
         @Override
-        public void noInk(ReceiptPrinter printer) {
+        public void outOfInk(ReceiptPrinter printer) {
             noInk = true;
         }
 
@@ -148,7 +149,7 @@ public class ReceiptPrint {
         }
 
         @Override
-        public void noPaper(ReceiptPrinter printer) {
+        public void outOfPaper(ReceiptPrinter printer) {
             noPaper = true;
         }
 
@@ -161,16 +162,13 @@ public class ReceiptPrint {
 
         @Override
         public void inkLow(ReceiptPrinter printer) {
-            lowAmountInk= true;
+            lowAmountInk = true;
         }
 
         @Override
         public void paperLow(ReceiptPrinter printer) {
             lowAmountPaper = true;
         }
-            
-            
-            
-        
+
     }
 }
