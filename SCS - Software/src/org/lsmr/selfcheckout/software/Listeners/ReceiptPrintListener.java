@@ -11,4 +11,8 @@ public interface ReceiptPrintListener {
 	void paperAdded(ReceiptPrinter printer);
 
 	void inkAdded(ReceiptPrinter printer);
+
+	void inkLow(ReceiptPrinter printer);
+
+	void paperLow(ReceiptPrinter printer);
 }

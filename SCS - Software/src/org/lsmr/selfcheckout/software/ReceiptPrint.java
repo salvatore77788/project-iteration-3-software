@@ -40,11 +40,26 @@ public class ReceiptPrint {
         }
     }
 
+    // You cannot replace ink by simply pouring more ink into the unit
+    //  therefore, in order to replace the ink you will have to remove
+    //  the cartridge and add a new catridge (max allowable ink allowed)
     public void addingInk(int ink) throws OverloadException {
         scs.printer.addInk(ink);
         promptInkAdded(ink);
     }
+    // equivalent to of a paper roll
+    public int paperRoll(){
+        return MAXIMUM_PAPER;
+    }
+    // equivalent of a new ink cartridge
+    public int inkCartridge(){
+        return MAXIMUM_INK;
+    }
 
+    // when you replace paper, you have to replace the entire unit
+    // receipt paper comes on a roll and cannot be added to an existing roll
+    // therefore, when you change the roll you remove the current amount and
+    // add the maximum amount allowable (roughly one roll)
     public void addingPaper(int paper) throws OverloadException {
         scs.printer.addPaper(paper);
         promptPaperAdded(paper);
@@ -114,6 +129,7 @@ public class ReceiptPrint {
         return this.printerListener.noInk;
     }
 
+
     public class ReceiptPrinterListenerInterface implements ReceiptPrintListener {
         boolean noPaper;
         boolean noInk;
@@ -122,7 +138,7 @@ public class ReceiptPrint {
 
         @Override
         public void noInk(ReceiptPrinter printer) {
-            boolean noInk = true;
+            noInk = true;
         }
 
         @Override
@@ -143,5 +159,18 @@ public class ReceiptPrint {
 
         }
 
+        @Override
+        public void inkLow(ReceiptPrinter printer) {
+            lowAmountInk= true;
+        }
+
+        @Override
+        public void paperLow(ReceiptPrinter printer) {
+            lowAmountPaper = true;
+        }
+            
+            
+            
+        
     }
 }

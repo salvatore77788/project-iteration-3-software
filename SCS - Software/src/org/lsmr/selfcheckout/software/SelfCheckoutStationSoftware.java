@@ -9,8 +9,7 @@ import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-
-//This is the class that boots up and then has a gui.
+import org.lsmr.selfcheckout.software.ReceiptPrint;
 public class SelfCheckoutStationSoftware {
 
 	protected SelfCheckoutStation scs;
@@ -19,6 +18,8 @@ public class SelfCheckoutStationSoftware {
 	protected BarcodeScannerSoftware bss;
 	protected BanknoteSlotSoftware banknoteSlotSoftware;
 	protected CoinSlotSoftware coinSlotSoftware;
+	protected ReceiptPrint rp; // added receipt print 
+	protected AttendantStation as; // added attendant station
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -43,6 +44,8 @@ public class SelfCheckoutStationSoftware {
 		this.priceOfBags = new BigDecimal("0.05");
 
 		this.scs = scs;
+		this.rp = new ReceiptPrint();
+		this.as = new AttendantStation();
 		this.db = new TestDatabase();
 		this.ess = new ElectronicScaleSoftware();
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
@@ -173,7 +176,26 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
+	public void refillInkPaper() throws OverloadException {
+		if(rp.getlowAmountPaper()){
+			rp.addingPaper(rp.paperRoll() - rp.getpaperAmount());
+		}
+		if(rp.getlowAmountInk()){
+			rp.addingInk(rp.inkCartridge() - rp.getinkAmount());
+		}
+	}
+
+	public void detectLowInkPaper(){
+		rp.detectLowOnInk(rp.getinkAmount());
+		rp.detectLowOnPaper(rp.getpaperAmount());
+	}
+	
+	
+
 	private void print(BigDecimal total) throws EmptyException, OverloadException {
+
+		// implementation for replacing ink and paper with new rolls/cartridges
+		
 
 		int widthOfReceipt = 60;
 		int spaceBetweenPriceAndDesc = 3;
@@ -182,7 +204,11 @@ public class SelfCheckoutStationSoftware {
 				"------------------------------------------------------------",
 				"Item", "Price", "----", "----\n");
 		for (char c : header.toCharArray()) {
+			detectLowInkPaper();
+			// this is where the attendant adds ink and paper if necessary
+			refillInkPaper();
 			scs.printer.print(c);
+			
 		}
 		System.out.println(header);
 
@@ -198,6 +224,8 @@ public class SelfCheckoutStationSoftware {
 				String whitespace = new String(new char[spaceBetweenPriceAndDesc]).replace("\0", " ");
 				receiptLine = description.substring(0, description.length()) + whitespace + i.price.toString() + "\n";
 				for (char c : receiptLine.toCharArray()) {
+					detectLowInkPaper();
+					refillInkPaper();
 					scs.printer.print(c);
 				}
 				System.out.print(receiptLine);
@@ -207,6 +235,8 @@ public class SelfCheckoutStationSoftware {
 				String whitespace = new String(new char[whitespaceLength]).replace("\0", " ");
 				receiptLine = i.description + whitespace + i.price.toString() + '\n';
 				for (char c : receiptLine.toCharArray()) {
+					detectLowInkPaper();
+					refillInkPaper();		
 					scs.printer.print(c);
 				}
 				System.out.print(receiptLine);
@@ -215,18 +245,24 @@ public class SelfCheckoutStationSoftware {
 
 		String totalLine = "Total: " + total;
 		for (char c : totalLine.toCharArray()) {
+			detectLowInkPaper();
+			refillInkPaper();
 			scs.printer.print(c);
 		}
 		System.out.println(totalLine);
 
 		String cashLine = "Cash: " + this.amountPaid[0];
 		for (char c : cashLine.toCharArray()) {
+			detectLowInkPaper();
+			refillInkPaper();
 			scs.printer.print(c);
 		}
 		System.out.println(cashLine);
 
 		String changeLine = "Change: " + getAmountReturned();
 		for (char c : changeLine.toCharArray()) {
+			detectLowInkPaper();
+			refillInkPaper();
 			scs.printer.print(c);
 		}
 		System.out.println(changeLine);
@@ -245,6 +281,8 @@ public class SelfCheckoutStationSoftware {
 				// e.printStackTrace();
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
+			rp.detectLowOnInk(rp.getinkAmount());
+			rp.detectLowOnPaper(rp.getpaperAmount());
 			print(total);
 			resetVars();
 		} else {
