@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class PartialPaymentSoftware {
     SelfCheckoutStationSoftware scss;
 
-    public PartialPaymentSoftware(SelfCheckoutStationSoftware scss) throws  OverloadException {
+    public PartialPaymentSoftware(SelfCheckoutStationSoftware scss) throws OverloadException {
         this.scss = scss;
     }
 
@@ -40,7 +40,6 @@ public class PartialPaymentSoftware {
         // if total partial payment not match with total amount,
         // do nothing just enable scanner so user can scan items
         else {
-            scss.scs.mainScanner.endConfigurationPhase();
             scss.scs.mainScanner.enable();
         }
     }
