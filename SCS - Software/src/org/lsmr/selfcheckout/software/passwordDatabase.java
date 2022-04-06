@@ -16,7 +16,7 @@ public class PasswordDatabase {
 		database.put(ID, password);
 	}
 	
-	public Password getPassword(int ID) {
+	public String getPassword(int ID) {
 		return database.get(ID);
 	}
 }
