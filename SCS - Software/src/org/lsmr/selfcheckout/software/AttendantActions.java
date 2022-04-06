@@ -1,4 +1,4 @@
-package org.lsmr.software;
+package org.lsmr.selfcheckout.software;
 
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 
