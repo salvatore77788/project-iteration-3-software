@@ -21,23 +21,20 @@ public class attendantUseCase3 {
 	}
 	
 	
-	//id and password inputted for a given superVisionStation
-	public void login(int id, String password, SupervisionStation superStation) {
+	//id and password inputted for a given superVisionStation and database
+	public void login(int id, String password, SupervisionStation superStation, PasswordDatabase database) {
 		
-		if(database.method(id, password) == true && isLoggedIn == false)
+		//login if password matches id
+		if(database.getPassword(id) == password && isLoggedIn == false)
 		{
-				
 			    superStation.screen.enable();
 			    superStation.keyboard.enable();
 			    isLoggedIn = true;
-	
 		}
 		
-		//Have attendant enter an employee ID and password, and test if the entries occur in a password database of some sort
-		//On successful login, enable functions/objects related to supervision stations. 
-		//Can only be run properly if current station is not already logged into. 
 	}
 	
+	//logout and disable screen and keyboard
 	public void logout(SupervisionStation superStation) {
 		if(isLoggedIn == true)
 		{
