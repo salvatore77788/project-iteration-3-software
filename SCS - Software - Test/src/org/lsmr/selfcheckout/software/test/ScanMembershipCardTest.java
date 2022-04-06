@@ -100,6 +100,7 @@ public class ScanMembershipCardTest {
     	do {
     		try {
     			theSoftware.scs.cardReader.swipe(cardTest);
+    			swipedWorked = true;
     		}
     		catch(IOException e) {
 				//System.out.println("Failed");
