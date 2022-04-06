@@ -5,36 +5,54 @@ import java.util.List;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 
-public class AttendantUseCase3 implements TouchScreenObserver {
+public class AttendantUseCase3 {
+	//potentially implement TouchScreenObserver
 	
 	private boolean isLoggedIn = false;
 	private SupervisorStation superStation;
 	private Hashmap<SelfCheckoutStation, ArrayList<T>> stationObservers = new Hashmap<SelfCheckoutStation, ArrayList<T>>(); 
 	
-	public AttendantUseCase3() {
-		
+	public void addStation(T station, ArrayList<T> potentialObservers) {
+		if (!isLoggedIn) return;
+		stationObservers.add(station, potentialObservers);
 	}
 	
-	public void addStation(SelfCheckoutStation scs, ArrayList<T> potentialObservers) {
+	public void removeStation(T station) {
 		if (!isLoggedIn) return;
+		if (!stationObservers.containsKey(station)) return;
 	}
 	
-	public void removeStation(SelfCheckoutStation scs) {
-		if (!isLoggedIn) return;
-		if (!stationObservers.contains(scs)) return;
+	public void startup(SupervisorStation ss) {
+		for (T potentialObserver: stationObservers.get(ss)) {
+			ss.attach(potentialObserver);
+		}
 	}
 
-	public void startup() {
+	public void startup(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
+		if (!stationObservers.containsKey(scs)) return;
 		
-		//attach observers
+		for (T potentialObserver: stationObservers.get(scs)) {
+			scs.attach(potentialObserver);
+		}
+		attendantUnBlockStation(scs); //method in AttendantActions --> potentially combine the two classes
+	}
+	
+	public void shutdown(SupervisorStation ss) {
+		if (!isLoggedIn) return;
+		if (!stationObservers.containsKey(scs)) return;
+		
+		ss.detachAll();
 		
 	}
 	
-	public void shutdown() {
+	public void shutdown(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
+		if (!stationObservers.containsKey(scs)) return;
 		
-		//detach observers
+		scs.detachAll();
+		attendantBlockStation(scs); //method in AttendantActions --> potentially combine the two classes
+		
 	}
 	
 	
