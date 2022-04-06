@@ -13,26 +13,27 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 //This is the class that boots up and then has a gui.
 public class SelfCheckoutStationSoftware {
 
-	protected SelfCheckoutStation scs;
-	protected TestDatabase db; // in an actual system this would connect to a db or something
-	protected ElectronicScaleSoftware ess;
-	protected BarcodeScannerSoftware bss;
-	protected BanknoteSlotSoftware banknoteSlotSoftware;
-	protected CoinSlotSoftware coinSlotSoftware;
+	public SelfCheckoutStation scs;
+	public TestDatabase db; // in an actual system this would connect to a db or something
+	public ElectronicScaleSoftware ess;
+	public BarcodeScannerSoftware bss;
+	public BanknoteSlotSoftware banknoteSlotSoftware;
+	public CoinSlotSoftware coinSlotSoftware;
+	public ScanMembershipCard memberCardObserver;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
 	// reference.
 	// Thus, passing the following vars to the other classes will give us an updated
 	// vars.
-	protected ArrayList<ItemInfo> itemsScanned;
-	protected final double weightThreshold = 10;
-	protected BigDecimal[] amountPaid;
-	protected int bagsUsed;
-	protected int maximumBags;
-	protected BigDecimal priceOfBags;
-	protected ReturnChangeSoftware returnChangeSoftware;
-	protected BigDecimal amountReturned;
+	public ArrayList<ItemInfo> itemsScanned;
+	public final double weightThreshold = 10;
+	public BigDecimal[] amountPaid;
+	public int bagsUsed;
+	public int maximumBags;
+	public BigDecimal priceOfBags;
+	public ReturnChangeSoftware returnChangeSoftware;
+	public BigDecimal amountReturned;
 
 	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws Exception {
 		this.itemsScanned = new ArrayList<ItemInfo>();
@@ -44,9 +45,10 @@ public class SelfCheckoutStationSoftware {
 
 		this.scs = scs;
 		this.db = new TestDatabase();
-		this.ess = new ElectronicScaleSoftware();
+		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
+		this.memberCardObserver = new ScanMembershipCard(this.scs);
 
 		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
@@ -56,6 +58,7 @@ public class SelfCheckoutStationSoftware {
 		this.scs.baggingArea.attach(ess);
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
+		this.scs.cardReader.attach(memberCardObserver);
 
 		// create new change class
 	}
@@ -321,5 +324,7 @@ public class SelfCheckoutStationSoftware {
 	public void startUpGUI() {
 		// does nothing for now
 	}
+	
+	
 
 }
