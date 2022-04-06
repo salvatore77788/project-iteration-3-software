@@ -9,8 +9,7 @@ import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-
-//This is the class that boots up and then has a gui.
+import org.lsmr.selfcheckout.software.ReceiptPrint;
 public class SelfCheckoutStationSoftware {
 
 	public SelfCheckoutStation scs;
@@ -20,6 +19,9 @@ public class SelfCheckoutStationSoftware {
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
+	
+	protected ReceiptPrint rp; // added receipt print 
+	protected AttendantStation as; // added attendant station
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -44,6 +46,8 @@ public class SelfCheckoutStationSoftware {
 		this.priceOfBags = new BigDecimal("0.05");
 
 		this.scs = scs;
+		this.rp = new ReceiptPrint();
+		this.as = new AttendantStation();
 		this.db = new TestDatabase();
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
@@ -176,63 +180,96 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
+
+	public void detectLowInkPaper(int inkNeeded, int paperNeeded){
+		
+		if (inkNeeded == 0) {
+			rp.detectLowPaper(paperNeeded);
+		} else if (paperNeeded == 0) {
+			rp.detectLowInk(inkNeeded);
+		} else {
+			rp.detectLowInk(inkNeeded);
+			rp.detectLowPaper(paperNeeded);
+		}
+	}
+
 	private void print(BigDecimal total) throws EmptyException, OverloadException {
 
-		int widthOfReceipt = 60;
-		int spaceBetweenPriceAndDesc = 3;
-
-		String header = String.format("%32s\n%s\n%-4s%56s\n%-4s%56s", "START OF THE RECEIPT",
-				"------------------------------------------------------------",
-				"Item", "Price", "----", "----\n");
-		for (char c : header.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(header);
-
-		for (ItemInfo i : itemsScanned) {
-			// creates 60 white spaced string
-			String receiptLine = "";
-
-			int descSpaceLength = widthOfReceipt - (i.price.toString().length() + spaceBetweenPriceAndDesc);
-
-			String description = "";
-			if (i.description.length() > descSpaceLength) {
-				description = i.description.substring(0, descSpaceLength);
-				String whitespace = new String(new char[spaceBetweenPriceAndDesc]).replace("\0", " ");
-				receiptLine = description.substring(0, description.length()) + whitespace + i.price.toString() + "\n";
-				for (char c : receiptLine.toCharArray()) {
-					scs.printer.print(c);
-				}
-				System.out.print(receiptLine);
-			} else {
-				int whitespaceLength = widthOfReceipt - i.description.length() - i.price.toString().length()
-						- ("\n".length());
-				String whitespace = new String(new char[whitespaceLength]).replace("\0", " ");
-				receiptLine = i.description + whitespace + i.price.toString() + '\n';
-				for (char c : receiptLine.toCharArray()) {
-					scs.printer.print(c);
-				}
-				System.out.print(receiptLine);
+		// implementation for replacing ink and paper with new rolls/cartridges
+		
+		try { 
+			int widthOfReceipt = 60;
+			int spaceBetweenPriceAndDesc = 3;
+			
+			String header = String.format("%32s\n%s\n%-4s%56s\n%-4s%56s", "START OF THE RECEIPT",
+					"------------------------------------------------------------",
+					"Item", "Price", "----", "----\n");
+			
+			detectLowInkPaper(header.toCharArray().length, 1);
+			for (char c : header.toCharArray()) {
+				scs.printer.print(c);
+				
 			}
+			System.out.println(header);
+			
+			detectLowInkPaper(0, itemsScanned.size());
+			for (ItemInfo i : itemsScanned) {
+				// creates 60 white spaced string
+				String receiptLine = "";
+	
+				int descSpaceLength = widthOfReceipt - (i.price.toString().length() + spaceBetweenPriceAndDesc);
+	
+				String description = "";
+				if (i.description.length() > descSpaceLength) {
+					description = i.description.substring(0, descSpaceLength);
+					String whitespace = new String(new char[spaceBetweenPriceAndDesc]).replace("\0", " ");
+					receiptLine = description.substring(0, description.length()) + whitespace + i.price.toString() + "\n";
+					
+					detectLowInkPaper(receiptLine.toCharArray().length, 1);
+					for (char c : receiptLine.toCharArray()) {
+						scs.printer.print(c);
+					}
+					System.out.print(receiptLine);
+				} else {
+					int whitespaceLength = widthOfReceipt - i.description.length() - i.price.toString().length()
+							- ("\n".length());
+					String whitespace = new String(new char[whitespaceLength]).replace("\0", " ");
+					receiptLine = i.description + whitespace + i.price.toString() + '\n';
+					
+					detectLowInkPaper(receiptLine.toCharArray().length, 1);
+					for (char c : receiptLine.toCharArray()) {	
+						scs.printer.print(c);
+					}
+					System.out.print(receiptLine);
+				}
+			}
+	
+			String totalLine = "Total: " + total;
+			detectLowInkPaper(totalLine.toCharArray().length, 1);
+			for (char c : totalLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(totalLine);
+	
+			String cashLine = "Cash: " + this.amountPaid[0];
+			detectLowInkPaper(cashLine.toCharArray().length, 1);
+			for (char c : cashLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(cashLine);
+	
+			String changeLine = "Change: " + getAmountReturned();
+			detectLowInkPaper(changeLine.toCharArray().length, 1);
+			for (char c : changeLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(changeLine);
+			
+			scs.printer.cutPaper();
 		}
-
-		String totalLine = "Total: " + total;
-		for (char c : totalLine.toCharArray()) {
-			scs.printer.print(c);
+		catch (Exception e) {
+			
 		}
-		System.out.println(totalLine);
-
-		String cashLine = "Cash: " + this.amountPaid[0];
-		for (char c : cashLine.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(cashLine);
-
-		String changeLine = "Change: " + getAmountReturned();
-		for (char c : changeLine.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(changeLine);
 	}
 
 	public void checkout() throws EmptyException, OverloadException {
@@ -248,6 +285,8 @@ public class SelfCheckoutStationSoftware {
 				// e.printStackTrace();
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
+			rp.detectLowInk(rp.getinkAmount());
+			rp.detectLowPaper(rp.getpaperAmount());
 			print(total);
 			resetVars();
 		} else {
