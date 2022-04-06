@@ -1,7 +1,7 @@
 package org.lsmr.selfcheckout.software;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.ElectronicScale;
-import org.lsmr.selfcheckout.devices.SimulationException;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 
@@ -10,9 +10,11 @@ public class ElectronicScaleSoftware implements ElectronicScaleObserver{
 	private double currentWeight;
 	private double weightAtLastEvent;
 	private boolean isDisabled;
+	private SelfCheckoutStation scs;
 	
 	
-	public ElectronicScaleSoftware() {
+	public ElectronicScaleSoftware(SelfCheckoutStation aSCS) {
+		this.scs = aSCS;
 		this.currentWeight = 0;
 		this.weightAtLastEvent = 0;
 		this.isDisabled = false;

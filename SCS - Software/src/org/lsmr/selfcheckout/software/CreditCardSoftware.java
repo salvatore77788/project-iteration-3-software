@@ -24,7 +24,6 @@ public class CreditCardSoftware implements CardReaderObserver {
         scs = selfCheckoutStation;
         scs.cardReader.attach(this);
         cardReader = new CardReader();
-        cardReader.endConfigurationPhase();
     }
 
     /**

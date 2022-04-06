@@ -23,7 +23,7 @@ public class BaggingAreaSoftwareTest {
 	ItemInfo facemasks_item;
 
 	@Before
-	public void setup() throws OverloadException {
+	public void setup() throws Exception {
 		testHardware = new TestHardware();
 		scss = new SelfCheckoutStationSoftware(testHardware.scs);
 				

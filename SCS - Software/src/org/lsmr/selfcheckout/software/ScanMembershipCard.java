@@ -2,6 +2,7 @@ package org.lsmr.selfcheckout.software;
 
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.devices.CardReader;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
@@ -22,7 +23,8 @@ public class ScanMembershipCard implements CardReaderObserver {
     // we can't extend Card class and create MembershipCard class, so
     // we create a card object to represent membership card
     private Card membershipCard;
-    private String pin;
+    public SelfCheckoutStation theStation;
+    public boolean cardSwipedNew = false;
 
     // card type
     public static final String TYPE = "MEMBERSHIP";
@@ -31,18 +33,19 @@ public class ScanMembershipCard implements CardReaderObserver {
     private Card.CardData cardData;
 
     // card status
-    private boolean cardTapped = false;
+    //private boolean cardTapped = false;
     private boolean cardSwiped = false;
-    private boolean cardInsert = false;
+    //private boolean cardInsert = false;
 
     // is applicable for discount
     private boolean isApplicableForDiscount = false;
 
     // default constructor
-    public ScanMembershipCard(Card membershipCard, String pin) {
+    public ScanMembershipCard(SelfCheckoutStation aStation) {
         // validate card type
-        this.membershipCard = membershipCard;
-        this.pin = pin;
+    	this.theStation = aStation;
+       
+       
     }
 
     @Override
@@ -57,45 +60,31 @@ public class ScanMembershipCard implements CardReaderObserver {
 
     @Override
     public void cardInserted(CardReader reader) {
-        // insert the card in device, for this imagine in the
-        // reader we can read single card at a time
-        try {
-            // verify pin, pin should not null
-            if (pin == null) {
-                throw new InvalidCardTypeException();
-            }
-
-            // update cardData and insert card
-            cardDataRead(reader,
-                    reader.insert(membershipCard, pin) // insert card
-            );
-            cardInsert = true;
-        } catch (IOException e) {
-            // show error message in GUI/TouchScreen
-            TouchScreen.invalidCardMessage();
-        } catch (InvalidCardTypeException e) {
-            // show error message in GUI/TouchScreen
-            TouchScreen.invalidPinMessage();
-        }
+		/*
+		 * // insert the card in device, for this imagine in the // reader we can read
+		 * single card at a time try { // verify pin, pin should not null if (pin ==
+		 * null) { throw new InvalidCardTypeException(); }
+		 * 
+		 * // update cardData and insert card cardDataRead(reader,
+		 * reader.insert(membershipCard, pin) // insert card ); cardInsert = true; }
+		 * catch (IOException e) { // show error message in GUI/TouchScreen
+		 * TouchScreen.invalidCardMessage(); } catch (InvalidCardTypeException e) { //
+		 * show error message in GUI/TouchScreen TouchScreen.invalidPinMessage(); }
+		 */
     }
 
     @Override
     public void cardTapped(CardReader reader) {
-        try {
-            cardDataRead(reader,
-                    reader.tap(membershipCard) // tap card
-            );
-            cardTapped = true;
-
-            // after tap lets check is user verify for discount or not
-            if (verifyDiscount()) {
-                isApplicableForDiscount = true;
-            }
-
-        } catch (IOException e) {
-            // show error message in GUI/TouchScreen
-            TouchScreen.invalidCardMessage();
-        }
+		/*
+		 * try { cardDataRead(reader, reader.tap(membershipCard) // tap card );
+		 * cardTapped = true;
+		 * 
+		 * // after tap lets check is user verify for discount or not if
+		 * (verifyDiscount()) { isApplicableForDiscount = true; }
+		 * 
+		 * } catch (IOException e) { // show error message in GUI/TouchScreen
+		 * TouchScreen.invalidCardMessage(); }
+		 */
     }
 
     // provide discount for random basis
@@ -112,23 +101,8 @@ public class ScanMembershipCard implements CardReaderObserver {
     @Override
     public void cardSwiped(CardReader reader) {
         // swipe and update card data
-        try {
-            Card.CardData data = reader.swipe(membershipCard);// swap card
-            // verify type
-            if (data.getType().equals(TYPE)) {
-                cardDataRead(reader, data);
-            }
-            // notify in touchscreen, card type is not valid.
-            else {
-                // show error message in GUI/TouchScreen
-                TouchScreen.invalidMembershipCardMessage();
-            }
-
-            // update card swapped
-            cardSwiped = true;
-        } catch (IOException e) {
-            TouchScreen.invalidCardMessage();
-        }
+    	this.cardSwipedNew = true;
+        
     }
 
     @Override
@@ -139,9 +113,9 @@ public class ScanMembershipCard implements CardReaderObserver {
 
         // after remove update all value,
         // so we can process another card using same object
-        cardTapped = false;
+        //cardTapped = false;
         cardSwiped = false;
-        cardInsert = false;
+        //cardInsert = false;
     }
 
     // if any of cardReader operation happened we will validate type and
@@ -163,15 +137,11 @@ public class ScanMembershipCard implements CardReaderObserver {
         return cardData;
     }
 
-    public boolean isCardTapped() {
-        return cardTapped;
-    }
+    
 
     public boolean isCardSwiped() {
         return cardSwiped;
     }
 
-    public boolean isCardInsert() {
-        return cardInsert;
-    }
+   
 }

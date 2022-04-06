@@ -9,33 +9,35 @@ import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.SimulationException;
-
-//This is the class that boots up and then has a gui.
+import org.lsmr.selfcheckout.software.ReceiptPrint;
 public class SelfCheckoutStationSoftware {
 
-	protected SelfCheckoutStation scs;
-	protected TestDatabase db; // in an actual system this would connect to a db or something
-	protected ElectronicScaleSoftware ess;
-	protected BarcodeScannerSoftware bss;
-	protected BanknoteSlotSoftware banknoteSlotSoftware;
-	protected CoinSlotSoftware coinSlotSoftware;
+	public SelfCheckoutStation scs;
+	public TestDatabase db; // in an actual system this would connect to a db or something
+	public ElectronicScaleSoftware ess;
+	public BarcodeScannerSoftware bss;
+	public BanknoteSlotSoftware banknoteSlotSoftware;
+	public CoinSlotSoftware coinSlotSoftware;
+	public ScanMembershipCard memberCardObserver;
+	
+	protected ReceiptPrint rp; // added receipt print 
+	protected AttendantStation as; // added attendant station
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
 	// reference.
 	// Thus, passing the following vars to the other classes will give us an updated
 	// vars.
-	protected ArrayList<ItemInfo> itemsScanned;
-	protected final double weightThreshold = 10;
-	protected BigDecimal[] amountPaid;
-	protected int bagsUsed;
-	protected int maximumBags;
-	protected BigDecimal priceOfBags;
-	protected ReturnChangeSoftware returnChangeSoftware;
-	protected BigDecimal amountReturned;
+	public ArrayList<ItemInfo> itemsScanned;
+	public final double weightThreshold = 10;
+	public BigDecimal[] amountPaid;
+	public int bagsUsed;
+	public int maximumBags;
+	public BigDecimal priceOfBags;
+	public ReturnChangeSoftware returnChangeSoftware;
+	public BigDecimal amountReturned;
 
-	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws SimulationException, OverloadException {
+	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws Exception {
 		this.itemsScanned = new ArrayList<ItemInfo>();
 		this.amountPaid = new BigDecimal[1];
 		this.amountPaid[0] = BigDecimal.ZERO;
@@ -44,10 +46,13 @@ public class SelfCheckoutStationSoftware {
 		this.priceOfBags = new BigDecimal("0.05");
 
 		this.scs = scs;
+		this.rp = new ReceiptPrint();
+		this.as = new AttendantStation();
 		this.db = new TestDatabase();
-		this.ess = new ElectronicScaleSoftware();
+		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
+		this.memberCardObserver = new ScanMembershipCard(this.scs);
 
 		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
@@ -57,6 +62,7 @@ public class SelfCheckoutStationSoftware {
 		this.scs.baggingArea.attach(ess);
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
+		this.scs.cardReader.attach(memberCardObserver);
 
 		// create new change class
 	}
@@ -74,7 +80,7 @@ public class SelfCheckoutStationSoftware {
 
 	public BigDecimal getAmountReturned() {
 		return amountReturned;
-	} 
+	}
 
 	/**
 	 * Purpose: return the correct amount of change to the user, giving them the
@@ -103,7 +109,7 @@ public class SelfCheckoutStationSoftware {
 					// get the dispenser that holds the denomination we need and emit the banknote.
 					this.scs.banknoteDispensers.get(removed).emit();
 					// remove the banknote so we can release another one.
-					this.scs.banknoteOutput.removeDanglingBanknote();
+					this.scs.banknoteOutput.removeDanglingBanknotes();
 					// update amountToBeReturned
 					amountToBeReturned = amountToBeReturned.subtract(BigDecimal.valueOf(removed));
 					amountReturned = amountReturned.add(BigDecimal.valueOf(removed));
@@ -142,7 +148,7 @@ public class SelfCheckoutStationSoftware {
 					}
 					counter--;
 				}
- 
+
 			} else {
 				break;
 			}
@@ -174,66 +180,99 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
-	private void print(BigDecimal total) {
 
-		int widthOfReceipt = 60;
-		int spaceBetweenPriceAndDesc = 3;
-
-		String header = String.format("%32s\n%s\n%-4s%56s\n%-4s%56s", "START OF THE RECEIPT",
-				"------------------------------------------------------------",
-				"Item", "Price", "----", "----\n");
-		for (char c : header.toCharArray()) {
-			scs.printer.print(c);
+	public void detectLowInkPaper(int inkNeeded, int paperNeeded){
+		
+		if (inkNeeded == 0) {
+			rp.detectLowPaper(paperNeeded);
+		} else if (paperNeeded == 0) {
+			rp.detectLowInk(inkNeeded);
+		} else {
+			rp.detectLowInk(inkNeeded);
+			rp.detectLowPaper(paperNeeded);
 		}
-		System.out.println(header);
-
-		for (ItemInfo i : itemsScanned) {
-			// creates 60 white spaced string
-			String receiptLine = "";
-
-			int descSpaceLength = widthOfReceipt - (i.price.toString().length() + spaceBetweenPriceAndDesc);
-
-			String description = "";
-			if (i.description.length() > descSpaceLength) {
-				description = i.description.substring(0, descSpaceLength);
-				String whitespace = new String(new char[spaceBetweenPriceAndDesc]).replace("\0", " ");
-				receiptLine = description.substring(0, description.length()) + whitespace + i.price.toString() + "\n";
-				for (char c : receiptLine.toCharArray()) {
-					scs.printer.print(c);
-				}
-				System.out.print(receiptLine);
-			} else {
-				int whitespaceLength = widthOfReceipt - i.description.length() - i.price.toString().length()
-						- ("\n".length());
-				String whitespace = new String(new char[whitespaceLength]).replace("\0", " ");
-				receiptLine = i.description + whitespace + i.price.toString() + '\n';
-				for (char c : receiptLine.toCharArray()) {
-					scs.printer.print(c);
-				}
-				System.out.print(receiptLine);
-			}
-		}
-
-		String totalLine = "Total: " + total;
-		for (char c : totalLine.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(totalLine);
-
-		String cashLine = "Cash: " + this.amountPaid[0];
-		for (char c : cashLine.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(cashLine);
-
-		String changeLine = "Change: " + getAmountReturned();
-		for (char c : changeLine.toCharArray()) {
-			scs.printer.print(c);
-		}
-		System.out.println(changeLine);
 	}
 
-	public void checkout() {
+	private void print(BigDecimal total) throws EmptyException, OverloadException {
+
+		// implementation for replacing ink and paper with new rolls/cartridges
+		
+		try { 
+			int widthOfReceipt = 60;
+			int spaceBetweenPriceAndDesc = 3;
+			
+			String header = String.format("%32s\n%s\n%-4s%56s\n%-4s%56s", "START OF THE RECEIPT",
+					"------------------------------------------------------------",
+					"Item", "Price", "----", "----\n");
+			
+			detectLowInkPaper(header.toCharArray().length, 1);
+			for (char c : header.toCharArray()) {
+				scs.printer.print(c);
+				
+			}
+			System.out.println(header);
+			
+			detectLowInkPaper(0, itemsScanned.size());
+			for (ItemInfo i : itemsScanned) {
+				// creates 60 white spaced string
+				String receiptLine = "";
+	
+				int descSpaceLength = widthOfReceipt - (i.price.toString().length() + spaceBetweenPriceAndDesc);
+	
+				String description = "";
+				if (i.description.length() > descSpaceLength) {
+					description = i.description.substring(0, descSpaceLength);
+					String whitespace = new String(new char[spaceBetweenPriceAndDesc]).replace("\0", " ");
+					receiptLine = description.substring(0, description.length()) + whitespace + i.price.toString() + "\n";
+					
+					detectLowInkPaper(receiptLine.toCharArray().length, 1);
+					for (char c : receiptLine.toCharArray()) {
+						scs.printer.print(c);
+					}
+					System.out.print(receiptLine);
+				} else {
+					int whitespaceLength = widthOfReceipt - i.description.length() - i.price.toString().length()
+							- ("\n".length());
+					String whitespace = new String(new char[whitespaceLength]).replace("\0", " ");
+					receiptLine = i.description + whitespace + i.price.toString() + '\n';
+					
+					detectLowInkPaper(receiptLine.toCharArray().length, 1);
+					for (char c : receiptLine.toCharArray()) {	
+						scs.printer.print(c);
+					}
+					System.out.print(receiptLine);
+				}
+			}
+	
+			String totalLine = "Total: " + total;
+			detectLowInkPaper(totalLine.toCharArray().length, 1);
+			for (char c : totalLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(totalLine);
+	
+			String cashLine = "Cash: " + this.amountPaid[0];
+			detectLowInkPaper(cashLine.toCharArray().length, 1);
+			for (char c : cashLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(cashLine);
+	
+			String changeLine = "Change: " + getAmountReturned();
+			detectLowInkPaper(changeLine.toCharArray().length, 1);
+			for (char c : changeLine.toCharArray()) {
+				scs.printer.print(c);
+			}
+			System.out.println(changeLine);
+			
+			scs.printer.cutPaper();
+		}
+		catch (Exception e) {
+			
+		}
+	}
+
+	public void checkout() throws EmptyException, OverloadException {
 		promptForBags();
 
 		BigDecimal total = total();
@@ -246,6 +285,8 @@ public class SelfCheckoutStationSoftware {
 				// e.printStackTrace();
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
+			rp.detectLowInk(rp.getinkAmount());
+			rp.detectLowPaper(rp.getpaperAmount());
 			print(total);
 			resetVars();
 		} else {
@@ -253,7 +294,7 @@ public class SelfCheckoutStationSoftware {
 		}
 	}
 
-	public boolean checkBaggingAreaAll() throws OverloadException{
+	public boolean checkBaggingAreaAll() throws OverloadException {
 		double expectedWeight = 0;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
@@ -263,7 +304,7 @@ public class SelfCheckoutStationSoftware {
 			expectedWeight = Double.sum(i.weight, expectedWeight);
 			System.out.println(i.weight);
 		}
-		
+
 		System.out.println("Expected weight:");
 		System.out.println(expectedWeight);
 		System.out.println(currentWeight);
@@ -277,8 +318,8 @@ public class SelfCheckoutStationSoftware {
 		return true;
 
 	}
- 
-	public boolean checkBaggingAreaItem(ItemInfo item) throws OverloadException{
+
+	public boolean checkBaggingAreaItem(ItemInfo item) throws OverloadException {
 		double itemWeight = item.weight;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
@@ -290,9 +331,9 @@ public class SelfCheckoutStationSoftware {
 			if (item.weight == i.weight) {
 				existsInScannedList = true;
 				System.out.format("%f == %f", i.weight, item.weight);
-			} 
+			}
 		}
-		
+
 		System.out.println("Previous weight:");
 		System.out.println(previousWeight);
 		System.out.println(currentWeight);
@@ -322,5 +363,7 @@ public class SelfCheckoutStationSoftware {
 	public void startUpGUI() {
 		// does nothing for now
 	}
+	
+	
 
 }

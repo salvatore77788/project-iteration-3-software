@@ -11,7 +11,8 @@ import org.junit.Assert;
 
 public class ElectronicScaleSoftwareTest 
 {
-	private ElectronicScaleSoftware ess = new ElectronicScaleSoftware();
+	private TestHardware testHardware2 = new TestHardware();
+	private ElectronicScaleSoftware ess = new ElectronicScaleSoftware(testHardware2.scs);
 	private ElectronicScale scale = new ElectronicScale(1000, 1);
 	
 	@Test
@@ -24,7 +25,8 @@ public class ElectronicScaleSoftwareTest
 	
 	@Test
 	public void testConstructor() {
-		ElectronicScaleSoftware test = new ElectronicScaleSoftware();
+		
+		ElectronicScaleSoftware test = new ElectronicScaleSoftware(testHardware2.scs);
 		Assert.assertTrue("Current weight should be zero at initialization.", test.getCurrentWeight() == 0);
 		Assert.assertTrue("Weight at last event should be zero.", test.getWeightAtLastEvent() == 0);;
 	}
