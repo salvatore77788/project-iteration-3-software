@@ -3,8 +3,10 @@ package org.lsmr.selfcheckout.software.test;
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Card;
-import org.lsmr.selfcheckout.devices.CardReader;
+//import org.lsmr.selfcheckout.devices.theSoftware.scs.cardReader;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.ScanMembershipCard;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 import static org.junit.Assert.*;
 /*
@@ -13,111 +15,61 @@ import static org.junit.Assert.*;
  * protected Phase phase = Phase.NORMAL;
  */
 
+import java.io.IOException;
+
 public class ScanMembershipCardTest {
 
-    private Card card;
-    private String pin;
-    private CardReader cardReader;
-    private ScanMembershipCard membershipCard;
+	private Card cardTest;
+	private String pin;
 
-    @Before
-    public void setup() throws Exception {
+	private TestHardware testHardware;
+	private SelfCheckoutStationSoftware theSoftware;
 
-        pin = "4567";
-        // create card
-        /*
-         * public Card(
-         * 		String type,
-         *     String number,
-         *     String cardholder,
-         *     String cvv,
-         *     String pin,
-         *     boolean isTapEnabled,
-         *     boolean hasChip )
-         */
-        card = new Card(
-                ScanMembershipCard.TYPE,
-                "1234567890123456",
-                "John Smith",
-                "567",
-                pin,
-                true,
-                true
-        );
+	@Before
+	public void setup() throws Exception {
 
-        // init card reader and set device ConfigurationPhase = NORMAL
-        cardReader = new CardReader();
-        cardReader.endConfigurationPhase();
+		// we only need this to instantiate a proper scs (coin and banknote
+		// denominations)
+		testHardware = new TestHardware();
 
-    }
+		theSoftware = new SelfCheckoutStationSoftware(testHardware.scs);
 
-    @Test
-    public void InsertTest() {
-        // init membership card
-        membershipCard = new ScanMembershipCard(card, pin);
+		pin = "4567";
 
-        // before cardInserted result should be false
-        assertFalse(membershipCard.isCardInsert());
+		cardTest = new Card(
+				ScanMembershipCard.TYPE,
+				"1234567890123456",
+				"John Smith",
+				"567",
+				pin,
+				true,
+				true);
 
-        // insert card
-        membershipCard.cardInserted(cardReader);
+	}
 
-        //after should be true
-        assertTrue(membershipCard.isCardInsert());
-    }
+	@Test
+	public void SwipeTest() {
 
-    @Test
-    public void TapTest() {
-        // init membership card
-        membershipCard = new ScanMembershipCard(card, pin);
+		// should be false at first.
+		assertFalse(theSoftware.memberCardObserver.cardSwipedNew);
 
-        // before tapped result should be false
-        assertFalse(membershipCard.isCardTapped());
+		boolean swipedWorked = false;
+		do {
+			try {
+				theSoftware.scs.cardReader.swipe(cardTest);
+				swipedWorked = true;
+			} catch (IOException e) {
+				// System.out.println("Failed");
+				// TODO Auto-generated catch block
 
-        // tapped card
-        membershipCard.cardTapped(cardReader);
+				e.printStackTrace();
+				continue;
+			}
 
-        // after should be true
-        assertTrue(membershipCard.isCardTapped());
-    }
+		} while (!swipedWorked);
 
-    @Test
-    public void SwipeTest() {
-        // init membership card
-        membershipCard = new ScanMembershipCard(card, pin);
+		assertTrue(theSoftware.memberCardObserver.cardSwipedNew);
 
-        // before CardSwiped result should be false
-        assertFalse(membershipCard.isCardSwiped());
+	}
 
-        // tapped card
-        membershipCard.cardSwiped(cardReader);
-
-        // after should be true
-        assertTrue(membershipCard.isCardSwiped());
-    }
-
-    @Test
-    public void RemoveTest() {
-
-        // init membership card
-        membershipCard = new ScanMembershipCard(card, pin);
-
-        // trigger all events
-        membershipCard.cardTapped(cardReader);
-        membershipCard.cardSwiped(cardReader);
-        membershipCard.cardInserted(cardReader);
-
-        // before remove card all result should be true
-        assertTrue(membershipCard.isCardSwiped());
-        assertTrue(membershipCard.isCardInsert());
-        assertTrue(membershipCard.isCardTapped());
-
-        // removed card
-        membershipCard.cardRemoved(cardReader);
-
-        // after remove card all result should be true
-        assertFalse(membershipCard.isCardSwiped());
-        assertFalse(membershipCard.isCardInsert());
-        assertFalse(membershipCard.isCardTapped());
-    }
 }

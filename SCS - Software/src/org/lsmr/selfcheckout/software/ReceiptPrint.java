@@ -1,16 +1,21 @@
 package org.lsmr.selfcheckout.software;
 
+import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.software.Listeners.ReceiptPrintListener;
+import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
+import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
 
-public class ReceiptPrint {
+public class ReceiptPrint implements ReceiptPrinterObserver {
 
-    public ReceiptPrinterListenerInterface printerListener;
     private SelfCheckoutStation scs;
     private int inkAmount;
     private int paperAmount;
-
+    private boolean noPaper;
+    private boolean noInk;
+    private boolean addPaper;
+    private boolean addInk;
     private boolean lowAmountPaper;
     private boolean lowAmountInk;
 
@@ -21,30 +26,49 @@ public class ReceiptPrint {
         return scs.printer.removeReceipt();
     }
 
-    public void detectLowOnInk(int inkLevel) {
-        int lowPercentageInk = MAXIMUM_INK % 10;
+    public void detectLowInk(int inkNeeded) {
+    	int inkLevel = this.inkAmount - inkNeeded;
+        int lowPercentageInk = MAXIMUM_INK % 5;
 
         if (inkLevel < lowPercentageInk) {
             this.lowAmountInk = true;
-            System.out.println("The ink amount is 10%, please refill.");
+            System.out.println("The ink amount is 5%, please refill.");
         }
     }
 
-    public void detectLowOnPaper(int paperLevel) {
-        int lowPercentagePaper = MAXIMUM_PAPER % 10;
+    public void detectLowPaper(int paperNeeded) {
+    	int paperLevel = this.paperAmount - paperNeeded;
+        int lowPercentagePaper = MAXIMUM_PAPER % 5;
 
         if (paperLevel < lowPercentagePaper) {
             this.lowAmountPaper = true;
-            System.out.println("The paper amount is 10%, please refill.");
+            System.out.println("The paper amount is 5%, please refill.");
         }
     }
 
-    public void addingInk(int ink) {
+    // You cannot replace ink by simply pouring more ink into the unit
+    // therefore, in order to replace the ink you will have to remove
+    // the cartridge and add a new catridge (max allowable ink allowed)
+    public void addingInk(int ink) throws OverloadException {
         scs.printer.addInk(ink);
         promptInkAdded(ink);
     }
 
-    public void addingPaper(int paper) {
+    // equivalent to of a paper roll
+    public int paperRoll() {
+        return MAXIMUM_PAPER;
+    }
+
+    // equivalent of a new ink cartridge
+    public int inkCartridge() {
+        return MAXIMUM_INK;
+    }
+
+    // when you replace paper, you have to replace the entire unit
+    // receipt paper comes on a roll and cannot be added to an existing roll
+    // therefore, when you change the roll you remove the current amount and
+    // add the maximum amount allowable (roughly one roll)
+    public void addingPaper(int paper) throws OverloadException {
         scs.printer.addPaper(paper);
         promptPaperAdded(paper);
     }
@@ -69,7 +93,7 @@ public class ReceiptPrint {
     }
 
     public void setaddPaper(boolean state) {
-        this.printerListener.addPaper = state;
+        this.addPaper = state;
     }
 
     public boolean getlowAmountPaper() {
@@ -81,11 +105,11 @@ public class ReceiptPrint {
     }
 
     public boolean getaddPaper() {
-        return this.printerListener.addPaper;
+        return this.addPaper;
     }
 
     public boolean getNoPaper() {
-        return this.printerListener.noPaper;
+        return this.noPaper;
     }
 
     // INK GETTERS AND SETTERS
@@ -94,7 +118,7 @@ public class ReceiptPrint {
     }
 
     public void setaddInk(boolean state) {
-        this.printerListener.addInk = state;
+        this.addInk = state;
     }
 
     public boolean getlowAmountInk() {
@@ -106,41 +130,46 @@ public class ReceiptPrint {
     }
 
     public boolean getaddInk() {
-        return this.printerListener.addInk;
+        return this.addInk;
     }
 
     public boolean getNoInk() {
-        return this.printerListener.noInk;
+        return this.noInk;
     }
 
-    public class ReceiptPrinterListenerInterface implements ReceiptPrintListener {
-        boolean noPaper;
-        boolean noInk;
-        boolean addPaper;
-        boolean addInk;
-
-        @Override
-        public void noInk(ReceiptPrinter printer) {
-            boolean noInk = true;
-        }
-
-        @Override
-        public void inkAdded(ReceiptPrinter printer) {
-            noInk = false;
-            addInk = true;
-        }
-
-        @Override
-        public void noPaper(ReceiptPrinter printer) {
-            noPaper = true;
-        }
-
-        @Override
-        public void paperAdded(ReceiptPrinter printer) {
-            noPaper = false;
-            addPaper = true;
-
-        }
+    @Override
+    public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+        // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void outOfPaper(ReceiptPrinter printer) {
+        noPaper = true;
+    }
+
+    @Override
+    public void outOfInk(ReceiptPrinter printer) {
+        noInk = true;
+    }
+
+    @Override
+    public void paperAdded(ReceiptPrinter printer) {
+        noPaper = false;
+        addPaper = true;
+
+    }
+
+    @Override
+    public void inkAdded(ReceiptPrinter printer) {
+        noInk = false;
+        addInk = true;
+    }
+
 }

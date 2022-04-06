@@ -18,7 +18,9 @@ import org.lsmr.selfcheckout.software.TestDatabase;
 
 public class BarcodeScannerSoftwareTest 
 {
-	private ElectronicScaleSoftware ess = new ElectronicScaleSoftware();
+	private TestHardware testHardware = new TestHardware();
+	 
+	private ElectronicScaleSoftware ess = new ElectronicScaleSoftware(testHardware.scs);
 	private BarcodeScanner bs = new BarcodeScanner();
 
 	private ItemInfo info;

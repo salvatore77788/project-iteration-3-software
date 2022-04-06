@@ -9,6 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SCS - Software"/>
-	<classpathentry kind="src" path="/SCS - Hardware - v3.0"/>
+	<classpathentry kind="src" path="/SCS - Hardware - v3.1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

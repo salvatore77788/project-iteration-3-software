@@ -43,13 +43,6 @@ public class TestItems {
 		listOfItems.put(barcode, item);
 		listOfProducts.put(barcode, product);
 
-		barcode = new Barcode(new Numeral[] { Numeral.ten });
-		item = new BarcodedItem(barcode, 240);
-		product = new BarcodedProduct(barcode,
-				"Pikachu Keychain",
-				new BigDecimal("4.80"), 1);
-		listOfItems.put(barcode, item);
-		listOfProducts.put(barcode, product);
 	}
 
 	public BarcodedItem lookupItem(Barcode barcode) {

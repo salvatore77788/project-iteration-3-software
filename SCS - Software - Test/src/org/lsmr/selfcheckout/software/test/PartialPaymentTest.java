@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class PartialPaymentTest {
 
     @Test
-    public void partialPaymentTest() throws OverloadException {
+    public void partialPaymentTest() throws Exception {
 
         TestHardware testHardware = new TestHardware();
         SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
