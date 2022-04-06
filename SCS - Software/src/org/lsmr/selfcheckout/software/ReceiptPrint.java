@@ -1,17 +1,21 @@
 package org.lsmr.selfcheckout.software;
 
+import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.software.Listeners.ReceiptPrintListener;
+import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
+import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
 
-public class ReceiptPrint {
+public class ReceiptPrint implements ReceiptPrinterObserver {
 
-    public ReceiptPrinterListenerInterface printerListener;
     private SelfCheckoutStation scs;
     private int inkAmount;
     private int paperAmount;
-
+    private boolean noPaper;
+    private boolean noInk;
+    private boolean addPaper;
+    private boolean addInk;
     private boolean lowAmountPaper;
     private boolean lowAmountInk;
 
@@ -87,7 +91,7 @@ public class ReceiptPrint {
     }
 
     public void setaddPaper(boolean state) {
-        this.printerListener.addPaper = state;
+        this.addPaper = state;
     }
 
     public boolean getlowAmountPaper() {
@@ -99,11 +103,11 @@ public class ReceiptPrint {
     }
 
     public boolean getaddPaper() {
-        return this.printerListener.addPaper;
+        return this.addPaper;
     }
 
     public boolean getNoPaper() {
-        return this.printerListener.noPaper;
+        return this.noPaper;
     }
 
     // INK GETTERS AND SETTERS
@@ -112,7 +116,7 @@ public class ReceiptPrint {
     }
 
     public void setaddInk(boolean state) {
-        this.printerListener.addInk = state;
+        this.addInk = state;
     }
 
     public boolean getlowAmountInk() {
@@ -124,51 +128,46 @@ public class ReceiptPrint {
     }
 
     public boolean getaddInk() {
-        return this.printerListener.addInk;
+        return this.addInk;
     }
 
     public boolean getNoInk() {
-        return this.printerListener.noInk;
+        return this.noInk;
     }
 
-    public class ReceiptPrinterListenerInterface implements ReceiptPrintListener {
-        boolean noPaper;
-        boolean noInk;
-        boolean addPaper;
-        boolean addInk;
-
-        @Override
-        public void outOfInk(ReceiptPrinter printer) {
-            noInk = true;
-        }
-
-        @Override
-        public void inkAdded(ReceiptPrinter printer) {
-            noInk = false;
-            addInk = true;
-        }
-
-        @Override
-        public void outOfPaper(ReceiptPrinter printer) {
-            noPaper = true;
-        }
-
-        @Override
-        public void paperAdded(ReceiptPrinter printer) {
-            noPaper = false;
-            addPaper = true;
-
-        }
-
-        @Override
-        public void inkLow(ReceiptPrinter printer) {
-            lowAmountInk = true;
-        }
-
-        @Override
-        public void paperLow(ReceiptPrinter printer) {
-            lowAmountPaper = true;
-        }
+    @Override
+    public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+        // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void outOfPaper(ReceiptPrinter printer) {
+        noPaper = true;
+    }
+
+    @Override
+    public void outOfInk(ReceiptPrinter printer) {
+        noInk = true;
+    }
+
+    @Override
+    public void paperAdded(ReceiptPrinter printer) {
+        noPaper = false;
+        addPaper = true;
+
+    }
+
+    @Override
+    public void inkAdded(ReceiptPrinter printer) {
+        noInk = false;
+        addInk = true;
+    }
+
 }
