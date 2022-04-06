@@ -4,7 +4,10 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import java.util.*;
 
 public class AttendantActions {
+	
 
+
+	
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be disgussed in the meating
     public void attendantBlockStation(SelfCheckoutStation station) {
@@ -29,12 +32,54 @@ public class AttendantActions {
         data.setIsDisabled(false);
     }
 
+
+    
     // Remove scanned item from customer station
-    public void removeItem(SelfCheckoutStation station) throws Exception {
+    // Needs the software of the station that has the data stored
+    public void removeItem() throws Exception {
     	
-    	SelfCheckoutStationSoftware stationSoftware = new SelfCheckoutStationSoftware(station);
-    	ElectronicScaleSoftware scaleSoftware = new ElectronicScaleSoftware(station);
+		Scanner scanner = new Scanner(System.in);
+		boolean exist = false;
+		
+		int stationNumber = 0;
+		
+		// Choose station
+		// Should replace with GUI
+		while(!exist) {
+			
+			// Get input and check if it is valid 
+			try {
+				System.out.print("Enter Station Number: ");
+				
+				// Get input from attendant
+				String itemString = scanner.nextLine();
+				
+				// Try to convert to int
+				stationNumber = Integer.parseInt(itemString);
+				
+				// Check if that station number exists
+				for(SelfCheckoutStationSoftware s: AttendantStation.softwareStationConnected) {
+					if(s.stationNumber == stationNumber) {
+						exist = true;
+						break;
+					}
+				}
+				
+				// Station does not exist
+				if(exist == false) {
+					throw new Exception();
+				}
+				
+				System.out.println("Station #" + stationNumber + " was selected");
+				
+			} catch (Exception e) {
+				System.out.println("Invalid selection, please try again");
+			}
+		}
     	
+		// Get the software for the right station
+    	SelfCheckoutStationSoftware stationSoftware = AttendantStation.softwareStationConnected.get(stationNumber);
+    	ElectronicScaleSoftware scaleSoftware = AttendantStation.electronicScaleConnected.get(stationNumber);
     	
     	int count = 0;
     	
@@ -44,7 +89,6 @@ public class AttendantActions {
     		count++;
     	}
     	
-		Scanner scanner = new Scanner(System.in);
 
 		boolean valid = false;
 		int itemNum = 0;
