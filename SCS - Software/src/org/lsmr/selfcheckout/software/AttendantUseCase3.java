@@ -5,19 +5,36 @@ import java.util.List;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 
-public class attendantUseCase3 {
+public class AttendantUseCase3 implements TouchScreenObserver {
 	
-	public boolean isLoggedIn = false;
-	//Potentially add methods to add or remove supervised stations if no other class has done that already
+	private boolean isLoggedIn = false;
+	private SupervisorStation superStation;
+	private Hashmap<SelfCheckoutStation, ArrayList<T>> stationObservers = new Hashmap<SelfCheckoutStation, ArrayList<T>>(); 
 	
+	public AttendantUseCase3() {
+		
+	}
+	
+	public void addStation(SelfCheckoutStation scs, ArrayList<T> potentialObservers) {
+		if (!isLoggedIn) return;
+	}
+	
+	public void removeStation(SelfCheckoutStation scs) {
+		if (!isLoggedIn) return;
+		if (!stationObservers.contains(scs)) return;
+	}
+
 	public void startup() {
-		//enable all functions/objects related to customer use of a station, such as scanner,coin acceptor, etc etc.
-		//can only be done while logged in
+		if (!isLoggedIn) return;
+		
+		//attach observers
+		
 	}
 	
 	public void shutdown() {
-		//reverse of startup()
-		//can only be done while logged in
+		if (!isLoggedIn) return;
+		
+		//detach observers
 	}
 	
 	
@@ -40,6 +57,7 @@ public class attendantUseCase3 {
 		{
 			 superStation.screen.disable();
 			 superStation.keyboard.disable();
+			 isLoggedIn = false;
 		}
 	}
 	
