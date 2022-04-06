@@ -1,4 +1,4 @@
-# SENG-300-Iteration3
+# SENG 300 Iteration 3 
 
 ## Requirements:
 1. Java 17 JDK
@@ -61,7 +61,7 @@
 
 ## Downloading the project:
 * Easiest way is to clone the repository:
-    + [SENG-300-Iteration3 GitHub](https://github.com/salvatore77788/project-iteration-3-software)
+    + [SENG 300 Iteration3 GitHub](https://github.com/salvatore77788/project-iteration-3-software)
         + You will need to be added to the repository as it is a private repository.
     + Alternatively, if you're a TA or Professor, you need to move our code into a file system where you have permissions to run and compile code.
 
