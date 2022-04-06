@@ -1,5 +1,7 @@
 package org.lsmr.selfcheckout.software;
 
+import org.lsmr.selfcheckout.devices.Keyboard;
+
 public class attendantUseCase3 {
 	
 	//Potentially add methods to add or remove supervised stations if no other class has done that already
@@ -15,6 +17,11 @@ public class attendantUseCase3 {
 	}
 	
 	public void login() {
+		
+		KeyBoardObserver.keyPressed();
+		//
+		//
+		
 		//Have attendant enter an employee ID and password, and test if the entries occur in a password database of some sort
 		//On successful login, enable functions/objects related to supervision stations. 
 		//Can only be run properly if current station is not already logged into. 
