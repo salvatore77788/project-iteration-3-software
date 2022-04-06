@@ -34,6 +34,8 @@ public class SelfCheckoutStationSoftware {
 	public BigDecimal priceOfBags;
 	public ReturnChangeSoftware returnChangeSoftware;
 	public BigDecimal amountReturned;
+	public int stationNumber;
+	
 
 	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws Exception {
 		this.itemsScanned = new ArrayList<ItemInfo>();
@@ -60,7 +62,14 @@ public class SelfCheckoutStationSoftware {
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
 
-		// create new change class
+		// Connect software to attendant station
+		AttendantStation aStation = new AttendantStation();
+		
+		// Assign the station a number
+		this.stationNumber = aStation.assignStationNumber();
+		
+		// Connect the software to the attendant station
+		aStation.connectToAttendantStation(scs,this, ess, bss, banknoteSlotSoftware);
 	}
 
 	public BigDecimal total() {
