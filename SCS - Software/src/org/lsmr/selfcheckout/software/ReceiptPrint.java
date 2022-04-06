@@ -26,21 +26,23 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         return scs.printer.removeReceipt();
     }
 
-    public void detectLowInk(int inkLevel) {
-        int lowPercentageInk = MAXIMUM_INK % 10;
+    public void detectLowInk(int inkNeeded) {
+    	int inkLevel = this.inkAmount - inkNeeded;
+        int lowPercentageInk = MAXIMUM_INK % 5;
 
         if (inkLevel < lowPercentageInk) {
             this.lowAmountInk = true;
-            System.out.println("The ink amount is 10%, please refill.");
+            System.out.println("The ink amount is 5%, please refill.");
         }
     }
 
-    public void detectLowPaper(int paperLevel) {
-        int lowPercentagePaper = MAXIMUM_PAPER % 10;
+    public void detectLowPaper(int paperNeeded) {
+    	int paperLevel = this.paperAmount - paperNeeded;
+        int lowPercentagePaper = MAXIMUM_PAPER % 5;
 
         if (paperLevel < lowPercentagePaper) {
             this.lowAmountPaper = true;
-            System.out.println("The paper amount is 10%, please refill.");
+            System.out.println("The paper amount is 5%, please refill.");
         }
     }
 
