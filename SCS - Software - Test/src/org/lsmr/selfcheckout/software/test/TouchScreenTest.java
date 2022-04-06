@@ -6,15 +6,23 @@ import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.ElectronicScale;
 import org.lsmr.selfcheckout.software.AttendantStation;
+import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.TouchScreenSoftware;
 
 import org.junit.Assert;
 
 public class TouchScreenTest {
+	
+	
+	
 	private AttendantStation as;
 	private TouchScreenSoftware tss;
-	private ElectronicScale es;
+	//private ElectronicScale es;
 	private TouchScreenStub ts;
+	private ElectronicScaleSoftware escaleObserver;
+	
+	private TestHardware testHardware;
+	
 
 	private class TouchScreenStub extends AbstractDevice<TouchScreenSoftware> {
 		
@@ -22,12 +30,19 @@ public class TouchScreenTest {
 
 	@Before
 	public void setup() {
+		
+		testHardware = new TestHardware();
+		
+		
+		
+		
+		
 		as = new AttendantStation();
 		tss = new TouchScreenSoftware(as);
-		es = new ElectronicScale(1, 1);
-		es.endConfigurationPhase();
-		ts = new TouchScreenStub();
-		ts.endConfigurationPhase();
+	//	es = new ElectronicScale(1, 1);
+	//	es.endConfigurationPhase();
+	//	ts = new TouchScreenStub();
+	//	ts.endConfigurationPhase();
 		ts.attach(tss);
 	}
 
@@ -43,6 +58,8 @@ public class TouchScreenTest {
 		Assert.assertTrue("TouchScreenSoftware.isDisabled should be false", tss.getIsDisabled() == false);
 	}
 
+	
+	// 
 	@Test
 	public void testAddBagsWhileEnabled() {
 		try {
