@@ -1,5 +1,9 @@
 package org.lsmr.software;
 
+import org.lsmr.selfcheckout.Banknote;
+import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 
 public class AttendantActions {
@@ -27,5 +31,23 @@ public class AttendantActions {
         station.cardReader.enable();
         data.setIsDisabled(false);
     }
+    
+    public void emptyCoinStorageUnit(CoinDispenser storageUnit) {
+    	
+    }
+    
+    public void fillCoinStorageUnit(CoinDispenser storageUnit, Coin ... coins) {
+    	
+    }
+    
+    public void emptyBanknoteStorageUnit(BanknoteDispenser storageUnit) {
+    	
+    }
+    
+    public void fillBanknoteStorageUnit(BanknoteDispenser storageUnit, Banknote ... banknotes) {
+    	
+    }
+    
+   
 
 }
