@@ -23,8 +23,9 @@ public class PartialPaymentSoftware {
      * @param amount partial amount want to pay
      * @throws OverloadException
      * @throws EmptyException
+     * @throws InterruptedException
      */
-    public void partialPayment(BigDecimal amount) throws EmptyException, OverloadException {
+    public void partialPayment(BigDecimal amount) throws EmptyException, OverloadException, InterruptedException {
         // disable scanner
         scss.scs.mainScanner.disable();
 

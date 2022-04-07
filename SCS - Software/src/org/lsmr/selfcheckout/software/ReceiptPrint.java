@@ -10,8 +10,8 @@ import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
 public class ReceiptPrint implements ReceiptPrinterObserver {
 
     private SelfCheckoutStation scs;
-    private int inkAmount;
-    private int paperAmount;
+    public int inkAmount = 1 << 20;
+    public int paperAmount = 1 << 10;
     private boolean noPaper;
     private boolean noInk;
     private boolean addPaper;
@@ -26,23 +26,35 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         return scs.printer.removeReceipt();
     }
 
-    public void detectLowInk(int inkNeeded) {
-    	int inkLevel = this.inkAmount - inkNeeded;
+    public void detectLowInk(int inkAmount) throws InterruptedException {
         int lowPercentageInk = MAXIMUM_INK % 5;
 
-        if (inkLevel < lowPercentageInk) {
+        if (inkAmount < lowPercentageInk) {
             this.lowAmountInk = true;
-            System.out.println("The ink amount is 5%, please refill.");
+            while (inkAmount < lowPercentageInk) {
+                this.lowAmountInk = true;
+                Thread.sleep(30000);
+                System.out.println("The ink amount is 5%, please refill.");
+                // warn attendant
+                // If attendant comes do this:
+                // setinkAmount(MAXIMUM_INK);
+            }
         }
     }
 
-    public void detectLowPaper(int paperNeeded) {
-    	int paperLevel = this.paperAmount - paperNeeded;
+    public void detectLowPaper(int paperAmount) throws InterruptedException {
         int lowPercentagePaper = MAXIMUM_PAPER % 5;
 
-        if (paperLevel < lowPercentagePaper) {
+        if (paperAmount < lowPercentagePaper) {
             this.lowAmountPaper = true;
-            System.out.println("The paper amount is 5%, please refill.");
+            while (inkAmount < lowPercentagePaper) {
+                this.lowAmountInk = true;
+                Thread.sleep(30000);
+                System.out.println("The paper amount is 5%, please refill.");
+                // warn attendant
+                // If attendant comes do this:
+                // setpaperAmount(MAXIMUM_PAPER);
+            }
         }
     }
 
@@ -52,16 +64,6 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
     public void addingInk(int ink) throws OverloadException {
         scs.printer.addInk(ink);
         promptInkAdded(ink);
-    }
-
-    // equivalent to of a paper roll
-    public int paperRoll() {
-        return MAXIMUM_PAPER;
-    }
-
-    // equivalent of a new ink cartridge
-    public int inkCartridge() {
-        return MAXIMUM_INK;
     }
 
     // when you replace paper, you have to replace the entire unit
@@ -96,20 +98,12 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         this.addPaper = state;
     }
 
-    public boolean getlowAmountPaper() {
-        return this.lowAmountPaper;
-    }
-
     public int getpaperAmount() {
         return this.paperAmount;
     }
 
     public boolean getaddPaper() {
         return this.addPaper;
-    }
-
-    public boolean getNoPaper() {
-        return this.noPaper;
     }
 
     // INK GETTERS AND SETTERS
@@ -121,20 +115,12 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         this.addInk = state;
     }
 
-    public boolean getlowAmountInk() {
-        return this.lowAmountInk;
-    }
-
     public int getinkAmount() {
         return this.inkAmount;
     }
 
     public boolean getaddInk() {
         return this.addInk;
-    }
-
-    public boolean getNoInk() {
-        return this.noInk;
     }
 
     @Override
