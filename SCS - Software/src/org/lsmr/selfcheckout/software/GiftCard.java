@@ -12,32 +12,32 @@ import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
 import org.lsmr.selfcheckout.external.CardIssuer;
 
-public class DebitCardSoftware implements CardReaderObserver {
+public class GiftCard implements CardReaderObserver {
     public final CardReader cardReader;
+    private CardInsertData cardInsertData;
     private CardData cardData;
-    public boolean cardTapped = false;
     public boolean cardSwiped = false;
-    public boolean cardInsert = false;
+
     private SelfCheckoutStation scs;
     private int holdNumber;
 
-    public DebitCardSoftware(SelfCheckoutStation selfCheckoutStation) {
+    public GiftCard(SelfCheckoutStation selfCheckoutStation) {
         scs = selfCheckoutStation;
         scs.cardReader.attach(this);
         cardReader = new CardReader();
     }
 
     /**
-     * This class is a simulation of paying with a debit card at the checkout.
+     * This class is a simulation of paying with a credit card at the checkout.
      * 
-     * The type of payment (creditcard) needs to be debit card.
+     * The type of payment (giftcard) needs to be credit card.
      * The option of payment (paymentOption) has to be either tap, swipe or insert.
      * The card limit (totalBalance) needs to be more than the amount owed.
      * The pin (pin) entered by the user has to be correct.
      * Return true if payment is successful, false otherwise.
      */
 
-    public boolean PayWithDebitCard(Card debitCard, int paymentMethod, BigDecimal totalBalance, String pin,
+    public boolean PaywithGiftCard(Card giftcard, int paymentMethod, BigDecimal totalBalance,
             BigDecimal total, CardIssuer payinfo) throws IOException {
         CardData cardInformation = null;
         int value = 0;
@@ -45,43 +45,19 @@ public class DebitCardSoftware implements CardReaderObserver {
         double balance = totalBalance.doubleValue();
         double cost = total.doubleValue();
 
-        if (debitCard == null) {
-            return false;
-        }
-        if (paymentMethod > 3 || paymentMethod < 1) {
+        if (giftcard == null) {
             return false;
         }
 
         if (paymentMethod == 1) {
-            cardInformation = scs.cardReader.tap(debitCard);
-            if (cardData.getType() == "debit") {
+            cardInformation = scs.cardReader.swipe(giftcard);
+            if (cardData.getType() == "giftcard") {
                 if (cardInformation == cardData) {
                     cardReadApproved = true;
                 }
 
             }
 
-        }
-
-        if (paymentMethod == 2) {
-            cardInformation = scs.cardReader.swipe(debitCard);
-            if (cardData.getType() == "debit") {
-                if (cardInformation == cardData) {
-                    cardReadApproved = true;
-                }
-
-            }
-
-        }
-
-        if (paymentMethod == 3) {
-            cardInformation = scs.cardReader.insert(debitCard, pin);
-            if (cardData.getType() == "debit") {
-                if (cardInformation == cardData) {
-                    cardReadApproved = true;
-                }
-
-            }
         }
         if (cardReadApproved == true && balance >= cost) {
             holdNumber = payinfo.authorizeHold(cardData.getNumber(), total);
@@ -90,8 +66,9 @@ public class DebitCardSoftware implements CardReaderObserver {
                     return true;
                 }
             } else {
-                throw new IOException("The debit card has been declined");
+                throw new IOException("The gift card has been declined!");
             }
+
         }
 
         return false;
@@ -100,7 +77,6 @@ public class DebitCardSoftware implements CardReaderObserver {
 
     @Override
     public void cardInserted(CardReader reader) {
-        cardInsert = true;
     }
 
     @Override
@@ -110,7 +86,6 @@ public class DebitCardSoftware implements CardReaderObserver {
 
     @Override
     public void cardTapped(CardReader reader) {
-        cardTapped = true;
 
     }
 

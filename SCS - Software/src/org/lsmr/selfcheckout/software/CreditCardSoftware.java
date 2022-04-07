@@ -14,7 +14,6 @@ import org.lsmr.selfcheckout.external.CardIssuer;
 
 public class CreditCardSoftware implements CardReaderObserver {
     public final CardReader cardReader;
-    private CardInsertData cardInsertData;
     private CardData cardData;
     public boolean cardTapped = false;
     public boolean cardSwiped = false;
