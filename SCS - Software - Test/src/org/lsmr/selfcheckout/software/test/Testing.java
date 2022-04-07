@@ -22,7 +22,6 @@ public class Testing {
 		// test.testBarcodeScannerSoftware();
 
 		// test.testBanknoteValidator();
-
 		test.testCheckout();
 
 		// test.testReceiptPrinter();
@@ -88,9 +87,8 @@ public class Testing {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
 
-		testHardware.scs.printer.addInk(10000);
-		testHardware.scs.printer.addPaper(300);
-		;
+		testHardware.scs.printer.addInk(1 << 20);
+		testHardware.scs.printer.addPaper(1 << 10);
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
