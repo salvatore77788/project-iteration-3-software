@@ -14,12 +14,21 @@ import java.util.Scanner;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.ElectronicScale;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
 
 public class TouchScreenSoftware implements TouchScreenObserver {
 	private boolean isDisabled;
 	private AttendantStation as;
+	public SelfCheckoutStation theStation;
+	
+	
+	public TouchScreenSoftware(SelfCheckoutStation aSCS) {
+		this.theStation = aSCS;
+	}
+	
+	
 
 	public TouchScreenSoftware(AttendantStation as) {
 		this.isDisabled = false;

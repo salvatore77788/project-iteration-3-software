@@ -20,6 +20,7 @@ public class SelfCheckoutStationSoftware {
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
+	public TouchScreenSoftware touchSnObserver;
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant station
@@ -54,6 +55,9 @@ public class SelfCheckoutStationSoftware {
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
 		this.memberCardObserver = new ScanMembershipCard(this.scs);
+		// This Touch Screen Observer is meant for a SelfCheckoutStation.
+		// There is another constructor that uses an Attendant Station.
+		this.touchSnObserver = new TouchScreenSoftware(this.scs);
 
 		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
@@ -64,6 +68,7 @@ public class SelfCheckoutStationSoftware {
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
+		this.scs.screen.attach(touchSnObserver);
 
 		// create new change class
 	}
