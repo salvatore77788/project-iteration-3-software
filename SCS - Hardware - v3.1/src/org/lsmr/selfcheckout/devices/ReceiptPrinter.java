@@ -40,7 +40,8 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	/**
 	 * Creates a receipt printer.
 	 */
-	public ReceiptPrinter() {}
+	public ReceiptPrinter() {
+	}
 
 	/**
 	 * Prints a single character to the receipt. Whitespace characters are ignored,
@@ -48,35 +49,37 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	 * start of the next line.
 	 * 
 	 * @param c
-	 *            The character to print.
+	 *          The character to print.
 	 * @throws EmptyException
-	 *             If there is no ink or no paper in the printer.
+	 *                                         If there is no ink or no paper in the
+	 *                                         printer.
 	 * @throws OverloadException
-	 *             If the extra character would spill off the end of the line.
+	 *                                         If the extra character would spill
+	 *                                         off the end of the line.
 	 * @throws IllegalPhaseSimulationException
-	 *             If the device is not in the normal phase.
+	 *                                         If the device is not in the normal
+	 *                                         phase.
 	 */
 	public void print(char c) throws EmptyException, OverloadException {
-		if(phase == Phase.ERROR)
+		if (phase == Phase.ERROR)
 			throw new IllegalErrorPhaseSimulationException();
-		if(phase == Phase.CONFIGURATION)
+		if (phase == Phase.CONFIGURATION)
 			throw new IllegalConfigurationPhaseSimulationException();
 
-		if(c == '\n') {
+		if (c == '\n') {
 			--linesOfPaperRemaining;
 			charactersOnCurrentLine = 0;
-		}
-		else if(c != ' ' && Character.isWhitespace(c))
+		} else if (c != ' ' && Character.isWhitespace(c))
 			return;
-		else if(charactersOnCurrentLine == CHARACTERS_PER_LINE)
+		else if (charactersOnCurrentLine == CHARACTERS_PER_LINE)
 			throw new OverloadException("The line is too long. Add a newline");
-		else if(linesOfPaperRemaining == 0)
+		else if (linesOfPaperRemaining == 0)
 			throw new EmptyException("There is no paper in the printer.");
 		else
 			charactersOnCurrentLine++;
 
-		if(!Character.isWhitespace(c)) {
-			if(charactersOfInkRemaining == 0)
+		if (!Character.isWhitespace(c)) {
+			if (charactersOfInkRemaining == 0)
 				throw new EmptyException("There is no ink in the printer");
 
 			charactersOfInkRemaining--;
@@ -84,10 +87,10 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 
 		sb.append(c);
 
-		if(charactersOfInkRemaining == 0)
+		if (charactersOfInkRemaining == 0)
 			notifyOutOfInk();
 
-		if(linesOfPaperRemaining == 0)
+		if (linesOfPaperRemaining == 0)
 			notifyOutOfPaper();
 	}
 
@@ -97,12 +100,13 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	 * retrievable by the customer.
 	 * 
 	 * @throws IllegalPhaseSimulationException
-	 *             If the device is not in the normal phase.
+	 *                                         If the device is not in the normal
+	 *                                         phase.
 	 */
 	public void cutPaper() {
-		if(phase == Phase.ERROR)
+		if (phase == Phase.ERROR)
 			throw new IllegalErrorPhaseSimulationException();
-		if(phase == Phase.CONFIGURATION)
+		if (phase == Phase.CONFIGURATION)
 			throw new IllegalConfigurationPhaseSimulationException();
 
 		lastReceipt = sb.toString();
@@ -117,21 +121,21 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	 * 
 	 * @return The receipt if it has been cut; otherwise, null.
 	 * @throws IllegalPhaseSimulationException
-	 *             If the device is not in the normal phase.
+	 *                                         If the device is not in the normal
+	 *                                         phase.
 	 */
 	public String removeReceipt() {
-		if(phase == Phase.ERROR)
+		if (phase == Phase.ERROR)
 			throw new IllegalErrorPhaseSimulationException();
-		if(phase == Phase.CONFIGURATION)
+		if (phase == Phase.CONFIGURATION)
 			throw new IllegalConfigurationPhaseSimulationException();
 
 		String receipt = lastReceipt;
 
-		if(lastReceipt != null) {
+		if (lastReceipt != null) {
 			lastReceipt = null;
 			sb = new StringBuilder();
-		}
-		else
+		} else
 			throw new InvalidArgumentSimulationException("A non-existent receipt cannot be removed.");
 
 		return receipt;
@@ -142,26 +146,29 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	 * announces "inkAdded" event.
 	 * 
 	 * @param quantity
-	 *            The quantity of characters-worth of ink to add.
+	 *                 The quantity of characters-worth of ink to add.
 	 * @throws SimulationException
-	 *             If the quantity is negative.
+	 *                                              If the quantity is negative.
 	 * @throws OverloadException
-	 *             If the total of the existing ink plus the added quantity is
-	 *             greater than the printer's capacity.
+	 *                                              If the total of the existing ink
+	 *                                              plus the added quantity is
+	 *                                              greater than the printer's
+	 *                                              capacity.
 	 * @throws IllegalErrorPhaseSimulationException
-	 *             If the device is in the error phase.
+	 *                                              If the device is in the error
+	 *                                              phase.
 	 */
 	public void addInk(int quantity) throws OverloadException {
-		if(phase == Phase.ERROR)
+		if (phase == Phase.ERROR)
 			throw new IllegalErrorPhaseSimulationException();
 
-		if(quantity < 0)
+		if (quantity < 0)
 			throw new InvalidArgumentSimulationException("Are you trying to remove ink?");
 
-		if(charactersOfInkRemaining + quantity > MAXIMUM_INK)
+		if (charactersOfInkRemaining + quantity > MAXIMUM_INK)
 			throw new OverloadException("You spilled a bunch of ink!");
 
-		if(quantity > 0) {
+		if (quantity > 0) {
 			charactersOfInkRemaining += quantity;
 			notifyInkAdded();
 		}
@@ -172,48 +179,51 @@ public class ReceiptPrinter extends AbstractDevice<ReceiptPrinterObserver> {
 	 * announces "paperAdded" event.
 	 * 
 	 * @param units
-	 *            The quantity of lines-worth of paper to add.
+	 *              The quantity of lines-worth of paper to add.
 	 * @throws SimulationException
-	 *             If the quantity is negative.
+	 *                                              If the quantity is negative.
 	 * @throws OverloadException
-	 *             If the total of the existing paper plus the added quantity is
-	 *             greater than the printer's capacity.
+	 *                                              If the total of the existing
+	 *                                              paper plus the added quantity is
+	 *                                              greater than the printer's
+	 *                                              capacity.
 	 * @throws IllegalErrorPhaseSimulationException
-	 *             If the device is in the error phase.
+	 *                                              If the device is in the error
+	 *                                              phase.
 	 */
 	public void addPaper(int units) throws OverloadException {
-		if(phase == Phase.ERROR)
+		if (phase == Phase.ERROR)
 			throw new IllegalErrorPhaseSimulationException();
 
-		if(units < 0)
+		if (units < 0)
 			throw new InvalidArgumentSimulationException("Are you trying to remove paper?");
 
-		if(linesOfPaperRemaining + units > MAXIMUM_PAPER)
+		if (linesOfPaperRemaining + units > MAXIMUM_PAPER)
 			throw new OverloadException("You may have broken the printer, jamming so much in there!");
 
-		if(units > 0) {
+		if (units > 0) {
 			linesOfPaperRemaining += units;
 			notifyPaperAdded();
 		}
 	}
 
 	private void notifyOutOfInk() {
-		for(ReceiptPrinterObserver l : observers)
+		for (ReceiptPrinterObserver l : observers)
 			l.outOfInk(this);
 	}
 
 	private void notifyInkAdded() {
-		for(ReceiptPrinterObserver l : observers)
+		for (ReceiptPrinterObserver l : observers)
 			l.inkAdded(this);
 	}
 
 	private void notifyOutOfPaper() {
-		for(ReceiptPrinterObserver l : observers)
+		for (ReceiptPrinterObserver l : observers)
 			l.outOfPaper(this);
 	}
 
 	private void notifyPaperAdded() {
-		for(ReceiptPrinterObserver l : observers)
+		for (ReceiptPrinterObserver l : observers)
 			l.paperAdded(this);
 	}
 }

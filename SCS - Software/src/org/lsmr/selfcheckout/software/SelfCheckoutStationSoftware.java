@@ -195,6 +195,11 @@ public class SelfCheckoutStationSoftware {
 
 	private void print(BigDecimal total) throws EmptyException, OverloadException, InterruptedException {
 
+		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+
+		int paper = ReceiptPrint.paperAmount;
+		int ink = ReceiptPrint.inkAmount;
+
 		// implementation for replacing ink and paper with new rolls/cartridges
 		int widthOfReceipt = 60;
 		int spaceBetweenPriceAndDesc = 3;
@@ -206,6 +211,8 @@ public class SelfCheckoutStationSoftware {
 		detectLowInkPaper(header.toCharArray().length, 1);
 		for (char c : header.toCharArray()) {
 			scs.printer.print(c);
+			ink--;
+			paper--;
 
 		}
 		System.out.println(header);
@@ -226,6 +233,8 @@ public class SelfCheckoutStationSoftware {
 				detectLowInkPaper(receiptLine.toCharArray().length, 1);
 				for (char c : receiptLine.toCharArray()) {
 					scs.printer.print(c);
+					ink--;
+					paper--;
 				}
 				System.out.print(receiptLine);
 			} else {
@@ -237,6 +246,8 @@ public class SelfCheckoutStationSoftware {
 				detectLowInkPaper(receiptLine.toCharArray().length, 1);
 				for (char c : receiptLine.toCharArray()) {
 					scs.printer.print(c);
+					ink--;
+					paper--;
 				}
 				System.out.print(receiptLine);
 			}
@@ -246,6 +257,8 @@ public class SelfCheckoutStationSoftware {
 		detectLowInkPaper(totalLine.toCharArray().length, 1);
 		for (char c : totalLine.toCharArray()) {
 			scs.printer.print(c);
+			ink--;
+			paper--;
 		}
 		System.out.println(totalLine);
 
@@ -253,6 +266,8 @@ public class SelfCheckoutStationSoftware {
 		detectLowInkPaper(cashLine.toCharArray().length, 1);
 		for (char c : cashLine.toCharArray()) {
 			scs.printer.print(c);
+			ink--;
+			paper--;
 		}
 		System.out.println(cashLine);
 
@@ -260,6 +275,8 @@ public class SelfCheckoutStationSoftware {
 		detectLowInkPaper(changeLine.toCharArray().length, 1);
 		for (char c : changeLine.toCharArray()) {
 			scs.printer.print(c);
+			ink--;
+			paper--;
 		}
 		System.out.println(changeLine);
 

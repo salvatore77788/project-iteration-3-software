@@ -8,6 +8,7 @@ import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
+import org.lsmr.selfcheckout.software.ReceiptPrint;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 import java.math.BigDecimal;
@@ -87,8 +88,14 @@ public class Testing {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
 
-		testHardware.scs.printer.addInk(1 << 20);
-		testHardware.scs.printer.addPaper(1 << 10);
+		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+
+		int paper = ReceiptPrint.paperAmount;
+		int ink = ReceiptPrint.inkAmount;
+		System.out.println(ink);
+		System.out.println(paper);
+		testHardware.scs.printer.addInk(ink);
+		testHardware.scs.printer.addPaper(paper);
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
@@ -107,9 +114,13 @@ public class Testing {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
 
-		testHardware.scs.printer.addInk(10000);
-		testHardware.scs.printer.addPaper(300);
-		;
+		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+
+		int paper = ReceiptPrint.paperAmount;
+		int ink = ReceiptPrint.inkAmount;
+
+		testHardware.scs.printer.addInk(ink);
+		testHardware.scs.printer.addPaper(paper);
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
