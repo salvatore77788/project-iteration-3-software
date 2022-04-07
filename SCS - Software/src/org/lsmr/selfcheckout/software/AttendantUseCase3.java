@@ -20,6 +20,7 @@ public class AttendantUseCase3 {
 	public void removeStation(T station) {
 		if (!isLoggedIn) return;
 		if (!stationObservers.containsKey(station)) return;
+		stationObservers.remove(station);
 	}
 	
 	public void startup(SupervisorStation ss) {
