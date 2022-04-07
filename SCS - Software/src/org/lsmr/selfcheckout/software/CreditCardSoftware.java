@@ -10,6 +10,7 @@ import org.lsmr.selfcheckout.devices.CardReader;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
+import org.lsmr.selfcheckout.external.CardIssuer;
 
 public class CreditCardSoftware implements CardReaderObserver {
     public final CardReader cardReader;
@@ -19,6 +20,7 @@ public class CreditCardSoftware implements CardReaderObserver {
     public boolean cardSwiped = false;
     public boolean cardInsert = false;
     private SelfCheckoutStation scs;
+    private int holdNumber;
 
     public CreditCardSoftware(SelfCheckoutStation selfCheckoutStation) {
         scs = selfCheckoutStation;
@@ -37,7 +39,7 @@ public class CreditCardSoftware implements CardReaderObserver {
      */
 
     public boolean PayWithcreditcard(Card creditcard, int paymentMethod, BigDecimal totalBalance, String pin,
-            BigDecimal total) throws IOException {
+            BigDecimal total, CardIssuer payinfo) throws IOException {
         CardData cardInformation = null;
         int value = 0;
         boolean cardReadApproved = false;
@@ -83,7 +85,15 @@ public class CreditCardSoftware implements CardReaderObserver {
             }
         }
         if (cardReadApproved == true && balance >= cost) {
-            return true;
+            holdNumber = payinfo.authorizeHold(cardData.getNumber(), total);
+            if (payinfo.postTransaction(cardData.getNumber(), holdNumber, total)) {
+                if (payinfo.releaseHold(cardData.getNumber(), holdNumber)) {
+                    return true;
+                }
+            } else {
+                throw new IOException("The credit card has been declined");
+            }
+
         }
 
         return false;
