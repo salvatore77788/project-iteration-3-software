@@ -19,8 +19,10 @@ import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 public class WelcomeGUI implements ActionListener{
 	
 	public SelfCheckoutStation theStation;
-	// The frame provided by screen in scs.
+	// The keyPadFrame provided by screen in scs.
 	JFrame stationFrame;
+	// needs to be able to "dispose" of frame from the other class.
+	static JFrame keyPadFrame;
 	JButton enterMemberNumberButton;
 
 	public WelcomeGUI(SelfCheckoutStation aSCS) {
@@ -60,24 +62,18 @@ public class WelcomeGUI implements ActionListener{
 		
 		if(e.getSource() == enterMemberNumberButton) {
 			
-			JFrame frame = new JFrame("Keypad");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			
-			
-			
-			
-		
-			 frame.getContentPane().add(new VirtualKeypad());
+			keyPadFrame = new JFrame("Keypad");
+			keyPadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			// Creates Pane with buttons along with its own Action Listener.
+			keyPadFrame.getContentPane().add(new VirtualKeypad());
 			 
-			 frame.pack();
-			 frame.setVisible(true);
-		
+			keyPadFrame.pack();
+			keyPadFrame.setVisible(true);
 		}
 		
 	}
 	
-	
+	// so far not used.
 	public void showKeypad() {
 		VirtualKeypad theKeypad = new VirtualKeypad();
 		theKeypad.createAndShowGUI();

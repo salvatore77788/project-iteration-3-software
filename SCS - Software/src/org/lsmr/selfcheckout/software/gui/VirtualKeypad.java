@@ -19,6 +19,10 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 
 
 	private Document display = null;
+	JButton enterButton;
+	JButton returnMenuButton;
+	JTextField displayField;
+	JFrame frame;
 
 	public VirtualKeypad() {
 	      super(new BorderLayout());
@@ -61,9 +65,20 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 
 
 			  // To add the 0 at the end. 
-	     JButton button = new JButton(Integer.toString(0)); button.addActionListener(this);
+	     JButton button = new JButton(Integer.toString(0)); 
+	     button.addActionListener(this);
 		 buttons.add(button);
 
+		 enterButton = new JButton("Enter");
+		 enterButton.addActionListener(this);
+		 buttons.add(enterButton);
+		 
+		 returnMenuButton = new JButton("Return to Menu");
+		 returnMenuButton.addActionListener(this);
+		 buttons.add(returnMenuButton);
+		 
+		 
+		 
 
 	      // Create a text field to display the numbers entered
 
@@ -102,7 +117,17 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	   @Override
 	   public void actionPerformed(ActionEvent event) {
 
-	      // Determine which key was pressed
+	      
+		   if(event.getSource() == enterButton) {
+			   String memberNumberProvided = displayField.getText();
+		   }
+		   
+		   if(event.getSource() == returnMenuButton) {
+			   WelcomeGUI.keyPadFrame.dispose();
+		   }
+		   
+		   
+		   // Determine which key was pressed
 
 	      String key = event.getActionCommand();
 
