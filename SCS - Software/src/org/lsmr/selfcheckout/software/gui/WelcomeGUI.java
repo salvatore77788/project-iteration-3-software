@@ -1,6 +1,8 @@
 package org.lsmr.selfcheckout.software.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -9,6 +11,7 @@ import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
@@ -18,7 +21,7 @@ public class WelcomeGUI implements ActionListener{
 	public SelfCheckoutStation theStation;
 	// The frame provided by screen in scs.
 	JFrame stationFrame;
-	JButton enterNumberButton;
+	JButton enterMemberNumberButton;
 
 	public WelcomeGUI(SelfCheckoutStation aSCS) {
 		
@@ -41,12 +44,43 @@ public class WelcomeGUI implements ActionListener{
 		stationFrame.setLayout(null);
 		
 		// Button for membershipnumber.
-		enterNumberButton = new JButton("Enter member card number");
-		enterNumberButton.setSize(200,75);
-		stationFrame.add(enterNumberButton);
-		enterNumberButton.setLocation(450,550);
+		enterMemberNumberButton = new JButton("Enter member card number");
+		enterMemberNumberButton.setSize(200,75);
+		stationFrame.add(enterMemberNumberButton);
+		enterMemberNumberButton.setLocation(450,550);
+		
+		enterMemberNumberButton.addActionListener(this);
 
 	
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == enterMemberNumberButton) {
+			
+			JFrame frame = new JFrame("Keypad");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			
+			
+			
+			
+		
+			 frame.getContentPane().add(new VirtualKeypad());
+			 
+			 frame.pack();
+			 frame.setVisible(true);
+		
+		}
+		
+	}
+	
+	
+	public void showKeypad() {
+		VirtualKeypad theKeypad = new VirtualKeypad();
+		theKeypad.createAndShowGUI();
 	}
 	
 	
@@ -72,11 +106,7 @@ public class WelcomeGUI implements ActionListener{
 		aGUI.mainMenu();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	
 	

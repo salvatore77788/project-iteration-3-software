@@ -78,7 +78,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	    * Create and setup the main window
 	    */
 
-	   private static void createAndShowGUI() {
+	   public static void createAndShowGUI() {
 	      JFrame frame = new JFrame("Keypad");
 
 	      // We want the application to exit when the window is closed
