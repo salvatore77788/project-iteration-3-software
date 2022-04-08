@@ -258,6 +258,13 @@ public class SelfCheckoutStationSoftware {
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
 			print(total);
+			
+			// Prompt customer to remove bags after checkout is complete
+			// Replace with GUI
+			while(ess.getCurrentWeight() > 0.01) {
+				System.out.println("Please take your bags!");
+			}
+			
 			resetVars();
 		} else {
 			System.out.println("Insuficient funds to complete checkout!");
@@ -324,6 +331,21 @@ public class SelfCheckoutStationSoftware {
 		return true;
 	}
 
+	// Return to scanning
+	// Connect with GUI 
+    public void returnToScanning() {
+
+        // Functionalities That Were Disabled Amidst The Initialization Of Payment
+        scs.baggingArea.enable();
+        scs.scanningArea.enable();
+        scs.mainScanner.enable();
+        scs.handheldScanner.enable();
+
+        // Functionalities That Are To Be Disabled While Not Paying
+        scs.coinValidator.disable();
+        scs.banknoteValidator.disable();
+    }
+    
 	public void resetVars() {
 		this.itemsScanned = new ArrayList<ItemInfo>();
 		this.amountPaid[0] = BigDecimal.ZERO;

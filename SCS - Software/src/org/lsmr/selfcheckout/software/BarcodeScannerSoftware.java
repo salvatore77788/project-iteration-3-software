@@ -61,6 +61,15 @@ public class BarcodeScannerSoftware implements BarcodeScannerObserver{
 			double weightDiff = ess.getCurrentWeight() - ess.getWeightAtLastEvent();
 			if (Math.abs(weightDiff - info.weight) > weightThreshold) {
 				System.out.println("Please wait for an attendant");
+				
+				// GUI Button
+				boolean largeItem = false;
+				if(largeItem) {
+					boolean approveWeight = false; 
+					if(approveWeight) {
+						this.itemsScanned.add(info);				//Add item to the list of scanned item, price too	
+					}
+				}
 				//Notify attendant
 				//disable the touch screen
 			}
@@ -71,7 +80,10 @@ public class BarcodeScannerSoftware implements BarcodeScannerObserver{
 		
 		
 		this.itemsScanned.add(info);				//Add item to the list of scanned item, price too	
-		
+	    Data data = Data.getInstance();
+
+		//thread to wait 5 seconds 
+        data.startBaggingTimer();
 	}
 	
 	public ArrayList<ItemInfo> getItemsScanned(){
