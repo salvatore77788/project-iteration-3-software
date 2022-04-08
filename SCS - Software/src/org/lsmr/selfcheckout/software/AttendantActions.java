@@ -12,6 +12,9 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 
 public class AttendantActions {
 
+	// We need references to selfcheckout stations
+	// Make a static array of selfcheckout stations
+	
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be disgussed in the meating
     public void attendantBlockStation(SelfCheckoutStation station) {
@@ -35,6 +38,12 @@ public class AttendantActions {
         station.cardReader.enable();
         data.setIsDisabled(false);
     }
+    
+    /*
+     * Should we include a method to disable the 
+     * 
+     */
+    
     
     /**
      * Simulates the attendant emptying a coin storage unit.
