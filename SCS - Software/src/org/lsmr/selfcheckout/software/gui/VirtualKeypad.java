@@ -23,6 +23,8 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	JButton returnMenuButton;
 	JTextField displayField;
 	JFrame frame;
+	String memberNumberProvided;
+	
 
 	public VirtualKeypad() {
 	      super(new BorderLayout());
@@ -82,7 +84,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 
 	      // Create a text field to display the numbers entered
 
-	      JTextField displayField = new JTextField("Member Number: ");
+	      JTextField displayField = new JTextField();
 	      // what does this do?
 	      display = displayField.getDocument();
 	      add(BorderLayout.CENTER, buttons);
@@ -119,7 +121,21 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 
 	      
 		   if(event.getSource() == enterButton) {
-			   String memberNumberProvided = displayField.getText();
+			   //Document theDocument = displayField.getDocument();
+			   
+				try {
+					memberNumberProvided = new String(display.getText(0,display.getLength()));
+					System.out.println("Member number provided is:\n" + memberNumberProvided);
+					// close Frame.
+					WelcomeGUI.keyPadFrame.dispose();
+					
+				} 
+				catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Trying to extract the number didn't work");
+					e.printStackTrace();
+				}
+			   
 		   }
 		   
 		   if(event.getSource() == returnMenuButton) {
@@ -140,6 +156,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	      }
 	   }
 
+	   // main method.
 	   public static void main(String[] args) {
 	      SwingUtilities.invokeLater(new Runnable() {
 	         public void run() {

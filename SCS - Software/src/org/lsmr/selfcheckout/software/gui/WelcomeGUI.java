@@ -35,7 +35,7 @@ public class WelcomeGUI implements ActionListener{
 	}
 	
 	public void mainMenu() {
-		System.out.println("Entered windowShows");
+		//System.out.println("Entered windowShows");
 		
 		stationFrame = theStation.screen.getFrame();
 		stationFrame.setSize(700,700);
