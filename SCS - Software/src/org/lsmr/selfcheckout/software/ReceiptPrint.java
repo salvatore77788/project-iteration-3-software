@@ -30,14 +30,12 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         int lowPercentageInk = MAXIMUM_INK % 5;
 
         if (inkAmount < lowPercentageInk) {
-            this.lowAmountInk = true;
+            //this.lowAmountInk = true;
             while (inkAmount < lowPercentageInk) {
-                this.lowAmountInk = true;
-                Thread.sleep(30000);
-                System.out.println("The ink amount is 5%, please refill.");
-                // warn attendant
-                // If attendant comes do this:
-                // setinkAmount(MAXIMUM_INK);
+                //this.lowAmountInk = true;
+                Thread.sleep(30000); //system just waits until attendant verifies the ink is filled
+                //System.out.println("The ink amount is 5%, please refill.");
+                //AttendantActions.fillInk();
             }
         }
     }
@@ -46,11 +44,12 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         int lowPercentagePaper = MAXIMUM_PAPER % 5;
 
         if (paperAmount < lowPercentagePaper) {
-            this.lowAmountPaper = true;
+            //this.lowAmountPaper = true;
             while (inkAmount < lowPercentagePaper) {
-                this.lowAmountInk = true;
+                //this.lowAmountInk = true;
                 Thread.sleep(30000);
-                System.out.println("The paper amount is 5%, please refill.");
+                //System.out.println("The paper amount is 5%, please refill.");
+                //AttendantActions.fillInk();
                 // warn attendant
                 // If attendant comes do this:
                 // setpaperAmount(MAXIMUM_PAPER);

@@ -2,6 +2,8 @@ package org.lsmr.selfcheckout.software.test;
 
 import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
+import org.lsmr.selfcheckout.software.AttendantStation;
+import org.lsmr.selfcheckout.software.AttendantActions;
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
@@ -31,6 +33,9 @@ public class ReceiptPrinterSoftwareTest {
 	private TestHardware testHardwarePrint = new TestHardware();
 	private ReceiptPrint rcpt = new ReceiptPrint();
 	private SelfCheckoutStationSoftware software;
+	private AttendantStation atstat;
+	private AttendantActions att = new AttendantActions();
+	
 	
 	@Before
 	public void setupPrint() throws Exception {
@@ -61,7 +66,7 @@ public class ReceiptPrinterSoftwareTest {
 	public void testLowInk() throws InterruptedException, EmptyException, OverloadException
 	{
 		rcpt.setpaperAmount(1<<10);
-		rcpt.setinkAmount(1);
+		rcpt.setinkAmount(0);
 		software.checkout();
 		
 	}
@@ -81,5 +86,25 @@ public class ReceiptPrinterSoftwareTest {
 		rcpt.setpaperAmount(1);
 		software.checkout();
 		
+	}
+	
+	@Test
+	public void testAttnFillInk() throws Exception
+	{
+		rcpt.setinkAmount(1<<20);
+		rcpt.setinkAmount(1);
+		//System.out.print(rcpt.toString());
+		att.fillInk(rcpt);
+		assertTrue("ink amount expected (1<<20)", rcpt.getinkAmount() == 1<<20 );		
+	}
+	
+	@Test
+	public void testAttnFill() throws Exception
+	{
+		rcpt.setinkAmount(1<<20);
+		rcpt.setpaperAmount(1);
+		//System.out.print(rcpt.toString());
+		att.fillPaper(rcpt);
+		assertTrue("ink amount expected (1<<20)", rcpt.getinkAmount() == 1<<20 );		
 	}
 }

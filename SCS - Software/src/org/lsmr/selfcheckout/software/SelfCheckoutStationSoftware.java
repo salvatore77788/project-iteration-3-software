@@ -23,6 +23,7 @@ public class SelfCheckoutStationSoftware {
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant station
+	protected AttendantActions at; //added attendant actions
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
