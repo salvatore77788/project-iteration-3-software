@@ -40,8 +40,8 @@ public class AttendantUseCase3 {
 	}
 	
 	public void shutdown(SupervisorStation ss) {
-		if (!isLoggedIn) return;
-		if (!stationObservers.containsKey(scs)) return;
+		if (isLoggedIn) return;
+		if (!stationObservers.containsKey(ss)) return;
 		
 		ss.detachAll();
 		
