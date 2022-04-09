@@ -127,7 +127,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 					memberNumberProvided = new String(display.getText(0,display.getLength()));
 					System.out.println("Member number provided is:\n" + memberNumberProvided);
 					// close Frame.
-					WelcomeGUI.keyPadFrame.dispose();
+					EnterMemberCard.keyPadFrame.dispose();
 					
 				} 
 				catch (BadLocationException e) {
@@ -139,7 +139,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 		   }
 		   
 		   if(event.getSource() == returnMenuButton) {
-			   WelcomeGUI.keyPadFrame.dispose();
+			   EnterMemberCard.keyPadFrame.dispose();
 		   }
 		   
 		   
