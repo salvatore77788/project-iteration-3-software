@@ -2,6 +2,7 @@ package org.lsmr.selfcheckout.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -272,6 +273,7 @@ public class AttendantGui {
         jMenuItemMBShutDownAll = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItemMBLogout = new javax.swing.JMenuItem();
+        jMenuItemMBQuit = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
 
         jMenuItemSCAddItem.setText("Add Item");
@@ -637,6 +639,14 @@ public class AttendantGui {
             }
         });
         jMenu3.add(jMenuItemMBLogout);
+        
+        jMenuItemMBQuit.setText("Quit");
+        jMenuItemMBQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemMBQuitActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItemMBQuit);
 
         jMenuBar2.add(jMenu3);
 
@@ -719,16 +729,31 @@ public class AttendantGui {
     }                                                  
 
     private void jMenuItemMBStartUpAllActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        // TODO add your handling code here:
+        for(int i = 0; i < stationSoftwares.length; i++) {
+        	SCSSoftware sw = stationSoftwares[i];
+        	if(sw.isShutdown)
+        		sw.isShutdown = false;
+        }
     }                                                     
 
     private void jMenuItemMBShutDownAllActionPerformed(java.awt.event.ActionEvent evt) {                                                       
-        // TODO add your handling code here:
+    	for(int i = 0; i < stationSoftwares.length; i++) {
+        	SCSSoftware sw = stationSoftwares[i];
+        	if(!sw.isShutdown)
+        		sw.isShutdown = true;
+        }
     }                                                      
 
     private void jMenuItemMBLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
-    }                                                 
+    }
+    
+    private void jMenuItemMBQuitActionPerformed(java.awt.event.ActionEvent evt) {
+    	// Completely end the application -- For demo use only really
+    	frame.setVisible(false);
+    	frame.dispose();
+    	System.exit(0);
+    }
 
     private void jMenuItemSCRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
@@ -771,6 +796,7 @@ public class AttendantGui {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem jMenuItemMBQuit;
     private javax.swing.JMenuItem jMenuItemMBLogout;
     private javax.swing.JMenuItem jMenuItemMBShutDownAll;
     private javax.swing.JMenuItem jMenuItemMBStartUpAll;
