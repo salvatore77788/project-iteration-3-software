@@ -5,16 +5,70 @@
  */
 package org.lsmr.selfcheckout.gui;
 
-import javax.swing.JFrame;
+import java.awt.Color;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.List;
+import java.util.Locale;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.ListModel;
+
+import org.lsmr.selfcheckout.devices.ReceiptPrinter;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
+import org.lsmr.selfcheckout.software.ItemInfo;
 
 
 public class AttendantGui {
+	private static final Color STATUS_GOOD_COLOR = new Color(51, 153, 0);
+	private static final Color STATUS_BAD_COLOR = Color.RED;
+	
+	// Test station software class
+	private class SCSSoftware {
+		public SelfCheckoutStation station;
+		
+		public ArrayList<ItemInfo> itemsScanned;
+		public int inkLeft;
+		public int paperLeft;
+		
+		public Boolean isBlocked;
+		public Boolean isShutdown;
+		
+		public SCSSoftware(SelfCheckoutStation station) {
+			this.station = station;
+			
+			itemsScanned = new ArrayList<ItemInfo>();
+			
+			inkLeft = 0;
+			paperLeft = 0;
+			
+			isBlocked = false;
+			isShutdown = true;
+		}
+		
+		public int getPercentageInkLeft() {
+			return inkLeft/ReceiptPrinter.MAXIMUM_INK;
+		}
+		
+		public int getPercentagePaperLeft() {
+			return paperLeft/ReceiptPrinter.MAXIMUM_PAPER;
+		}
+	}
+	
 
 	// For now, just use a testing Attendant station instance
 	private SupervisionStation superStation;
 	private JFrame frame;
+	
+	private SCSSoftware[] stationSoftwares;
+	
+	// List models
+	DefaultListModel<String> shoppingCartLM;
+	DefaultListModel<String> coinDispLM;
+	DefaultListModel<String> bnDispLM;
 	
     /**
      * Creates new form TestFrame
@@ -25,12 +79,99 @@ public class AttendantGui {
     	
         initComponents();
         
+        initData();
+        
         // Initialize 
         frame.setLocation(1500, 300);
         frame.setVisible(true);
     }
 
-    /**
+    private void initData() {
+    	// TODO: Remove testing code
+    	int[] bnDenoms = new int[] {5, 10, 20, 50, 100};
+    	BigDecimal[] coinDenoms = new BigDecimal[] {new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"), new BigDecimal("1.00"), new BigDecimal("2.00")};
+    	
+    	// Create some test stations
+    	stationSoftwares = new SCSSoftware[3];
+    	for(int i = 0; i < 3; i++) {
+    		SelfCheckoutStation s = new SelfCheckoutStation(Currency.getInstance(Locale.CANADA), bnDenoms, coinDenoms, 1000, 1);
+    		superStation.add(s);
+    		stationSoftwares[i] = new SCSSoftware(s);
+    	}
+    	
+    	// Set up stations list
+		int stationCount = superStation.supervisedStationCount();
+		
+		String[] stationNames = new String[stationCount];
+		for(int i = 0; i < stationCount; i++)
+			stationNames[i] = "Self-Checkout Station " + i;
+		jListStations.setListData(stationNames);
+		
+		// Set up coin denomination list
+		coinDispLM = new DefaultListModel<>();
+		for(int i = 0; i < coinDenoms.length; i++)
+			coinDispLM.addElement("$" + coinDenoms[i].toString() + ": Count");
+		jListCoinDispensers.setModel(coinDispLM);
+		
+		// Set up banknote denomination list
+		bnDispLM = new DefaultListModel<String>();
+		for(int i = 0; i < bnDenoms.length; i++)
+			bnDispLM.addElement("$" + bnDenoms[i] + ": Count");
+		jListBanknoteDispensers.setModel(coinDispLM);
+		
+		// Set up shopping cart list
+		shoppingCartLM = new DefaultListModel<String>(); 
+		jListShoppingCart.setModel(shoppingCartLM);
+		
+		setStation();
+	}
+    
+    private void setStation() {
+    	int idx = jListStations.getSelectedIndex();
+    	
+    	SCSSoftware stationSoftware = idx == -1 ? null : stationSoftwares[idx];
+    	
+    	// Data here needs to be taken from the actual software instead of the test software
+    	// Since none of it is actually implemented on this branch, it'll have to be done later
+    	
+    	// Set up buttons
+    	boolean stationIsNull = stationSoftware == null;
+    	
+    	jButtonBlockStation.setEnabled(!stationIsNull && !stationSoftware.isBlocked);
+		jButtonUnblockStation.setEnabled(!stationIsNull && stationSoftware.isBlocked);
+		jButtonShutdown.setEnabled(!stationIsNull && !stationSoftware.isShutdown);
+		jButtonStartUp.setEnabled(!stationIsNull && stationSoftware.isShutdown);
+    	jButtonRefillBanknoteDispenser.setEnabled(!stationIsNull);
+    	jButtonRefillCoinDispenser.setEnabled(!stationIsNull);
+    	jButtonRefillInk.setEnabled(!stationIsNull);
+    	jButtonRefillPaper.setEnabled(!stationIsNull);
+    	jButtonRefresh.setEnabled(!stationIsNull);
+    	jButtonUnloadBanknoteStorage.setEnabled(!stationIsNull);
+    	jButtonUnloadCoinStorage.setEnabled(!stationIsNull);
+    	
+    	// TODO: Coin dispenser data
+    	
+    	// TODO: Banknote Dispenser data
+    	
+    	// Status
+    	jLabelStatusCode.setText(stationIsNull ? "--" : "Good");
+    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : STATUS_GOOD_COLOR);
+    	jLabelInk.setText("Ink: " + (stationIsNull ? "--" : stationSoftware.getPercentageInkLeft()));
+    	jLabelPaper.setText("Paper: " + (stationIsNull ? "--" : stationSoftware.getPercentagePaperLeft()));
+    	
+    	// Shopping cart
+    	shoppingCartLM.clear();
+    	
+    	if(!stationIsNull) {
+    		for(int i = 0; i < stationSoftware.itemsScanned.size(); i++) {
+    			ItemInfo info = stationSoftware.itemsScanned.get(i);
+    			
+    			shoppingCartLM.addElement(info.toString());
+    		}
+    	}
+    }
+
+	/**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -470,7 +611,7 @@ public class AttendantGui {
     }// </editor-fold>                        
 
     private void jListStationsValueChanged(javax.swing.event.ListSelectionEvent evt) {                                           
-        // TODO add your handling code here:
+        setStation();
     }                                          
 
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
@@ -538,7 +679,6 @@ public class AttendantGui {
      */
     public static void main(String args[]) {
         /* Create and display the form */
-    	System.out.println("hi");
         new AttendantGui();
     }
 
