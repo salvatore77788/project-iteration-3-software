@@ -17,6 +17,7 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
+import org.lsmr.selfcheckout.software.AvailableFunds;
 import org.lsmr.selfcheckout.software.ItemInfo;
 
 
@@ -45,6 +46,8 @@ public class AttendantGui {
 		
 		public SCSStatus status;
 		
+		public AvailableFunds funds;
+		
 		public SCSSoftware(SelfCheckoutStation station) {
 			this.station = station;
 			
@@ -55,6 +58,8 @@ public class AttendantGui {
 			
 			isBlocked = false;
 			isShutdown = true;
+			
+			funds = new AvailableFunds(station);
 			
 			status = SCSStatus.OFF;
 		}
@@ -145,8 +150,6 @@ public class AttendantGui {
 		
 		// Set up coin denomination list
 		coinDispLM = new DefaultListModel<>();
-		for(int i = 0; i < coinDenoms.length; i++)
-			coinDispLM.addElement("$" + coinDenoms[i].toString() + ": Count");
 		jListCoinDispensers.setModel(coinDispLM);
 		
 		// Set up banknote denomination list
@@ -174,34 +177,41 @@ public class AttendantGui {
     	// Since none of it is actually implemented on this branch, it'll have to be done later
     	
     	// Set up buttons
-    	boolean stationIsNull = currentSoftware == null;
+    	boolean isStationNull = currentSoftware == null;
     	
-    	jButtonBlockStation.setEnabled(!stationIsNull && !currentSoftware.isBlocked && !currentSoftware.isShutdown);
-		jButtonUnblockStation.setEnabled(!stationIsNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
-		jButtonShutdown.setEnabled(!stationIsNull && !currentSoftware.isShutdown);
-		jButtonStartUp.setEnabled(!stationIsNull && currentSoftware.isShutdown);
-    	jButtonRefillBanknoteDispenser.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillCoinDispenser.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillInk.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillPaper.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefresh.setEnabled(!stationIsNull && !currentSoftware.isShutdown);
-    	jButtonUnloadBanknoteStorage.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonUnloadCoinStorage.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonBlockStation.setEnabled(!isStationNull && !currentSoftware.isBlocked && !currentSoftware.isShutdown);
+		jButtonUnblockStation.setEnabled(!isStationNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
+		jButtonShutdown.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+		jButtonStartUp.setEnabled(!isStationNull && currentSoftware.isShutdown);
+    	jButtonRefillBanknoteDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillCoinDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefresh.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	jButtonUnloadBanknoteStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonUnloadCoinStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
     	
-    	// TODO: Coin dispenser data
+    	// Set up coin denomination list
+    	coinDispLM.clear();
+		for(int i = 0; i < coinDenoms.length; i++)
+			coinDispLM.addElement("$" + coinDenoms[i].toString() + ": " + (isStationNull ? "--" : getCoinPercentage(coinDenoms[i])));
+		jListCoinDispensers.setModel(coinDispLM);
     	
-    	// TODO: Banknote Dispenser data
+		// Set up banknote denomination list
+    	bnDispLM.clear();
+    	for(int i = 0; i < bnDenoms.length; i++)
+    		bnDispLM.addElement("$" + bnDenoms[i] + ": " + (isStationNull ? "--" : getBanknotePercentage(bnDenoms[i])));
     	
     	// Status
-    	jLabelStatusCode.setText(stationIsNull ? "--" : currentSoftware.status.toString());
-    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : getStatusColor(currentSoftware.status));
-    	jLabelInk.setText("Ink: " + (stationIsNull ? "--" : currentSoftware.getPercentageInkLeft()));
-    	jLabelPaper.setText("Paper: " + (stationIsNull ? "--" : currentSoftware.getPercentagePaperLeft()));
+    	jLabelStatusCode.setText(isStationNull ? "--" : currentSoftware.status.toString());
+    	jLabelStatusCode.setForeground(isStationNull ? Color.BLACK : getStatusColor(currentSoftware.status));
+    	jLabelInk.setText("Ink: " + (isStationNull ? "--" : currentSoftware.getPercentageInkLeft()));
+    	jLabelPaper.setText("Paper: " + (isStationNull ? "--" : currentSoftware.getPercentagePaperLeft()));
     	
     	// Shopping cart
     	shoppingCartLM.clear();
     	
-    	if(!stationIsNull) {
+    	if(!isStationNull) {
     		for(int i = 0; i < currentSoftware.itemsScanned.size(); i++) {
     			ItemInfo info = currentSoftware.itemsScanned.get(i);
     			
@@ -210,7 +220,17 @@ public class AttendantGui {
     	}
     }
     
-    private Color getStatusColor(SCSStatus status) {
+    private int getCoinPercentage(BigDecimal coinDenom) {
+		int coinCount = currentSoftware.funds.getCoinCount(coinDenom);
+		return coinCount / SelfCheckoutStation.COIN_DISPENSER_CAPACITY;
+	}
+    
+    private int getBanknotePercentage(int bnDenom) {
+    	int bnCount = currentSoftware.funds.getBanknoteCount(bnDenom);
+    	return bnCount / SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY;
+    }
+
+	private Color getStatusColor(SCSStatus status) {
     	switch(status) {
     	case GOOD:
     		return STATUS_GOOD_COLOR;
