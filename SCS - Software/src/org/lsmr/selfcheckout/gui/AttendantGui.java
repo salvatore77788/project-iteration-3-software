@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lsmr.selfcheckout.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
-import javax.swing.ListModel;
+import javax.swing.JList;
 
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -35,6 +31,7 @@ public class AttendantGui {
 	}
 	
 	// Test station software class
+	// This should be replaced with SelfCheckoutStationSoftware when it is ready
 	private class SCSSoftware {
 		public SelfCheckoutStation station;
 		
@@ -83,6 +80,10 @@ public class AttendantGui {
 	DefaultListModel<String> coinDispLM;
 	DefaultListModel<String> bnDispLM;
 	
+	int[] bnDenoms = new int[] {5, 10, 20, 50, 100};
+	BigDecimal[] coinDenoms = new BigDecimal[] {new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"), 
+			new BigDecimal("1.00"), new BigDecimal("2.00")};
+	
     /**
      * Creates new form TestFrame
      */
@@ -92,17 +93,38 @@ public class AttendantGui {
     	
         initComponents();
         
-        initData();
+        initGUI();
         
         // Initialize 
         frame.setLocation(1500, 300);
         frame.setVisible(true);
     }
 
-    private void initData() {
+    private void initGUI() {
     	// TODO: Remove testing code
-    	int[] bnDenoms = new int[] {5, 10, 20, 50, 100};
-    	BigDecimal[] coinDenoms = new BigDecimal[] {new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"), new BigDecimal("1.00"), new BigDecimal("2.00")};
+    	
+    	// Custom renderer for the station list
+    	jListStations.setCellRenderer(new DefaultListCellRenderer() {
+    		@Override
+    		public Component getListCellRendererComponent(JList list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+    			Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+    			
+    			SCSSoftware software = stationSoftwares[index];
+    			String text = (String)value;
+    			
+    			setText(text);
+    			if(software.isShutdown)
+    				setForeground(Color.LIGHT_GRAY);
+    			else {
+    				setForeground(Color.BLACK);
+    				if(software.status == SCSStatus.BAD)
+        				text += "(!)";
+    				}
+    			
+    			return comp;
+    		}
+    	});
     	
     	// Create some test stations
     	stationSoftwares = new SCSSoftware[3];
