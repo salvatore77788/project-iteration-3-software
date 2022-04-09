@@ -2,6 +2,9 @@ package org.lsmr.selfcheckout.software;
 
 import java.util.List;
 
+import java.math.BigDecimal;
+
+
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.IllegalErrorPhaseSimulationException;
@@ -21,25 +24,21 @@ public class AttendantActions {
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be discussed in the meeting
     public void attendantBlockStation(SelfCheckoutStation station) {
-        Data data = Data.getInstance();
         station.baggingArea.disable();
         station.scanningArea.disable();
         station.handheldScanner.disable();
         station.mainScanner.disable();
         station.cardReader.disable();
-        data.setIsDisabled(true);
     }
 
     // Unblocks the self checkout station by enabling its crucial components
     // Could be used to approve a weight discrepancy
     public void attendantUnBlockStation(SelfCheckoutStation station) {
-        Data data = Data.getInstance();
         station.baggingArea.enable();
         station.scanningArea.enable();
         station.handheldScanner.enable();
         station.mainScanner.enable();
         station.cardReader.enable();
-        data.setIsDisabled(false);
     }
     
     /*
@@ -61,36 +60,30 @@ public class AttendantActions {
     
     /**
      * Simulates the attendant emptying a coin storage unit.
-     * @param storageUnit Coin storage unit to empty.
+     * @param station SelfCheckoutStation whose coin storage is to be unloaded.
      */
-    public List<Coin> emptyCoinStorageUnit(CoinStorageUnit storageUnit) {
-    	List<Coin> storageContents = storageUnit.unload();
+    public List<Coin> emptyCoinStorageUnit(SelfCheckoutStation station) {
+    	List<Coin> storageContents = station.coinStorage.unload();
+    	
+    	// This should be displayed on the touch screen.
+    	BigDecimal totalValue = new BigDecimal(0);
+    	for (int i = 0; i < storageContents.size(); i++) {
+    		totalValue.add(storageContents.get(i).getValue());
+    	}
+    	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
+    	
     	return storageContents;
-    }
-    
-    
-    /*
-     * This is for completion's sake. There is unlikely to be a case where an attendant would FILL the storage unit,
-     * since the it only depletes when an attendant empties it.
-     */
-    public void fillCoinStorageUnit(CoinStorageUnit storageUnit, Coin... coins) {
-    	try {
-    		storageUnit.load(coins);
-		} catch (SimulationException e) {
-			// Should not happen, since "null" coins don't really exist
-			e.printStackTrace();
-		} catch (OverloadException e) {
-			// Trying to load too many coins
-			e.printStackTrace();
-		}
     }
     
     /**
      * Simulates the attendant refilling a coin dispenser.
-     * @param dispenser Coin dispenser to be refilled.
+     * @param station SelfCheckoutStation that is being refilled.
+     * @param denom The coin denomination of the coin dispenser to refill.
      * @param coins Array of coins that will be put into the dispenser unit.
      */
-    public void fillCoinDispenser(CoinDispenser dispenser, Coin ... coins) {
+    public static void fillCoinDispenser(SelfCheckoutStation station, BigDecimal denom, Coin ... coins) {
+    	CoinDispenser dispenser = station.coinDispensers.get(denom);
+    	
     	// Assume the coins are correct
     	try {
 			dispenser.load(coins);
@@ -103,25 +96,31 @@ public class AttendantActions {
 		}
     }
     
-    public List<Coin> emptyCoinDispenser(CoinDispenser dispenser) {
-    	List<Coin> dispenserContents = dispenser.unload();
-    	return dispenserContents;
-    }
-    
     /**
      * Simulates the attendant emptying a banknote storage unit.
-     * @param storageUnit Banknote storage unit to empty.
+     * @param station SelfCheckoutStation whose banknote storage is to be unloaded.
      */
-    public void emptyBanknoteStorageUnit(BanknoteStorageUnit storageUnit) {
-    	storageUnit.unload();
+    public List<Banknote> emptyBanknoteStorageUnit(SelfCheckoutStation station) {
+    	List<Banknote> storageContents = station.banknoteStorage.unload();
+    	
+    	// This should be displayed on the touch screen.
+    	int totalValue = 0;
+    	for (int i = 0; i < storageContents.size(); i++) {
+    		totalValue += storageContents.get(i).getValue();
+    	}
+    	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
+    	
+    	return storageContents;
     }
     
     /**
      * Simulates the attendant refilling a banknote dispenser.
-     * @param dispenser Banknote dispenser to be refilled.
+     * @param station SelfCheckoutStation that is being refilled.
+     * @param denom The banknote denomination of the banknote dispenser to refill.
      * @param banknotes Banknotes to load into the dispenser.
      */
-    public void fillBanknoteDispenser(BanknoteDispenser dispenser, Banknote ... banknotes) {
+    public static void fillBanknoteDispenser(SelfCheckoutStation station, int denom, Banknote ... banknotes) {
+    	BanknoteDispenser dispenser = station.banknoteDispensers.get(denom);
     	try {
 			dispenser.load(banknotes);
 		} catch (OverloadException e) {
