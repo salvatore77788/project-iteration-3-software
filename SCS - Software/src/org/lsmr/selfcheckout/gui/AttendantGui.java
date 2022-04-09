@@ -2,7 +2,6 @@ package org.lsmr.selfcheckout.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,6 +72,19 @@ public class AttendantGui {
 		
 		public int getPercentagePaperLeft() {
 			return toPercent(paperLeft, ReceiptPrinter.MAXIMUM_PAPER);
+		}
+		
+		public void startUp() {
+			funds.attachAll();
+			isShutdown = false;
+			isBlocked = true; // Start blocked?
+			status = SCSStatus.GOOD;
+		}
+		
+		public void shutDown() {
+			funds.detachAll();
+			isShutdown = true;
+			status = SCSStatus.OFF;
 		}
 	}
 	
@@ -757,14 +769,14 @@ public class AttendantGui {
 
     private void jButtonStartUpActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // Start up the station and software
-    	currentSoftware.isShutdown = false;
+    	currentSoftware.startUp();
     	jListStations.updateUI();
     	setStation();
     }                                              
 
     private void jButtonShutdownActionPerformed(java.awt.event.ActionEvent evt) {                                                
     	// Shut down the station and software
-    	currentSoftware.isShutdown = true;
+    	currentSoftware.shutDown();
     	jListStations.updateUI();
     	setStation();
     	
@@ -786,7 +798,7 @@ public class AttendantGui {
         for(int i = 0; i < stationSoftwares.length; i++) {
         	SCSSoftware sw = stationSoftwares[i];
         	if(sw.isShutdown)
-        		sw.isShutdown = false;
+        		sw.startUp();
         }
         jListStations.updateUI();
         setStation();
@@ -796,7 +808,7 @@ public class AttendantGui {
     	for(int i = 0; i < stationSoftwares.length; i++) {
         	SCSSoftware sw = stationSoftwares[i];
         	if(!sw.isShutdown)
-        		sw.isShutdown = true;
+        		sw.shutDown();
         }
     	jListStations.updateUI();
     	setStation();

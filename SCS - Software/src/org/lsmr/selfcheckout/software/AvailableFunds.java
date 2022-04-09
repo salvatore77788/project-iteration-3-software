@@ -319,9 +319,6 @@ public class AvailableFunds {
 			
 			coinDispenserWatchers.put(denom, watcher);
 		}
-		
-		// Connect observers
-		attachAll();
 	}
 	
 	public void attachAll() {
