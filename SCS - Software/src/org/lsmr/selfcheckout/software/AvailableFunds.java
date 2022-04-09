@@ -30,7 +30,7 @@ public class AvailableFunds {
 	private boolean isBanknoteStorageFull;
 
 	private Map<Integer, BanknoteDispenserWatcher> banknoteDispenserWatchers;
-	private Map<BigDecimal,CoinDispenserWatcher> coinDispenserWatchers;
+	private Map<BigDecimal, CoinDispenserWatcher> coinDispenserWatchers;
 	private CoinStorageUnitObserver coinStorageObserver = new CoinStorageUnitObserver() {
 
 		@Override
@@ -308,7 +308,6 @@ public class AvailableFunds {
 			BanknoteDispenserWatcher watcher = new BanknoteDispenserWatcher(denom);
 			
 			banknoteDispenserWatchers.put(denom, watcher);
-			station.banknoteDispensers.get(denom).attach(watcher);
 		}
 		
 		// Create and connect coin dispenser watchers
@@ -319,12 +318,34 @@ public class AvailableFunds {
 			CoinDispenserWatcher watcher = new CoinDispenserWatcher(denom);
 			
 			coinDispenserWatchers.put(denom, watcher);
-			station.coinDispensers.get(denom).attach(watcher);
 		}
 		
-		// Connect storage observers
+		// Connect observers
+		attachAll();
+	}
+	
+	public void attachAll() {
+		// Connect all observers
+		for(BanknoteDispenserWatcher w : banknoteDispenserWatchers.values())
+			station.banknoteDispensers.get(w.getDenomination()).attach(w);
+		
+		for(CoinDispenserWatcher w : coinDispenserWatchers.values())
+			station.coinDispensers.get(w.getDenomination()).attach(w);
+		
 		station.coinStorage.attach(coinStorageObserver);
 		station.banknoteStorage.attach(banknoteStorageObserver);
+	}
+	
+	public void detachAll() {
+		// Disconnect all observers
+		for(BanknoteDispenserWatcher w : banknoteDispenserWatchers.values())
+			station.banknoteDispensers.get(w.getDenomination()).detach(w);
+		
+		for(CoinDispenserWatcher w : coinDispenserWatchers.values())
+			station.coinDispensers.get(w.getDenomination()).detach(w);
+		
+		station.coinStorage.detach(coinStorageObserver);
+		station.banknoteStorage.detach(banknoteStorageObserver);
 	}
 	
 	/**
