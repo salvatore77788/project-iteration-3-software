@@ -202,6 +202,10 @@ public class AttendantGui {
     	for(int i = 0; i < bnDenoms.length; i++)
     		bnDispLM.addElement("$" + bnDenoms[i] + ": " + (isStationNull ? "--" : getBanknotePercentage(bnDenoms[i])));
     	
+    	// Storage labels
+    	jLabelCoinStorage.setText("Coin Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsCoinStorageFull() ? "Full" : "Not Full")));
+    	jLabelBanknoteStorage.setText("Banknote Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsBanknoteStorageFull() ? "Full" : "Not Full")));
+    	
     	// Status
     	jLabelStatusCode.setText(isStationNull ? "--" : currentSoftware.status.toString());
     	jLabelStatusCode.setForeground(isStationNull ? Color.BLACK : getStatusColor(currentSoftware.status));
