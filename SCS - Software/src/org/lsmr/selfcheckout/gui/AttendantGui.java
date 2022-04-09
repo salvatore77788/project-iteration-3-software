@@ -19,6 +19,7 @@ import javax.swing.ListModel;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
+import org.lsmr.selfcheckout.software.AttendantActions;
 import org.lsmr.selfcheckout.software.ItemInfo;
 
 
@@ -75,6 +76,7 @@ public class AttendantGui {
 	private JFrame frame;
 	
 	private SCSSoftware[] stationSoftwares;
+	private SCSSoftware currentSoftware;
 	
 	// List models
 	DefaultListModel<String> shoppingCartLM;
@@ -140,42 +142,45 @@ public class AttendantGui {
     private void setStation() {
     	int idx = jListStations.getSelectedIndex();
     	
-    	SCSSoftware stationSoftware = idx == -1 ? null : stationSoftwares[idx];
+    	currentSoftware = idx == -1 ? null : stationSoftwares[idx];
+    	
+    	// Title
+    	jLabelStationName.setText("Self-Checkout System " + (idx == -1 ? "" : idx));
     	
     	// Data here needs to be taken from the actual software instead of the test software
     	// Since none of it is actually implemented on this branch, it'll have to be done later
     	
     	// Set up buttons
-    	boolean stationIsNull = stationSoftware == null;
+    	boolean stationIsNull = currentSoftware == null;
     	
-    	jButtonBlockStation.setEnabled(!stationIsNull && !stationSoftware.isBlocked);
-		jButtonUnblockStation.setEnabled(!stationIsNull && stationSoftware.isBlocked);
-		jButtonShutdown.setEnabled(!stationIsNull && !stationSoftware.isShutdown);
-		jButtonStartUp.setEnabled(!stationIsNull && stationSoftware.isShutdown);
-    	jButtonRefillBanknoteDispenser.setEnabled(!stationIsNull);
-    	jButtonRefillCoinDispenser.setEnabled(!stationIsNull);
-    	jButtonRefillInk.setEnabled(!stationIsNull);
-    	jButtonRefillPaper.setEnabled(!stationIsNull);
-    	jButtonRefresh.setEnabled(!stationIsNull);
-    	jButtonUnloadBanknoteStorage.setEnabled(!stationIsNull);
-    	jButtonUnloadCoinStorage.setEnabled(!stationIsNull);
+    	jButtonBlockStation.setEnabled(!stationIsNull && !currentSoftware.isBlocked && !currentSoftware.isShutdown);
+		jButtonUnblockStation.setEnabled(!stationIsNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
+		jButtonShutdown.setEnabled(!stationIsNull && !currentSoftware.isShutdown);
+		jButtonStartUp.setEnabled(!stationIsNull && currentSoftware.isShutdown);
+    	jButtonRefillBanknoteDispenser.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillCoinDispenser.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillInk.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillPaper.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefresh.setEnabled(!stationIsNull && !currentSoftware.isShutdown);
+    	jButtonUnloadBanknoteStorage.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonUnloadCoinStorage.setEnabled(!stationIsNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
     	
     	// TODO: Coin dispenser data
     	
     	// TODO: Banknote Dispenser data
     	
     	// Status
-    	jLabelStatusCode.setText(stationIsNull ? "--" : stationSoftware.status.toString());
-    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : getStatusColor(stationSoftware.status));
-    	jLabelInk.setText("Ink: " + (stationIsNull ? "--" : stationSoftware.getPercentageInkLeft()));
-    	jLabelPaper.setText("Paper: " + (stationIsNull ? "--" : stationSoftware.getPercentagePaperLeft()));
+    	jLabelStatusCode.setText(stationIsNull ? "--" : currentSoftware.status.toString());
+    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : getStatusColor(currentSoftware.status));
+    	jLabelInk.setText("Ink: " + (stationIsNull ? "--" : currentSoftware.getPercentageInkLeft()));
+    	jLabelPaper.setText("Paper: " + (stationIsNull ? "--" : currentSoftware.getPercentagePaperLeft()));
     	
     	// Shopping cart
     	shoppingCartLM.clear();
     	
     	if(!stationIsNull) {
-    		for(int i = 0; i < stationSoftware.itemsScanned.size(); i++) {
-    			ItemInfo info = stationSoftware.itemsScanned.get(i);
+    		for(int i = 0; i < currentSoftware.itemsScanned.size(); i++) {
+    			ItemInfo info = currentSoftware.itemsScanned.get(i);
     			
     			shoppingCartLM.addElement(info.toString());
     		}
@@ -637,11 +642,15 @@ public class AttendantGui {
     }                                          
 
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        // TODO add your handling code here:
+        // Block the current station
+    	currentSoftware.isBlocked = true;
+    	setStation();
     }                                                   
 
     private void jButtonUnblockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        // TODO add your handling code here:
+    	// Unblock the current station
+    	currentSoftware.isBlocked = false;
+    	setStation();
     }                                                     
 
     private void jButtonRefillCoinDispenserActionPerformed(java.awt.event.ActionEvent evt) {                                                           
@@ -653,23 +662,30 @@ public class AttendantGui {
     }                                                              
 
     private void jButtonUnloadBanknoteStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                             
-        // TODO add your handling code here:
+        AttendantActions.emptyBanknoteStorageUnit(currentSoftware.station);
+        setStation();
     }                                                            
 
     private void jButtonUnloadCoinStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-        // TODO add your handling code here:
+    	AttendantActions.emptyCoinStorageUnit(currentSoftware.station);
+    	setStation();
     }                                                        
 
     private void jButtonStartUpActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
+        // Start up the station and software
+    	currentSoftware.isShutdown = false;
+    	setStation();
     }                                              
 
     private void jButtonShutdownActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+    	// Shut down the station and software
+    	currentSoftware.isShutdown = true;
+    	setStation();
+    	
     }                                               
 
     private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
+        setStation();
     }                                              
 
     private void jButtonRefillInkActionPerformed(java.awt.event.ActionEvent evt) {                                                 
