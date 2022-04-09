@@ -306,6 +306,11 @@ public class AttendantGui {
         jMenu4 = new javax.swing.JMenu();
 
         jMenuItemSCAddItem.setText("Add Item");
+        jMenuItemSCAddItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSCAddItemActionPerformed(evt);
+            }
+        });
         jPopupMenuShoppingCart.add(jMenuItemSCAddItem);
 
         jMenuItemSCRemoveItem.setText("Remove Item");
@@ -808,7 +813,13 @@ public class AttendantGui {
 
     private void jMenuItemSCRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
-    }                                                     
+    	// If the attendant is removing the item, we can assume they have verified this before hand, so just remove the item
+    }
+    
+    private void jMenuItemSCAddItemActionPerformed(java.awt.event.ActionEvent evt) {
+    	// TODO add your handling code here:
+    	// Possibly use a modal/pop up window for searching by PLU/name and linking to the PLU catalog
+    }
 
     /**
      * @param args the command line arguments
