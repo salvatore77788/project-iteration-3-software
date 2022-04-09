@@ -24,6 +24,7 @@ public class SelfCheckoutStationSoftware {
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant station
+	private String memberNumber;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -54,7 +55,7 @@ public class SelfCheckoutStationSoftware {
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
-		this.memberCardObserver = new ScanMembershipCard(this.scs);
+		this.memberCardObserver = new ScanMembershipCard(this);
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
 		this.touchSnObserver = new TouchScreenSoftware(this.scs);
@@ -285,6 +286,19 @@ public class SelfCheckoutStationSoftware {
 		}
 		System.out.println(changeLine);
 
+		
+		// Printing Member Number onto receipt code.
+		System.out.println("Member Number: ");
+		// For iterating through characters of string named memberNumber.
+		detectLowInkPaper(changeLine.toCharArray().length, 1);
+		for(char c : memberNumber.toCharArray()) {
+			scs.printer.print(c);
+			ink--;
+			paper--;
+		}
+		
+		
+		
 		scs.printer.cutPaper();
 	}
 
@@ -377,6 +391,14 @@ public class SelfCheckoutStationSoftware {
 
 	public void startUpGUI() {
 		// does nothing for now
+	}
+	
+	public String getMemberCardNumber() {
+		return this.memberNumber;
+	}
+	
+	public void setMemberCardNumber(String memberCN) {
+		this.memberNumber = memberCN;
 	}
 
 }
