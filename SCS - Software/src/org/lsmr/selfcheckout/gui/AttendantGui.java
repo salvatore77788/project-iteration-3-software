@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -13,6 +14,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
 
+import org.lsmr.selfcheckout.Banknote;
+import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
@@ -65,11 +68,11 @@ public class AttendantGui {
 		}
 		
 		public int getPercentageInkLeft() {
-			return inkLeft/ReceiptPrinter.MAXIMUM_INK;
+			return toPercent(inkLeft, ReceiptPrinter.MAXIMUM_INK);
 		}
 		
 		public int getPercentagePaperLeft() {
-			return paperLeft/ReceiptPrinter.MAXIMUM_PAPER;
+			return toPercent(paperLeft, ReceiptPrinter.MAXIMUM_PAPER);
 		}
 	}
 	
@@ -89,6 +92,7 @@ public class AttendantGui {
 	int[] bnDenoms = new int[] {5, 10, 20, 50, 100};
 	BigDecimal[] coinDenoms = new BigDecimal[] {new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"), 
 			new BigDecimal("1.00"), new BigDecimal("2.00")};
+	Currency currency = Currency.getInstance(Locale.CANADA);
 	
     /**
      * Creates new form TestFrame
@@ -135,7 +139,7 @@ public class AttendantGui {
     	// Create some test stations
     	stationSoftwares = new SCSSoftware[3];
     	for(int i = 0; i < 3; i++) {
-    		SelfCheckoutStation s = new SelfCheckoutStation(Currency.getInstance(Locale.CANADA), bnDenoms, coinDenoms, 1000, 1);
+    		SelfCheckoutStation s = new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1);
     		superStation.add(s);
     		stationSoftwares[i] = new SCSSoftware(s);
     	}
@@ -154,9 +158,7 @@ public class AttendantGui {
 		
 		// Set up banknote denomination list
 		bnDispLM = new DefaultListModel<String>();
-		for(int i = 0; i < bnDenoms.length; i++)
-			bnDispLM.addElement("$" + bnDenoms[i] + ": Count");
-		jListBanknoteDispensers.setModel(coinDispLM);
+		jListBanknoteDispensers.setModel(bnDispLM);
 		
 		// Set up shopping cart list
 		shoppingCartLM = new DefaultListModel<String>(); 
@@ -194,13 +196,12 @@ public class AttendantGui {
     	// Set up coin denomination list
     	coinDispLM.clear();
 		for(int i = 0; i < coinDenoms.length; i++)
-			coinDispLM.addElement("$" + coinDenoms[i].toString() + ": " + (isStationNull ? "--" : getCoinPercentage(coinDenoms[i])));
-		jListCoinDispensers.setModel(coinDispLM);
+			coinDispLM.addElement("$" + coinDenoms[i].toString() + ": " + (isStationNull ? "--" : getCoinPercentage(coinDenoms[i]) + "%"));
     	
 		// Set up banknote denomination list
     	bnDispLM.clear();
     	for(int i = 0; i < bnDenoms.length; i++)
-    		bnDispLM.addElement("$" + bnDenoms[i] + ": " + (isStationNull ? "--" : getBanknotePercentage(bnDenoms[i])));
+    		bnDispLM.addElement("$" + bnDenoms[i] + ": " + (isStationNull ? "--" : getBanknotePercentage(bnDenoms[i]) + "%"));
     	
     	// Storage labels
     	jLabelCoinStorage.setText("Coin Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsCoinStorageFull() ? "Full" : "Not Full")));
@@ -209,8 +210,8 @@ public class AttendantGui {
     	// Status
     	jLabelStatusCode.setText(isStationNull ? "--" : currentSoftware.status.toString());
     	jLabelStatusCode.setForeground(isStationNull ? Color.BLACK : getStatusColor(currentSoftware.status));
-    	jLabelInk.setText("Ink: " + (isStationNull ? "--" : currentSoftware.getPercentageInkLeft()));
-    	jLabelPaper.setText("Paper: " + (isStationNull ? "--" : currentSoftware.getPercentagePaperLeft()));
+    	jLabelInk.setText("Ink: " + (isStationNull ? "--" : currentSoftware.getPercentageInkLeft() + "%"));
+    	jLabelPaper.setText("Paper: " + (isStationNull ? "--" : currentSoftware.getPercentagePaperLeft() + "%"));
     	
     	// Shopping cart
     	shoppingCartLM.clear();
@@ -226,12 +227,16 @@ public class AttendantGui {
     
     private int getCoinPercentage(BigDecimal coinDenom) {
 		int coinCount = currentSoftware.funds.getCoinCount(coinDenom);
-		return coinCount / SelfCheckoutStation.COIN_DISPENSER_CAPACITY;
+		return toPercent(coinCount, SelfCheckoutStation.COIN_DISPENSER_CAPACITY);
 	}
     
     private int getBanknotePercentage(int bnDenom) {
     	int bnCount = currentSoftware.funds.getBanknoteCount(bnDenom);
-    	return bnCount / SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY;
+    	return toPercent(bnCount, SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY);
+    }
+    
+    private int toPercent(double num, double denom) {
+    	return (int)(num/denom*100);
     }
 
 	private Color getStatusColor(SCSStatus status) {
@@ -710,11 +715,29 @@ public class AttendantGui {
     }                                                     
 
     private void jButtonRefillCoinDispenserActionPerformed(java.awt.event.ActionEvent evt) {                                                           
-        // TODO add your handling code here:
+        int idx = jListCoinDispensers.getSelectedIndex();
+        
+        if(idx >= 0) {
+        	BigDecimal denom = coinDenoms[idx];
+        	
+        	int refillCount = SelfCheckoutStation.COIN_DISPENSER_CAPACITY - currentSoftware.funds.getCoinCount(denom);
+        	AttendantActions.fillCoinDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Coin(currency, denom)).toArray(new Coin[refillCount]));
+        }
+        
+        setStation();
     }                                                          
 
     private void jButtonRefillBanknoteDispenserActionPerformed(java.awt.event.ActionEvent evt) {                                                               
-        // TODO add your handling code here:
+        int idx = jListBanknoteDispensers.getSelectedIndex();
+        
+        if(idx >= 0) {
+        	int denom = bnDenoms[idx];
+        	
+        	int refillCount = SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY - currentSoftware.funds.getBanknoteCount(denom);
+        	AttendantActions.fillBanknoteDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
+        }
+        
+        setStation();
     }                                                              
 
     private void jButtonUnloadBanknoteStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                             
@@ -758,6 +781,8 @@ public class AttendantGui {
         	if(sw.isShutdown)
         		sw.isShutdown = false;
         }
+        jListStations.updateUI();
+        setStation();
     }                                                     
 
     private void jMenuItemMBShutDownAllActionPerformed(java.awt.event.ActionEvent evt) {                                                       
@@ -766,6 +791,8 @@ public class AttendantGui {
         	if(!sw.isShutdown)
         		sw.isShutdown = true;
         }
+    	jListStations.updateUI();
+    	setStation();
     }                                                      
 
     private void jMenuItemMBLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                                  
