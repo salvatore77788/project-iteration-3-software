@@ -205,7 +205,7 @@ public class AttendantGui {
     	
     	// Storage labels
     	jLabelCoinStorage.setText("Coin Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsCoinStorageFull() ? "Full" : "Not Full")));
-    	jLabelBanknoteStorage.setText("Banknote Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsBanknoteStorageFull() ? "Full" : "Not Full")));
+    	jLabelBanknoteStorage.setText("Banknote Storage: " + (isStationNull ? "Unknown" : (currentSoftware.funds.getIsBanknoteStorageFull() ? "Full     " : "Not Full")));
     	
     	// Status
     	jLabelStatusCode.setText(isStationNull ? "--" : currentSoftware.status.toString());
@@ -563,8 +563,8 @@ public class AttendantGui {
                                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                                         .addComponent(jLabelBanknoteStorage)
                                                         .addGap(64, 64, 64)
-                                                        .addComponent(jButtonUnloadCoinStorage))
-                                                    .addComponent(jButtonUnloadBanknoteStorage))
+                                                        .addComponent(jButtonUnloadBanknoteStorage))
+                                                    .addComponent(jButtonUnloadCoinStorage))
                                                 .addGap(12, 12, 12)))))
                                 .addGap(18, 18, 18)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -616,11 +616,11 @@ public class AttendantGui {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelCoinStorage)
-                            .addComponent(jButtonUnloadBanknoteStorage))
+                            .addComponent(jButtonUnloadCoinStorage))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelBanknoteStorage)
-                            .addComponent(jButtonUnloadCoinStorage))
+                            .addComponent(jButtonUnloadBanknoteStorage))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -758,12 +758,14 @@ public class AttendantGui {
     private void jButtonStartUpActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // Start up the station and software
     	currentSoftware.isShutdown = false;
+    	jListStations.updateUI();
     	setStation();
     }                                              
 
     private void jButtonShutdownActionPerformed(java.awt.event.ActionEvent evt) {                                                
     	// Shut down the station and software
     	currentSoftware.isShutdown = true;
+    	jListStations.updateUI();
     	setStation();
     	
     }                                               
