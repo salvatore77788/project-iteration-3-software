@@ -2,6 +2,7 @@ package org.lsmr.selfcheckout.software.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -14,7 +15,10 @@ import org.junit.Test;
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.SimulationException;
+import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.AvailableFunds;
@@ -151,19 +155,151 @@ public class AvailableFundsTest {
 		assertEquals("Funds stored should be zero", new BigDecimal("0.00"), funds.getTotalFundsStored());
 	}
 	
-	// Helper method to just load a ton of coins and banknotes into the self-checkout station.
-	private void loadCoinsAndBanknotes() {
-		loadCoins(nickel, 200);
-		loadCoins(dime, 200);
-		loadCoins(quarter, 200);
-		loadCoins(loonie, 200);
-		loadCoins(toonie, 200);
+	@Test
+	public void testIsCoinStorageFull() {
+		Coin testCoin = new Coin(currency, coinDenoms[0]);
+		for(int i = 0; i < SelfCheckoutStation.COIN_STORAGE_CAPACITY; i++) {
+			try {
+				station.coinStorage.accept(testCoin);
+			} catch (DisabledException | OverloadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
-		loadBanknotes(bn5, 100);
+		assertTrue("Coin storage should be full.", funds.getIsCoinStorageFull());
+		
+		station.coinStorage.unload();
+		
+		assertFalse("Coin storage should not be full.", funds.getIsCoinStorageFull());
+	}
+	
+	
+	@Test
+	public void testIsBanknoteStorageFullAndUnloaded() {
+		Banknote testBn = new Banknote(currency, bnDenoms[0]);
+		for(int i = 0; i < SelfCheckoutStation.BANKNOTE_STORAGE_CAPACITY; i++) {
+			try {
+				station.banknoteStorage.accept(testBn);
+			} catch (DisabledException | OverloadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		assertTrue("Banknote storage should be full.", funds.getIsBanknoteStorageFull());
+		
+		station.banknoteStorage.unload();
+		
+		assertFalse("Banknote storage should not be full.", funds.getIsBanknoteStorageFull());
+	}
+	
+	@Test
+	public void testLoadEmitCoins() {
+		Coin[] coins = new Coin[] {nickel, dime, quarter, loonie, toonie};
+		
+		for(Coin c : coins) {
+			BigDecimal denom = c.getValue();
+			
+			loadCoins(c, 50);
+			assertEquals("Coin $" + denom.toString() + "" , 50, funds.getCoinCount(denom));
+			
+			emitCoins(station.coinDispensers.get(denom), 25);
+			assertEquals("Coin " + denom.toString() + "." , 25, funds.getCoinCount(denom));
+			
+			emitCoins(station.coinDispensers.get(denom), 25);
+			assertEquals("Coin " + denom.toString() + "." , 0, funds.getCoinCount(denom));
+		}
+	}
+	
+	@Test
+	public void testLoadEmitBanknotes() {
+		Banknote[] bns = new Banknote[] {bn5, bn10, bn20, bn50, bn100};
+		
+		for(Banknote bn : bns) {
+			int denom = bn.getValue();
+			
+			loadBanknotes(bn, 1);
+			assertEquals("Banknote $" + denom, 1, funds.getBanknoteCount(denom));
+			
+			emitBanknote(station.banknoteDispensers.get(denom));
+			assertEquals("Banknote $" + denom, 0, funds.getBanknoteCount(denom));
+		}
+	}
+	
+	@Test
+	public void testInvalidCoinDenom() {
+		BigDecimal badDenom = new BigDecimal("0.5");
+		
+		assertEquals("Incorrect invalid coin count.", 0, funds.getCoinCount(badDenom));
+	}
+	
+	@Test
+	public void testInvalidBanknoteDenom() {
+		int badDenom = 2;
+		
+		assertEquals("Incorrect invalid banknote count.", 0, funds.getBanknoteCount(badDenom));
+	}
+	
+	@Test
+	public void testFundsDetached() {
+		funds.detachAll();
+		
+		loadCoins(nickel, 100);
 		loadBanknotes(bn10, 100);
-		loadBanknotes(bn20, 100);
-		loadBanknotes(bn50, 100);
-		loadBanknotes(bn100, 100);
+		
+		assertEquals("Funds detected.", new BigDecimal("0.00"), funds.getTotalFundsStored());
+		
+		// Check that storage fullness doesn't update
+		Coin testCoin = new Coin(currency, coinDenoms[0]);
+		for(int i = 0; i < SelfCheckoutStation.COIN_STORAGE_CAPACITY; i++) {
+			try {
+				station.coinStorage.accept(testCoin);
+			} catch (DisabledException | OverloadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		assertFalse("Coin storage should not be seen as full.", funds.getIsCoinStorageFull());
+		
+		Banknote testBn = new Banknote(currency, bnDenoms[0]);
+		for(int i = 0; i < SelfCheckoutStation.BANKNOTE_STORAGE_CAPACITY; i++) {
+			try {
+				station.banknoteStorage.accept(testBn);
+			} catch (DisabledException | OverloadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		assertFalse("Banknote storage should not be seen as full.", funds.getIsBanknoteStorageFull());
+	}
+	
+	private void emitCoins(CoinDispenser d, int count) {
+		int trayCoinCount = 0;
+		for(int i = 0; i < count; i++)
+			try {
+				d.emit();
+				if(++trayCoinCount >= 20) {
+					station.coinTray.collectCoins();
+					trayCoinCount = -20;
+				}
+			} catch (OverloadException | EmptyException | DisabledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		station.coinTray.collectCoins();
+	}
+	
+	private void emitBanknote(BanknoteDispenser d) {
+		try {
+			d.emit();
+		} catch (EmptyException | DisabledException | OverloadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		station.banknoteOutput.removeDanglingBanknotes();
 	}
 	
 	private void loadCoins(Coin c, int count) {
