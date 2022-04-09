@@ -24,7 +24,14 @@ import org.lsmr.selfcheckout.software.ItemInfo;
 
 public class AttendantGui {
 	private static final Color STATUS_GOOD_COLOR = new Color(51, 153, 0);
-	private static final Color STATUS_BAD_COLOR = Color.RED;
+	private static final Color STATUS_BAD_COLOR = new Color(204, 0, 0);
+	private static final Color STATUS_OFF_COLOR = Color.LIGHT_GRAY;
+	
+	private enum SCSStatus {
+		GOOD,
+		BAD,
+		OFF
+	}
 	
 	// Test station software class
 	private class SCSSoftware {
@@ -37,6 +44,8 @@ public class AttendantGui {
 		public Boolean isBlocked;
 		public Boolean isShutdown;
 		
+		public SCSStatus status;
+		
 		public SCSSoftware(SelfCheckoutStation station) {
 			this.station = station;
 			
@@ -47,6 +56,8 @@ public class AttendantGui {
 			
 			isBlocked = false;
 			isShutdown = true;
+			
+			status = SCSStatus.OFF;
 		}
 		
 		public int getPercentageInkLeft() {
@@ -154,8 +165,8 @@ public class AttendantGui {
     	// TODO: Banknote Dispenser data
     	
     	// Status
-    	jLabelStatusCode.setText(stationIsNull ? "--" : "Good");
-    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : STATUS_GOOD_COLOR);
+    	jLabelStatusCode.setText(stationIsNull ? "--" : stationSoftware.status.toString());
+    	jLabelStatusCode.setForeground(stationIsNull ? Color.BLACK : getStatusColor(stationSoftware.status));
     	jLabelInk.setText("Ink: " + (stationIsNull ? "--" : stationSoftware.getPercentageInkLeft()));
     	jLabelPaper.setText("Paper: " + (stationIsNull ? "--" : stationSoftware.getPercentagePaperLeft()));
     	
@@ -168,6 +179,17 @@ public class AttendantGui {
     			
     			shoppingCartLM.addElement(info.toString());
     		}
+    	}
+    }
+    
+    private Color getStatusColor(SCSStatus status) {
+    	switch(status) {
+    	case GOOD:
+    		return STATUS_GOOD_COLOR;
+    	case BAD:
+    		return STATUS_BAD_COLOR;
+    	default:
+    		return STATUS_OFF_COLOR;
     	}
     }
 
