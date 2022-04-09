@@ -21,12 +21,9 @@ import java.util.Random;
  */
 public class ScanMembershipCard implements CardReaderObserver {
 
-    // we can't extend Card class and create MembershipCard class, so
-    // we create a card object to represent membership card
-    private Card membershipCard;
-    public SelfCheckoutStation theStation;
+    // An instance of "theSoftware" would call up this class.
     public SelfCheckoutStationSoftware theSoftware;
-    public boolean cardSwipedNew = false;
+    public boolean cardSwiped = false;
     // Where we'll store members that are registered.
     public MembersDatabase memberDatabase;
     
@@ -37,9 +34,6 @@ public class ScanMembershipCard implements CardReaderObserver {
     // should null at beginning, after insert card data will be available
     private Card.CardData cardData;
 
-    // card status
-    //private boolean cardTapped = false;
-    private boolean cardSwiped = false;
     //private boolean cardInsert = false;
 
     // is applicable for discount
@@ -48,9 +42,8 @@ public class ScanMembershipCard implements CardReaderObserver {
     // default constructor
     public ScanMembershipCard(SelfCheckoutStationSoftware aSoftware) {
         // validate card type
-    	this.theSoftware = aSoftware;
-    	this.theStation = theSoftware.scs;
-       
+    	this.theSoftware = aSoftware;    
+    	this.memberDatabase = theSoftware.membersRecord;
        
     }
 
@@ -88,21 +81,14 @@ public class ScanMembershipCard implements CardReaderObserver {
     @Override
     public void cardSwiped(CardReader reader) {
         // swipe and update card data
-    	this.cardSwipedNew = true;
+    	this.cardSwiped = true;
         
     }
 
     @Override
     public void cardRemoved(CardReader reader) {
-        // remove the card from device, for this imagine in the
-        // reader we can read single card at a time
-        reader.remove();
-
-        // after remove update all value,
-        // so we can process another card using same object
-        //cardTapped = false;
-        cardSwiped = false;
-        //cardInsert = false;
+      
+      
     }
 
     // if any of cardReader operation happened we will validate type and
@@ -110,16 +96,20 @@ public class ScanMembershipCard implements CardReaderObserver {
     @Override
     public void cardDataRead(CardReader reader, Card.CardData data) {
     
+    	// based on the assumption, the swiped would have already happened. (reset.)
+    	this.cardSwiped = false;
     	// Only care about swipe or manual entry for membership card
     	if(data.getClass() == CardSwipeData.class) {
     		if(data.getType()=="member" || data.getType()=="membership") {
-    			if(memberDatabase.authenticateMember(data)) {
+    			if(this.memberDatabase.authenticateMember(data)) {
+    				
     				
     				theSoftware.setMemberCardNumber(data.getNumber());
     				//include it in the receipt.
     			}
     		}
     	}
+    	
     	
     	//cardData = data;
     }

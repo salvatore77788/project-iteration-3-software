@@ -25,6 +25,7 @@ public class SelfCheckoutStationSoftware {
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant station
 	private String memberNumber;
+	public MembersDatabase membersRecord;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -55,7 +56,10 @@ public class SelfCheckoutStationSoftware {
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
+		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
+		
+		
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
 		this.touchSnObserver = new TouchScreenSoftware(this.scs);

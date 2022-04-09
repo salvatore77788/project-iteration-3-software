@@ -8,6 +8,8 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.ScanMembershipCard;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
+import junit.framework.Assert;
+
 import static org.junit.Assert.*;
 /*
  * in AbstractDevice current should be 'NORMAL' run test
@@ -37,21 +39,23 @@ public class ScanMembershipCardTest {
 		pin = "4567";
 
 		cardTest = new Card(
-				ScanMembershipCard.TYPE,
-				"1234567890123456",
+				"member",
+				"85802420",
 				"John Smith",
-				"567",
-				pin,
-				true,
-				true);
+				"567", // cvv
+				pin, // pin
+				false, // Tap is not enabled.
+				false); // does not have a chip.
 
+		
+		theSoftware.membersRecord.members.put("85802420", "John Smith");
+		
 	}
 
+	// The test consists of obtaining the number from cardTest card.
+	// and makes sure that it gets set as memberNumber in theSoftware.
 	@Test
 	public void SwipeTest() {
-
-		// should be false at first.
-		assertFalse(theSoftware.memberCardObserver.cardSwipedNew);
 
 		boolean swipedWorked = false;
 		do {
@@ -68,8 +72,111 @@ public class ScanMembershipCardTest {
 
 		} while (!swipedWorked);
 
-		assertTrue(theSoftware.memberCardObserver.cardSwipedNew);
+		assertTrue("85802420" == theSoftware.getMemberCardNumber());
 
 	}
+	
+	
+	// The member number should not have been updated since the card 
+	// being swiped is a debit card.
+	@Test
+	public void SwipeTest2() {
+
+		Card cardTest2 = new Card(
+				"debit",
+				"85802420",
+				"John Smith",
+				"567", // cvv
+				pin, // pin
+				false, // Tap is not enabled.
+				false); 
+
+		boolean swipedWorked = false;
+		do {
+			try {
+				theSoftware.scs.cardReader.swipe(cardTest2);
+				swipedWorked = true;
+			} catch (IOException e) {
+				// System.out.println("Failed");
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+				continue;
+			}
+
+		} while (!swipedWorked);
+
+		assertTrue(null == theSoftware.getMemberCardNumber());
+
+	}
+	
+	
+	// The member number should not have been updated since the card 
+	// being swiped is a credit card.
+	@Test
+	public void SwipeTest3() {
+
+		Card cardTest3 = new Card(
+				"debit",
+				"85802420",
+				"John Smith",
+				"567", // cvv
+				pin, // pin
+				false, // Tap is not enabled.
+				false); 
+
+		boolean swipedWorked = false;
+		do {
+			try {
+				theSoftware.scs.cardReader.swipe(cardTest3);
+				swipedWorked = true;
+			} catch (IOException e) {
+				// System.out.println("Failed");
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+				continue;
+			}
+
+		} while (!swipedWorked);
+
+		assertTrue(null == theSoftware.getMemberCardNumber());
+
+	}
+	
+	// If the member card that was swiped is invalid
+	// then it should not set it as as the memberNumber in 
+	// SelfCheckoutStationSoftware.
+	@Test
+	public void SwipeTest4() {
+
+		Card cardTest4 = new Card(
+				"debit",
+				"90012420",
+				"Sean Brown",
+				"567", // cvv
+				pin, // pin
+				false, // Tap is not enabled.
+				false); 
+
+		boolean swipedWorked = false;
+		do {
+			try {
+				theSoftware.scs.cardReader.swipe(cardTest4);
+				swipedWorked = true;
+			} catch (IOException e) {
+				// System.out.println("Failed");
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+				continue;
+			}
+
+		} while (!swipedWorked);
+
+		assertTrue(null == theSoftware.getMemberCardNumber());
+
+	}
+
 
 }
