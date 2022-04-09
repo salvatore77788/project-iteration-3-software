@@ -6,8 +6,11 @@ public class AttendantActions {
 	
 	private boolean isLoggedIn = false;
 	private SupervisorStation superStation;
-	private Hashmap<SelfCheckoutStation, ArrayList<T>> stationObservers = new Hashmap<SelfCheckoutStation, ArrayList<T>>(); 
-
+	private Hashmap<SupervisionStation, Hashmap<D extends AbstractDevice, ArrayList<O>>> allSuperStationObservers = 
+			new Hashmap<SupervisionStation, Hashmap<D extends AbstractDevice, ArrayList<O>>>(); 
+	private Hashmap<SelfCheckoutStation, Hashmap<D extends AbstractDevice, ArrayList<O>>> allSelfStationObservers = 
+			new Hashmap<SelfCheckoutStation, Hashmap<D extends AbstractDevice, ArrayList<O>>>(); 
+	
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be disgussed in the meating
     public void attendantBlockStation(SelfCheckoutStation station) {
@@ -32,23 +35,48 @@ public class AttendantActions {
         data.setIsDisabled(false);
     }
     
-    // add a station to stationObservers
-    public void addStation(T station, ArrayList<T> potentialObservers) {
+    // add a supervision station to allSuperStationObservers
+    public void addStation(SupervisionStation ss, Hashmap<D, ArrayList<O>> superStationObservers) {
 		if (!isLoggedIn) return;
-		stationObservers.add(station, potentialObservers);
+		
+		allSuperStationObservers.add(ss, superStationObservers);
+	}
+    
+    public void addStation(SelfCheckoutStation scs, Hashmap<D, ArrayList<O>> selfStationObservers) {
+    	if (!isLoggedIn) return;   	
+    	
+    	allSelfStationObservers.add(scs, selfStationObservers)
+    }
+	
+    // remove supervison station from allSuperStationObservers
+	public void removeStation(SupervisionStation ss) {
+		if (!isLoggedIn) return;
+		if (!allSuperStationObservers.containsKey(ss)) return;
+		
+		allSuperStationObservers.remove(ss);
 	}
 	
-    // remove station from stationObservers
-	public void removeStation(T station) {
+	// remove self-checkout station from stationObservers
+	public void removeStation(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
-		if (!stationObservers.containsKey(station)) return;
-		stationObservers.remove(station);
+		if (!allSelfStationObservers.containsKey(scs)) return;
+		
+		allSelfStationObservers.remove(scs);
 	}
 	
 	// start supervisor station up by attaching its potential observers
 	public void startup(SupervisorStation ss) {
-		for (T potentialObserver: stationObservers.get(ss)) {
-			ss.attach(potentialObserver);
+		Hashmap<D extends AbstractDevice, ArrayList<O>> superStationObservers = allSuperStationObservers.get(ss);
+		for (O extends TouchScreenObserver observer: superstationObservers.get(ss.screen)) {
+			ss.screen.attach(observer);
+		}
+		
+		for () {
+			
+		}
+		
+		for () {
+			
 		}
 	}
 
@@ -57,10 +85,16 @@ public class AttendantActions {
 		if (!isLoggedIn) return;
 		if (!stationObservers.containsKey(scs)) return;
 		
-		for (T potentialObserver: stationObservers.get(scs)) {
-			scs.attach(potentialObserver);
-		}
 		attendantUnBlockStation(scs);
+		
+		for (T potentialObserver: stationObservers.get(scs))
+			scs.attach(potentialObserver);
+		
+		for ()
+			
+			
+		for ()
+		
 	}
 	
 	// shut supervisor station down by detaching its observers
@@ -68,8 +102,10 @@ public class AttendantActions {
 		if (isLoggedIn) return;
 		if (!stationObservers.containsKey(ss)) return;
 		
-		ss.detachAll();
-		
+		detachAll();
+		detachAll();
+		detachAll();
+		detachAll();
 	}
 	
 	// shut self-checkout station down by detaching its observers and blocking it
@@ -77,8 +113,12 @@ public class AttendantActions {
 		if (!isLoggedIn) return;
 		if (!stationObservers.containsKey(scs)) return;
 		
-		scs.detachAll();
 		attendantBlockStation(scs); 
+		
+		detachAll();
+		detachAll();
+		detachAll();
+		detachAll();
 		
 	}
 	
@@ -89,26 +129,32 @@ public class AttendantActions {
 		//login if password matches id
 		if(database.getPassword(id) == password && isLoggedIn == false)
 		{
-			    superStation.screen.enable();
-			    superStation.keyboard.enable();
-			    isLoggedIn = true;
+			this.superStation = superStation
+			superStation.screen.enable();
+			superStation.keyboard.enable();
+			isLoggedIn = true;
 		}
-		
 	}
 	
 	//logout and disable screen and keyboard
 	public void logout(SupervisionStation superStation) {
-		if(isLoggedIn == true)
+		if(isLoggedIn == true && superStation.equals(this.superStation))
 		{
-			 superStation.screen.disable();
-			 superStation.keyboard.disable();
-			 isLoggedIn = false;
+			this.superStation = null;
+			superStation.screen.disable();
+			superStation.keyboard.disable();
+			isLoggedIn = false;
 		}
 	}
 	
-	// Getter for the log in status
+	 // Getter for the log in status
 	  public Boolean getLoginStatus() {
 	    return isLoggedIn;
+	  }
+	  
+	  // getter for the station observers
+	  public Hashmap<S, ArrayList<O>> getStationObservers() {
+		  return stationObservers;
 	  }
 
 }
