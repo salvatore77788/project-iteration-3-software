@@ -45,7 +45,7 @@ public class AttendantActions {
     
     /**
      * Simulates the attendant emptying a coin storage unit.
-     * @param storageUnit Coin storage unit to empty.
+     * @param station SelfCheckoutStation whose coin storage is to be unloaded.
      */
     public static void emptyCoinStorageUnit(SelfCheckoutStation station) {
     	station.coinStorage.unload();
@@ -53,7 +53,8 @@ public class AttendantActions {
     
     /**
      * Simulates the attendant refilling a coin dispenser.
-     * @param dispenser Coin dispenser to be refilled.
+     * @param station SelfCheckoutStation that is being refilled.
+     * @param denom The coin denomination of the coin dispenser to refill.
      * @param coins Array of coins that will be put into the dispenser unit.
      */
     public static void fillCoinDispenser(SelfCheckoutStation station, BigDecimal denom, Coin ... coins) {
@@ -73,7 +74,7 @@ public class AttendantActions {
     
     /**
      * Simulates the attendant emptying a banknote storage unit.
-     * @param storageUnit Banknote storage unit to empty.
+     * @param station SelfCheckoutStation whose banknote storage is to be unloaded.
      */
     public static void emptyBanknoteStorageUnit(SelfCheckoutStation station) {
     	station.banknoteStorage.unload();
@@ -81,7 +82,8 @@ public class AttendantActions {
     
     /**
      * Simulates the attendant refilling a banknote dispenser.
-     * @param dispenser Banknote dispenser to be refilled.
+     * @param station SelfCheckoutStation that is being refilled.
+     * @param denom The banknote denomination of the banknote dispenser to refill.
      * @param banknotes Banknotes to load into the dispenser.
      */
     public static void fillBanknoteDispenser(SelfCheckoutStation station, int denom, Banknote ... banknotes) {
