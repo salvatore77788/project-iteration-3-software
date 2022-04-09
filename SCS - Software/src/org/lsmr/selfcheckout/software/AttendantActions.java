@@ -1,7 +1,10 @@
 package org.lsmr.selfcheckout.software;
 
+import java.util.List;
+
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.IllegalErrorPhaseSimulationException;
 import org.lsmr.selfcheckout.SimulationException;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
 import org.lsmr.selfcheckout.devices.BanknoteStorageUnit;
@@ -16,7 +19,7 @@ public class AttendantActions {
 	// Make a static array of selfcheckout stations
 	
     // Blocks the self checkout station by disabling its crucial components
-    // Data class being the same instance for all stations should be disgussed in the meating
+    // Data class being the same instance for all stations should be discussed in the meeting
     public void attendantBlockStation(SelfCheckoutStation station) {
         Data data = Data.getInstance();
         station.baggingArea.disable();
@@ -41,7 +44,18 @@ public class AttendantActions {
     
     /*
      * Should we include a method to disable the 
+     */
+    
+    /*
+     * DISTINCTION BETWEEN DISPENSER AND STORAGE UNIT
      * 
+     * DISPENSER:
+     * 	- the attendant loads coins/banknotes
+     *  - if the customer is supposed to receive change, this is where they receive it from
+     * 
+     * STORAGE UNIT:
+     *  - banknotes/coins come from customers
+     *  - must be emptied by the attendant
      */
     
     
@@ -49,8 +63,26 @@ public class AttendantActions {
      * Simulates the attendant emptying a coin storage unit.
      * @param storageUnit Coin storage unit to empty.
      */
-    public void emptyCoinStorageUnit(CoinStorageUnit storageUnit) {
-    	storageUnit.unload();
+    public List<Coin> emptyCoinStorageUnit(CoinStorageUnit storageUnit) {
+    	List<Coin> storageContents = storageUnit.unload();
+    	return storageContents;
+    }
+    
+    
+    /*
+     * This is for completion's sake. There is unlikely to be a case where an attendant would FILL the storage unit,
+     * since the it only depletes when an attendant empties it.
+     */
+    public void fillCoinStorageUnit(CoinStorageUnit storageUnit, Coin... coins) {
+    	try {
+    		storageUnit.load(coins);
+		} catch (SimulationException e) {
+			// Should not happen, since "null" coins don't really exist
+			e.printStackTrace();
+		} catch (OverloadException e) {
+			// Trying to load too many coins
+			e.printStackTrace();
+		}
     }
     
     /**
@@ -69,6 +101,11 @@ public class AttendantActions {
 			// Trying to load too many coins
 			e.printStackTrace();
 		}
+    }
+    
+    public List<Coin> emptyCoinDispenser(CoinDispenser dispenser) {
+    	List<Coin> dispenserContents = dispenser.unload();
+    	return dispenserContents;
     }
     
     /**
