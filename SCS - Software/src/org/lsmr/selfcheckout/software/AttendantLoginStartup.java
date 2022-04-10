@@ -94,6 +94,8 @@ public class AttendantLoginStartup {
 	private Map<SelfCheckoutStation, ArrayList<CoinTrayObserver>> allSelfCoinTrayObservers = 
 			new HashMap<SelfCheckoutStation, ArrayList<CoinTrayObserver>>();
 	
+	
+	 public Login loginFrame = new Login();
     
     // add a supervision station to allSuperStationObservers
     public void addStation(SupervisionStation ss, 
@@ -318,7 +320,6 @@ public class AttendantLoginStartup {
 	
 	public void login(SupervisionStation superStation, PasswordDatabase database) {
         database.AddLoginDetails("admin","admin");
-        Login loginFrame = new Login();
         loginFrame.setVisible(true);
         while (loginFrame.isPressed()== false)
         loginFrame.setVisible(true);
