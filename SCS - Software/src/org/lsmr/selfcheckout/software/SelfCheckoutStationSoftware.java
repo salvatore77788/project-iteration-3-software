@@ -24,10 +24,9 @@ public class SelfCheckoutStationSoftware {
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant stationæ
-	protected AttendantActions at; //added attendant actions
+	protected AttendantActions at; // added attendant actions
 	private String memberNumber;
 	public MembersDatabase membersRecord;
-
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -60,8 +59,7 @@ public class SelfCheckoutStationSoftware {
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
-		
-		
+
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
 		this.touchSnObserver = new TouchScreenSoftware(this.scs);
@@ -211,6 +209,8 @@ public class SelfCheckoutStationSoftware {
 
 		int paper = ReceiptPrint.paperAmount;
 		int ink = ReceiptPrint.inkAmount;
+		System.out.println(ink);
+		System.out.println(paper);
 
 		// implementation for replacing ink and paper with new rolls/cartridges
 		int widthOfReceipt = 60;
@@ -292,34 +292,32 @@ public class SelfCheckoutStationSoftware {
 		}
 		System.out.println(changeLine);
 
-		
-		// Member Card Number portion for the receipt.
-		String memberHeader = "Member Number:";
-		detectLowInkPaper(memberHeader.toCharArray().length, 1);
-		for (char c : memberHeader.toCharArray()) {
-			scs.printer.print(c);
-			ink--;
-			paper--;
-		}
-		System.out.println(memberHeader);		
-				
-		
-		
-		// memberNumber would have been set by either swipping the 
-		// member card or entering manually through Touchscreen.
-		detectLowInkPaper(memberNumber.toCharArray().length, 1);
-		for(char c : memberNumber.toCharArray()) {
-			scs.printer.print(c);
-			ink--;
-			paper--;
-		}
-		System.out.println(memberNumber);
-		
+		// // Member Card Number portion for the receipt.
+		// String memberHeader = "Member Number:";
+		// detectLowInkPaper(memberHeader.toCharArray().length, 1);
+		// for (char c : memberHeader.toCharArray()) {
+		// scs.printer.print(c);
+		// ink--;
+		// paper--;
+		// }
+		// System.out.println(memberHeader);
+
+		// // memberNumber would have been set by either swipping the
+		// // member card or entering manually through Touchscreen.
+		// detectLowInkPaper(memberNumber.toCharArray().length, 1);
+		// for(char c : memberNumber.toCharArray()) {
+		// scs.printer.print(c);
+		// ink--;
+		// paper--;
+		// }
+		// System.out.println(memberNumber);
+
 		// So we know on the command line when it ends.
 		String footerReceipt = String.format("%32s\n%s", "END OF THE RECEIPT",
 				"------------------------------------------------------------");
 		System.out.println(footerReceipt);
-		
+		System.out.println(ink);
+		System.out.println(paper);
 		scs.printer.cutPaper();
 	}
 
@@ -413,11 +411,11 @@ public class SelfCheckoutStationSoftware {
 	public void startUpGUI() {
 		// does nothing for now
 	}
-	
+
 	public String getMemberCardNumber() {
 		return this.memberNumber;
 	}
-	
+
 	public void setMemberCardNumber(String memberCN) {
 		this.memberNumber = memberCN;
 	}

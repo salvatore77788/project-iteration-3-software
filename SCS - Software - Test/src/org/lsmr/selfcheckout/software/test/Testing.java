@@ -5,6 +5,9 @@ import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.Numeral;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
@@ -17,20 +20,17 @@ public class Testing {
 	public static void main(String[] args) throws Exception {
 
 		Testing test = new Testing();
+		// test.testBarcodeScannerSoftware();
 
-		test.testBarcodeScannerSoftware();
-
-		test.testBanknoteValidator();
-
+		// test.testBanknoteValidator();
 		test.testCheckout();
 
-		test.testReceiptPrinter();
+		// test.testReceiptPrinter();
 
-		test.testRegularCash();
+		// test.testRegularCash();
+		// test.testReceiptPrinter();
 
-		test.testReceiptPrinter();
-
-		test.testRegularCash();
+		// test.testRegularCash();
 	}
 
 	public Testing() {
@@ -92,10 +92,8 @@ public class Testing {
 
 		int paper = ReceiptPrint.paperAmount;
 		int ink = ReceiptPrint.inkAmount;
-
 		System.out.println(ink);
 		System.out.println(paper);
-
 		testHardware.scs.printer.addInk(ink);
 		testHardware.scs.printer.addPaper(paper);
 
@@ -108,9 +106,6 @@ public class Testing {
 		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 100);
 		testHardware.scs.banknoteValidator.accept(bn);
 
-		// To replicate how the member number would show in the receipt.
-		software.setMemberCardNumber("85052420");
-		
 		software.checkout();
 
 	}
