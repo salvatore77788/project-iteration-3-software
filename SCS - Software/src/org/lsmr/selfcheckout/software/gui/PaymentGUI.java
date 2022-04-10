@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Locale;
 
+import javax.swing.JFrame;
+
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
@@ -15,7 +17,7 @@ import org.lsmr.selfcheckout.software.SelfCheckoutSystemSoftwareObserver;
 /**
  * Presents the GUI frame for choosing payment options, swiping membership card, and checking total due/paid.
  */
-public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystemSoftwareObserver {
+public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 	private static final String PAY_CARD_TEXT = "Please scan, swipe, or insert card.";
 	private static final String PAY_CASH_TEXT = "Please insert coins and dollars.";
 	private static final String MEMBERSHIP_TEXT = "Please swipe membership card.";
@@ -41,20 +43,20 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
     private Boolean membershipCardScanned = false;
     
     private SelfCheckoutStationSoftware software;
+    private JFrame frame;
 
     /**
      * Creates new form PaymentGUI
      */
     public PaymentGUI(SelfCheckoutStationSoftware software) {
-        initComponents();
-        
-        this.software = software;
+    	this.software = software;
         software.attach(this);
+        frame = software.scs.screen.getFrame();
+    	
+        initComponents();
         
         // Get the card layout so we can quickly swap cards
         cardLayout = (CardLayout)(jPanelPaymentTop.getLayout());
-        
-        setLocation(1000, 300);
         
         jTextAreaInfo.setWrapStyleWord(true);
         jTextAreaInfo.setLineWrap(true);
@@ -68,6 +70,9 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
         paymentTester.setLocation(400, 300);
         
         updatePaymentLabels();
+        
+        frame.setLocation(1000, 300);
+        frame.setVisible(true);
     }
     
     private void updatePaymentLabels() {
@@ -120,7 +125,7 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
         jLabelAmountDue = new javax.swing.JLabel();
         jLabelAmountPaid = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanelPaymentTop.setLayout(new java.awt.CardLayout());
 
@@ -305,8 +310,8 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
                 .addComponent(jPanelPaymentInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(frame.getContentPane());
+        frame.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,7 +321,7 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
             .addComponent(jPanelPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        frame.pack();
     }// </editor-fold>                        
 
     private void jButtonInfoScreenBackActionPerformed(java.awt.event.ActionEvent evt) {                                                      
@@ -365,7 +370,7 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
 	        /* Create and display the form */
 	        java.awt.EventQueue.invokeLater(new Runnable() {
 	            public void run() {
-	                new PaymentGUI(software).setVisible(true);
+	                new PaymentGUI(software);
 	            }
 	        });
         
