@@ -17,7 +17,7 @@ public class TouchScreenTest {
 
 	private AttendantStation as;
 	private TouchScreenSoftware tss;
-	// private ElectronicScale es;
+	private ElectronicScale es;
 	private TouchScreenStub ts;
 	private ElectronicScaleSoftware escaleObserver;
 
@@ -34,9 +34,9 @@ public class TouchScreenTest {
 
 		as = new AttendantStation();
 		tss = new TouchScreenSoftware(as);
-		// es = new ElectronicScale(1, 1);
+		es = new ElectronicScale(1, 1);
 		// es.endConfigurationPhase();
-		// ts = new TouchScreenStub();
+		ts = new TouchScreenStub();
 		// ts.endConfigurationPhase();
 		ts.attach(tss);
 	}
