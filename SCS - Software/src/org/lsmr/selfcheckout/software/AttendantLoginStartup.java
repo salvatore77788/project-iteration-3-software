@@ -30,7 +30,7 @@ public class AttendantLoginStartup {
 	private boolean isLoggedIn = false;
 	private SupervisionStation superStation;
 	
-	private ArrayList<SupervisionStation> allSuperStations = new ArrayList<SupervisionStation>();
+	public ArrayList<SupervisionStation> allSuperStations = new ArrayList<SupervisionStation>();
 	
 	private Map<SupervisionStation, ArrayList<TouchScreenObserver>> allSuperTouchScreenObservers = 
 			new HashMap<SupervisionStation, ArrayList<TouchScreenObserver>>(); 
@@ -322,6 +322,7 @@ public class AttendantLoginStartup {
         loginFrame.setVisible(true);
         while (loginFrame.isPressed()== false)
         loginFrame.setVisible(true);
+        loginFrame.unPressed();
         String id = loginFrame.getTextUserID();
         String password = loginFrame.getPasswordEntered();
         if(database.getPassword(id) == password && isLoggedIn == false)

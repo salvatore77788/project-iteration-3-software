@@ -50,13 +50,15 @@ public class AttendantLoginStartupTest {
     @Test
     public void addStationTest() {
     	loginStartup.addStation(superStation, null, null);
+    	
+
 
     }
     
     @Test
     public void removeStationTest() {
     	loginStartup.removeStation(superStation);
-
+    	Assert.assertTrue(!loginStartup.getAllSuperStations().contains(superStation));
     }
 	
     @Test
@@ -68,9 +70,12 @@ public class AttendantLoginStartupTest {
     
     @Test
     public void shutDownTest() {
-    	loginStartup.shutdown(superStation);
-
+    	loginStartup.startup(superStation);
+    	
+    	
     }
+    
+
     
     @Test
     public void loginTest() {
