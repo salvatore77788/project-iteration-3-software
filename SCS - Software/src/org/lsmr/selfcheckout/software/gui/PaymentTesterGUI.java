@@ -13,6 +13,7 @@ import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.CardIssuer;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 public class PaymentTesterGUI extends javax.swing.JFrame {
 
@@ -28,11 +29,11 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     /**
      * Creates new form PaymentTesterGUI
      */
-    public PaymentTesterGUI(SelfCheckoutStation station, CardIssuer cardIssuer) {
+    public PaymentTesterGUI(SelfCheckoutStationSoftware software) {
         initComponents();
         
-        this.station = station;
-        this.cardIssuer = cardIssuer;
+        station = software.scs;
+        cardIssuer = software.cardSoftware.cardIssuer;
         
         Currency c = Currency.getInstance(Locale.CANADA);
         
@@ -42,8 +43,8 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
         creditCard = createCard("credit", "123456789", "John Doe", "011", "1234", true, true, expiry, new BigDecimal("1000.00"));
         debitCard = createCard("debit", "987654321", "Doe John", "110", "4321", true, true, expiry, new BigDecimal("1000.00"));
         giftCard = createCard("gift", "1010101010", "Gift Man", "000", "0000", false, false, expiry, new BigDecimal("1000.00"));
-        membershipCard = createCard("membership", "192837465", "Member", "000", "0000", false, false, expiry, new BigDecimal("1000.00"));
-        
+        membershipCard = createCard("member", "192837465", "Member", "000", "0000", false, false, expiry, new BigDecimal("1000.00"));
+        software.memberCardObserver.memberDatabase.members.put("192837465", "Member"); // Register the test membership card
         
         coins = new Coin[] {
         		new Coin(c, new BigDecimal("0.05")),

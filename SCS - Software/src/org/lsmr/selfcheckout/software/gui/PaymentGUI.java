@@ -60,8 +60,9 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
         software.amountDue = new BigDecimal("1000.00");
         software.cardSoftware.paymentAmount = new BigDecimal("100.0");
         software.cardSoftware.cardIssuer = new CardIssuer("Test Financing");
-        PaymentTesterGUI paymentTester = new PaymentTesterGUI(software.scs, software.cardSoftware.cardIssuer);
+        PaymentTesterGUI paymentTester = new PaymentTesterGUI(software);
         paymentTester.setVisible(true);
+        paymentTester.setLocation(400, 300);
         
         updatePaymentLabels();
     }

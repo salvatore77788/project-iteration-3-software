@@ -95,14 +95,13 @@ public class ScanMembershipCard implements CardReaderObserver {
     // update cardData object in this class
     @Override
     public void cardDataRead(CardReader reader, Card.CardData data) {
-    
+    	
     	// based on the assumption, the swiped would have already happened. (reset.)
     	this.cardSwiped = false;
     	// Only care about swipe or manual entry for membership card
     	if(data.getClass() == CardSwipeData.class) {
     		if(data.getType()=="member" || data.getType()=="membership") {
     			if(this.memberDatabase.authenticateMember(data)) {
-    				
     				
     				theSoftware.setMemberCardNumber(data.getNumber());
     				//include it in the receipt.

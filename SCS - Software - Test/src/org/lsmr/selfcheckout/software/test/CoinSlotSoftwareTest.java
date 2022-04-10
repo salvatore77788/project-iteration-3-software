@@ -22,6 +22,8 @@ import org.lsmr.selfcheckout.software.BarcodeScannerSoftware;
 import org.lsmr.selfcheckout.software.CoinSlotSoftware;
 import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.ItemInfo;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSetup;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 import org.lsmr.selfcheckout.software.TestDatabase;
 
 public class CoinSlotSoftwareTest {
@@ -43,7 +45,12 @@ public class CoinSlotSoftwareTest {
     public void setup() {
         amountPaid = new BigDecimal[1];
         amountPaid[0] = BigDecimal.ZERO;
-        css = new CoinSlotSoftware(amountPaid);
+        try {
+			css = new CoinSlotSoftware(new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         coinDenominations.add(new BigDecimal(0.05));
         coinDenominations.add(new BigDecimal(0.10));
         coinDenominations.add(new BigDecimal(0.25));
