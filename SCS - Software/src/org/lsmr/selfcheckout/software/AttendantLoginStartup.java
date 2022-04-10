@@ -313,7 +313,6 @@ public class AttendantLoginStartup {
 	}
 	
 	
-	//id and password inputed for a given superVisionStation and database
 	public void login(SupervisionStation superStation, PasswordDatabase database) {
         database.AddLoginDetails("admin","admin");
         Login loginFrame = new Login();
