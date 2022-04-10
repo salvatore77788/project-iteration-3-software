@@ -320,10 +320,10 @@ public class AttendantLoginStartup {
 	
 	public void login(SupervisionStation superStation, PasswordDatabase database) {
         database.AddLoginDetails("admin","admin");
-        loginFrame.setVisible(true);
+        loginFrame.unPressed();
         while (loginFrame.isPressed()== false)
         loginFrame.setVisible(true);
-        loginFrame.unPressed();
+      
         String id = loginFrame.getTextUserID();
         String password = loginFrame.getPasswordEntered();
         if(database.getPassword(id) == password && isLoggedIn == false)
