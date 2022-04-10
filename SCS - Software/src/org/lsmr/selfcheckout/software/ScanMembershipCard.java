@@ -13,17 +13,22 @@ import java.io.IOException;
 import java.util.Random;
 
 /**
- * This class will read and verify membership card,
- *
+ * Class ScanMembershipCard that reads and verifies the costumer's membership card
  * if card verified then we can use "isApplicableForDiscount" method to
- * know this card user isApplicableForDiscount status then buy this method we can provide
- * Discount when customer paying using credit or debit card.
+ * know this card user isApplicableForDiscount status then by this method we can provide
+ * discount when customer is paying using credit or debit card.
  */
+
+/**
+ * implements CardReaderObserver
+ */
+
 public class ScanMembershipCard implements CardReaderObserver {
 
     // An instance of "theSoftware" would call up this class.
     public SelfCheckoutStationSoftware theSoftware;
     public boolean cardSwiped = false;
+    
     // Where we'll store members that are registered.
     public MembersDatabase memberDatabase;
     
@@ -31,7 +36,7 @@ public class ScanMembershipCard implements CardReaderObserver {
     // card type
     public static final String TYPE = "MEMBERSHIP";
 
-    // should null at beginning, after insert card data will be available
+    // should be null at the beginning, after inserting the card, data will be available
     private Card.CardData cardData;
 
     //private boolean cardInsert = false;
@@ -39,7 +44,11 @@ public class ScanMembershipCard implements CardReaderObserver {
     // is applicable for discount
     private boolean isApplicableForDiscount = false;
 
-    // default constructor
+    /**
+     * Parameterized constructor for the class ScanMembershipCard
+     * @param aSoftware 
+     * 			the SelfCheckoutStationSoftware used
+     */
     public ScanMembershipCard(SelfCheckoutStationSoftware aSoftware) {
         // validate card type
     	this.theSoftware = aSoftware;    
@@ -74,9 +83,10 @@ public class ScanMembershipCard implements CardReaderObserver {
     }
 
     /**
-     * card swap will verify card type, the card type should be "membership"
+     * cardSwiped will verify card type, the card type should be "membership" in this case
      *
-     * @param reader cardReader
+     * @param reader 
+     * 			the cardReader used
      */
     @Override
     public void cardSwiped(CardReader reader) {
@@ -91,8 +101,16 @@ public class ScanMembershipCard implements CardReaderObserver {
       
     }
 
-    // if any of cardReader operation happened we will validate type and
-    // update cardData object in this class
+
+    /**
+     * Reads the card Data and checks if the card is valid
+     * if any of cardReader operations happen we will validate type and 
+     * update cardData object in this class
+     * @param reader
+     * 			the CardReader used
+     * @param data
+     * 			the membership card data
+     */
     @Override
     public void cardDataRead(CardReader reader, Card.CardData data) {
     
@@ -114,7 +132,10 @@ public class ScanMembershipCard implements CardReaderObserver {
     	//cardData = data;
     }
 
-    // return isApplicableForDiscount's current status
+    /**
+     * Function isApplicableForDiscount decides whether the membership card is applicable for discount
+     * @return isApplicableForDiscount's current status
+     */
     public boolean isApplicableForDiscount() {
         return isApplicableForDiscount;
     }
