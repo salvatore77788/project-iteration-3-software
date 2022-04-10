@@ -2,6 +2,7 @@ package org.lsmr.selfcheckout.software;
 
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import java.util.Scanner;
 
 public class AttendantActions {
 
