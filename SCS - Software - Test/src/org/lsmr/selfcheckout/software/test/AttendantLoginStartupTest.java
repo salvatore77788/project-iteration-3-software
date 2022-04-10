@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Currency;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -64,7 +65,12 @@ public class AttendantLoginStartupTest {
     
     @Test
     public void loginTest() {
+    	pdata.AddLoginDetails("0", "0");
         loginStartup.login(superStation, pdata);
+        
+        //not sure how to test gui input so that it puts in correct login information
+ 
+        Assert.assertTrue(loginStartup.getLoginStatus() == true);
   
     }
     
@@ -72,6 +78,8 @@ public class AttendantLoginStartupTest {
     @Test
     public void logoutTest() {
         loginStartup.logout(superStation);
+        
+        Assert.assertTrue(loginStartup.getLoginStatus() == false);
   
     }
     
