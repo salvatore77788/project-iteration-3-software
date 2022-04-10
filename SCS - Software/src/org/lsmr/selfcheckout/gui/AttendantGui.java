@@ -21,6 +21,7 @@ import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
 import org.lsmr.selfcheckout.software.AvailableFunds;
 import org.lsmr.selfcheckout.software.ItemInfo;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 
 public class AttendantGui {
@@ -37,7 +38,7 @@ public class AttendantGui {
 	// Test station software class
 	// This should be replaced with SelfCheckoutStationSoftware when it is ready
 	private class SCSSoftware {
-		public SelfCheckoutStation station;
+		public SelfCheckoutStationSoftware station;
 		
 		public ArrayList<ItemInfo> itemsScanned;
 		public int inkLeft;
@@ -50,7 +51,7 @@ public class AttendantGui {
 		
 		public AvailableFunds funds;
 		
-		public SCSSoftware(SelfCheckoutStation station) {
+		public SCSSoftware(SelfCheckoutStationSoftware station) {
 			this.station = station;
 			
 			itemsScanned = new ArrayList<ItemInfo>();
@@ -61,7 +62,7 @@ public class AttendantGui {
 			isBlocked = false;
 			isShutdown = true;
 			
-			funds = new AvailableFunds(station);
+			funds = new AvailableFunds(station.scs);
 			
 			status = SCSStatus.OFF;
 		}
@@ -108,8 +109,9 @@ public class AttendantGui {
 	
     /**
      * Creates new form TestFrame
+     * @throws Exception 
      */
-    public AttendantGui() {
+    public AttendantGui() throws Exception {
     	superStation = new SupervisionStation();
     	frame = superStation.screen.getFrame();
     	
@@ -122,7 +124,7 @@ public class AttendantGui {
         frame.setVisible(true);
     }
 
-    private void initGUI() {
+    private void initGUI() throws Exception {
     	// TODO: Remove testing code
     	
     	// Custom renderer for the station list
@@ -151,8 +153,8 @@ public class AttendantGui {
     	// Create some test stations
     	stationSoftwares = new SCSSoftware[3];
     	for(int i = 0; i < 3; i++) {
-    		SelfCheckoutStation s = new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1);
-    		superStation.add(s);
+    		SelfCheckoutStationSoftware s = new SelfCheckoutStationSoftware(new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1));
+    		superStation.add(s.scs);
     		stationSoftwares[i] = new SCSSoftware(s);
     	}
     	
@@ -721,14 +723,14 @@ public class AttendantGui {
 
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // Block the current station
-    	AttendantActions.blockStation(currentSoftware.station);
+    	AttendantActions.blockStation(currentSoftware.station.scs);
     	currentSoftware.isBlocked = true;
     	setStation();
     }                                                   
 
     private void jButtonUnblockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                      
     	// Unblock the current station
-    	AttendantActions.unBlockStation(currentSoftware.station);
+    	AttendantActions.unBlockStation(currentSoftware.station.scs);
     	currentSoftware.isBlocked = false;
     	setStation();
     }                                                     
@@ -740,7 +742,7 @@ public class AttendantGui {
         	BigDecimal denom = coinDenoms[idx];
         	
         	int refillCount = SelfCheckoutStation.COIN_DISPENSER_CAPACITY - currentSoftware.funds.getCoinCount(denom);
-        	AttendantActions.fillCoinDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Coin(currency, denom)).toArray(new Coin[refillCount]));
+        	AttendantActions.fillCoinDispenser(currentSoftware.station.scs, denom, Collections.nCopies(refillCount, new Coin(currency, denom)).toArray(new Coin[refillCount]));
         }
         
         setStation();
@@ -753,19 +755,19 @@ public class AttendantGui {
         	int denom = bnDenoms[idx];
         	
         	int refillCount = SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY - currentSoftware.funds.getBanknoteCount(denom);
-        	AttendantActions.fillBanknoteDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
+        	AttendantActions.fillBanknoteDispenser(currentSoftware.station.scs, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
         }
         
         setStation();
     }                                                              
 
     private void jButtonUnloadBanknoteStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                             
-        AttendantActions.emptyBanknoteStorageUnit(currentSoftware.station);
+        AttendantActions.emptyBanknoteStorageUnit(currentSoftware.station.scs);
         setStation();
     }                                                            
 
     private void jButtonUnloadCoinStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    	AttendantActions.emptyCoinStorageUnit(currentSoftware.station);
+    	AttendantActions.emptyCoinStorageUnit(currentSoftware.station.scs);
     	setStation();
     }                                                        
 
@@ -839,8 +841,9 @@ public class AttendantGui {
 
     /**
      * @param args the command line arguments
+     * @throws Exception 
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         /* Create and display the form */
         new AttendantGui();
     }

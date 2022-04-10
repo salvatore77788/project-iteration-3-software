@@ -33,7 +33,7 @@ public class AttendantActions {
         station.scanningArea.disable();
         station.handheldScanner.disable();
         station.mainScanner.disable();
-        station.cardReader.disable();
+//        station.cardReader.disable();
     }
 
     // Unblocks the self checkout station by enabling its crucial components
@@ -43,7 +43,7 @@ public class AttendantActions {
         station.scanningArea.enable();
         station.handheldScanner.enable();
         station.mainScanner.enable();
-        station.cardReader.enable();
+//        station.cardReader.enable();
     }
     
     /*
