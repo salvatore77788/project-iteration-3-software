@@ -1,7 +1,5 @@
 package org.lsmr.selfcheckout.software;
 
-import java.math.BigDecimal;
-
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.SimulationException;
@@ -56,8 +54,8 @@ public class AttendantActions {
      * Simulates the attendant emptying a coin storage unit.
      * @param station SelfCheckoutStation whose coin storage is to be unloaded.
      */
-    public static void emptyCoinStorageUnit(SelfCheckoutStation station) {
-    	station.coinStorage.unload();
+    public void emptyCoinStorageUnit(CoinStorageUnit storageUnit) {
+    	storageUnit.unload();
     }
     
     /**
@@ -66,9 +64,7 @@ public class AttendantActions {
      * @param denom The coin denomination of the coin dispenser to refill.
      * @param coins Array of coins that will be put into the dispenser unit.
      */
-    public static void fillCoinDispenser(SelfCheckoutStation station, BigDecimal denom, Coin ... coins) {
-    	CoinDispenser dispenser = station.coinDispensers.get(denom);
-    	
+    public void fillCoinDispenser(CoinDispenser dispenser, Coin ... coins) {
     	// Assume the coins are correct
     	try {
 			dispenser.load(coins);
@@ -85,8 +81,8 @@ public class AttendantActions {
      * Simulates the attendant emptying a banknote storage unit.
      * @param station SelfCheckoutStation whose banknote storage is to be unloaded.
      */
-    public static void emptyBanknoteStorageUnit(SelfCheckoutStation station) {
-    	station.banknoteStorage.unload();
+    public void emptyBanknoteStorageUnit(BanknoteStorageUnit storageUnit) {
+    	storageUnit.unload();
     }
     
     /**
@@ -95,8 +91,7 @@ public class AttendantActions {
      * @param denom The banknote denomination of the banknote dispenser to refill.
      * @param banknotes Banknotes to load into the dispenser.
      */
-    public static void fillBanknoteDispenser(SelfCheckoutStation station, int denom, Banknote ... banknotes) {
-    	BanknoteDispenser dispenser = station.banknoteDispensers.get(denom);
+    public void fillBanknoteDispenser(BanknoteDispenser dispenser, Banknote ... banknotes) {
     	try {
 			dispenser.load(banknotes);
 		} catch (OverloadException e) {
