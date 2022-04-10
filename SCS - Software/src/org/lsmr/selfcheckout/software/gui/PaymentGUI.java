@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
+import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 import org.lsmr.selfcheckout.software.SelfCheckoutSystemSoftwareObserver;
 
@@ -45,6 +46,7 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
         initComponents();
         
         this.software = software;
+        software.attach(this);
         
         // Get the card layout so we can quickly swap cards
         cardLayout = (CardLayout)(jPanelPaymentTop.getLayout());
@@ -53,6 +55,13 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
         
         jTextAreaInfo.setWrapStyleWord(true);
         jTextAreaInfo.setLineWrap(true);
+        
+        // Testing
+        software.amountDue = new BigDecimal("1000.00");
+        software.cardSoftware.paymentAmount = new BigDecimal("100.0");
+        software.cardSoftware.cardIssuer = new CardIssuer("Test Financing");
+        PaymentTesterGUI paymentTester = new PaymentTesterGUI(software.scs, software.cardSoftware.cardIssuer);
+        paymentTester.setVisible(true);
         
         updatePaymentLabels();
     }
@@ -397,7 +406,7 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
 
 	@Override
 	public void amountPaid(SelfCheckoutStationSoftware software, BigDecimal amount) {
-		// TODO Auto-generated method stub
+		System.out.println("amount paid: " + amount);
 		// An amount was paid
 		if(state != PaymentGUIState.SELECTION && state != PaymentGUIState.MEMBERSHIP) {
 			// A payment was made
@@ -407,7 +416,8 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
 	    	if(software.amountDue.compareTo(software.getAmountPaid()) <= 0)
 	    		System.out.println("Payment complete. Ready to checkout.");
 			
-			cardLayout.first(jPanelPaymentTop); // Go back to the previous screen
+	    	if(state != PaymentGUIState.CASH)
+	    		cardLayout.first(jPanelPaymentTop); // Go back to the previous screen
 		}
 	}
 

@@ -61,7 +61,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.db = new TestDatabase();
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
-		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
+		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this);
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
 		this.cardSoftware = new CardSoftware(this);
@@ -70,7 +70,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		// There is another constructor that uses an Attendant Station.
 		this.touchSnObserver = new TouchScreenSoftware(this.scs);
 
-		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
+		this.coinSlotSoftware = new CoinSlotSoftware(this);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
 
 		// attach the ess and bss to the selfcheckout hardware

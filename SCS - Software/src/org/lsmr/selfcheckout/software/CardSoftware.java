@@ -46,13 +46,19 @@ public class CardSoftware implements CardReaderObserver {
     }
     
     public void payWithCard(CardData data) {
+    	String cardType = data.getType();
+    	
+    	// Not a paying card
+    	if(cardType != "credit" && cardType != "debit" && cardType != "gift")
+    		return;
+    	
     	String cardNumber = data.getNumber();
     	
     	// Verify the card is good through the card issuer
     	BigDecimal actualAmount = paymentAmount.min(scss.getAmountLeftToPay());
     	
-    	if(actualAmount.compareTo(BigDecimal.ZERO) < 0) {
-    		System.out.println("paying....");
+    	int c = actualAmount.compareTo(BigDecimal.ZERO);
+    	if(c > 0) {
 	    	int holdNumber = cardIssuer.authorizeHold(cardNumber, actualAmount);
 	    	if(holdNumber != -1 && cardIssuer.postTransaction(cardNumber, holdNumber, actualAmount)) {
 	    		// Amount has been paid in full

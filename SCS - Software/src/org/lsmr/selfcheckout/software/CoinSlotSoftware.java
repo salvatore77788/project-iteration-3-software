@@ -17,11 +17,11 @@ import org.lsmr.selfcheckout.devices.observers.CoinValidatorObserver;
 
 public class CoinSlotSoftware
         implements CoinDispenserObserver, CoinStorageUnitObserver, CoinTrayObserver, CoinValidatorObserver {
-
-    BigDecimal[] amountPaid;
+	
+	private SelfCheckoutStationSoftware software;
     
-    public CoinSlotSoftware(BigDecimal[] amountPaid) {
-    	this.amountPaid = amountPaid;
+    public CoinSlotSoftware(SelfCheckoutStationSoftware software) {
+    	this.software = software;
     }
 
     @Override
@@ -44,8 +44,7 @@ public class CoinSlotSoftware
      */
     @Override
     public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-        BigDecimal inserted = (amountPaid[0].add(valueof(value)));
-        this.amountPaid[0] = inserted;
+        software.addAmountPaid(value);
     }
 
     private BigDecimal valueof(BigDecimal value) {
