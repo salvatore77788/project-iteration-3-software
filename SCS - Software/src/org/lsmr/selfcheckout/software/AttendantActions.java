@@ -1,9 +1,13 @@
 package org.lsmr.selfcheckout.software;
 
+import java.util.List;
+
 import java.math.BigDecimal;
+
 
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
+import org.lsmr.selfcheckout.IllegalErrorPhaseSimulationException;
 import org.lsmr.selfcheckout.SimulationException;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
 import org.lsmr.selfcheckout.devices.BanknoteStorageUnit;
@@ -15,40 +19,42 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 public class AttendantActions {
 
 	// We need references to selfcheckout stations
-	/* 
-	 * !!! A list of selcheckout stations can be retrived from the SupervisionStation class if needed
-	 * */
-	
 	// Make a static array of selfcheckout stations
-	/* 
-	 * !!! Again an array of selfcheckout stations exist in  SupervisionStation class but I believe it to be redundant to 
-	 * implement it here
-	 * */
-
 	
     // Blocks the self checkout station by disabling its crucial components
-    // Data class being the same instance for all stations should be disgussed in the meating
-    public static void blockStation(SelfCheckoutStation station) {
+    // Data class being the same instance for all stations should be discussed in the meeting
+    public void attendantBlockStation(SelfCheckoutStation station) {
         station.baggingArea.disable();
         station.scanningArea.disable();
         station.handheldScanner.disable();
         station.mainScanner.disable();
-//        station.cardReader.disable();
+        station.cardReader.disable();
     }
 
     // Unblocks the self checkout station by enabling its crucial components
     // Could be used to approve a weight discrepancy
-    public static void unBlockStation(SelfCheckoutStation station) {
+    public void attendantUnBlockStation(SelfCheckoutStation station) {
         station.baggingArea.enable();
         station.scanningArea.enable();
         station.handheldScanner.enable();
         station.mainScanner.enable();
-//        station.cardReader.enable();
+        station.cardReader.enable();
     }
     
     /*
      * Should we include a method to disable the 
+     */
+    
+    /*
+     * DISTINCTION BETWEEN DISPENSER AND STORAGE UNIT
      * 
+     * DISPENSER:
+     * 	- the attendant loads coins/banknotes
+     *  - if the customer is supposed to receive change, this is where they receive it from
+     * 
+     * STORAGE UNIT:
+     *  - banknotes/coins come from customers
+     *  - must be emptied by the attendant
      */
     
     
@@ -56,8 +62,17 @@ public class AttendantActions {
      * Simulates the attendant emptying a coin storage unit.
      * @param station SelfCheckoutStation whose coin storage is to be unloaded.
      */
-    public static void emptyCoinStorageUnit(SelfCheckoutStation station) {
-    	station.coinStorage.unload();
+    public static List<Coin> emptyCoinStorageUnit(SelfCheckoutStation station) {
+    	List<Coin> storageContents = station.coinStorage.unload();
+    	
+    	// This should be displayed on the touch screen.
+    	BigDecimal totalValue = new BigDecimal(0);
+    	for (int i = 0; i < storageContents.size(); i++) {
+    		totalValue.add(storageContents.get(i).getValue());
+    	}
+    	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
+    	
+    	return storageContents;
     }
     
     /**
@@ -85,8 +100,17 @@ public class AttendantActions {
      * Simulates the attendant emptying a banknote storage unit.
      * @param station SelfCheckoutStation whose banknote storage is to be unloaded.
      */
-    public static void emptyBanknoteStorageUnit(SelfCheckoutStation station) {
-    	station.banknoteStorage.unload();
+    public static List<Banknote> emptyBanknoteStorageUnit(SelfCheckoutStation station) {
+    	List<Banknote> storageContents = station.banknoteStorage.unload();
+    	
+    	// This should be displayed on the touch screen.
+    	int totalValue = 0;
+    	for (int i = 0; i < storageContents.size(); i++) {
+    		totalValue += storageContents.get(i).getValue();
+    	}
+    	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
+    	
+    	return storageContents;
     }
     
     /**
