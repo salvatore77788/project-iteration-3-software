@@ -7,6 +7,12 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Currency;
 
+import javax.swing.JFrame;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +20,7 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantLoginStartup;
 import org.lsmr.selfcheckout.software.PasswordDatabase;
+import org.lsmr.selfcheckout.software.gui.Login;
 
 public class AttendantLoginStartupTest {
 	
@@ -21,6 +28,7 @@ public class AttendantLoginStartupTest {
     private AttendantLoginStartup loginStartup;
     private SupervisionStation superStation;
     private PasswordDatabase pdata;
+    private Login loginFrame;
 
     @Before
     public void setup() {
@@ -54,6 +62,7 @@ public class AttendantLoginStartupTest {
     @Test
     public void startUpTest() {
     	loginStartup.startup(superStation);
+    	
 
     }
     
@@ -66,7 +75,9 @@ public class AttendantLoginStartupTest {
     @Test
     public void loginTest() {
     	pdata.AddLoginDetails("0", "0");
-        loginStartup.login(superStation, pdata);
+    	JTextField id = new JTextField("0");
+    	JPasswordField pass = (JPasswordField) new JTextField("0");
+        loginStartup.login(superStation, pdata); 
         
         //not sure how to test gui input so that it puts in correct login information
  

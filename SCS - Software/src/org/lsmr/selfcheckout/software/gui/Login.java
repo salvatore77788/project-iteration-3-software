@@ -51,7 +51,7 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textFieldUserID = new JTextField();
+		textFieldUserID = new JTextField());
 		textFieldUserID.setToolTipText("UserID");
 		textFieldUserID.setBounds(101, 89, 299, 20);
 		contentPane.add(textFieldUserID);
@@ -85,6 +85,7 @@ public class Login extends JFrame {
 		contentPane.add(LoginButton);
 	}
 	
+
 	public String getTextUserID(){
 		if (pressed == true);
 		String enteredID;
@@ -105,4 +106,7 @@ public class Login extends JFrame {
 	public boolean isPressed() {
 		return pressed;
 	}
+
+	
+	
 }
