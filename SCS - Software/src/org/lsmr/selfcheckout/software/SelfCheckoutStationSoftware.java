@@ -67,7 +67,6 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
 		this.cardSoftware = new CardSoftware(this);
-		this.scanAndBag = new ScanAndBag(scs, db, this);
 
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
@@ -376,9 +375,6 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 			rp.detectLowPaper(rp.getpaperAmount());
 			print(total);
 
-			while(ess.getCurrentWeight() > 0.01) {
-				System.out.println("Please take your bags!");
-			}
 			resetVars();
 		} else {
 			System.out.println("Insuficient funds to complete checkout!");
