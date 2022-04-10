@@ -291,17 +291,32 @@ public class SelfCheckoutStationSoftware {
 		System.out.println(changeLine);
 
 		
-		// Printing Member Number onto receipt code.
-		System.out.println("Member Number: ");
-		// For iterating through characters of string named memberNumber.
-		detectLowInkPaper(changeLine.toCharArray().length, 1);
+		// Member Card Number portion for the receipt.
+		String memberHeader = "Member Number:";
+		detectLowInkPaper(memberHeader.toCharArray().length, 1);
+		for (char c : memberHeader.toCharArray()) {
+			scs.printer.print(c);
+			ink--;
+			paper--;
+		}
+		System.out.println(memberHeader);		
+				
+		
+		
+		// memberNumber would have been set by either swipping the 
+		// member card or entering manually through Touchscreen.
+		detectLowInkPaper(memberNumber.toCharArray().length, 1);
 		for(char c : memberNumber.toCharArray()) {
 			scs.printer.print(c);
 			ink--;
 			paper--;
 		}
+		System.out.println(memberNumber);
 		
-		
+		// So we know on the command line when it ends.
+		String footerReceipt = String.format("%32s\n%s", "END OF THE RECEIPT",
+				"------------------------------------------------------------");
+		System.out.println(footerReceipt);
 		
 		scs.printer.cutPaper();
 	}

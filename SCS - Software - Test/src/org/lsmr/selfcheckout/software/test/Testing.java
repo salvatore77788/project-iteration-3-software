@@ -108,6 +108,9 @@ public class Testing {
 		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 100);
 		testHardware.scs.banknoteValidator.accept(bn);
 
+		// To replicate how the member number would show in the receipt.
+		software.setMemberCardNumber("85052420");
+		
 		software.checkout();
 
 	}
