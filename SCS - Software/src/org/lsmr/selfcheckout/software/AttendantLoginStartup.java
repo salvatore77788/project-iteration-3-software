@@ -314,17 +314,27 @@ public class AttendantLoginStartup {
 	
 	
 	//id and password inputed for a given superVisionStation and database
-	public void login(String id, String password, SupervisionStation superStation, PasswordDatabase database) {
-		
-		//login if password matches id
-		if(database.getPassword(id) == password && isLoggedIn == false)
-		{
-			this.superStation = superStation;
-			superStation.screen.enable();
-			superStation.keyboard.enable();
-			isLoggedIn = true;
-		}
-	}
+	public void login(SupervisionStation superStation, PasswordDatabase database) {
+        database.AddLoginDetails("admin","admin");
+        Login loginFrame = new Login();
+        loginFrame.setVisible(true);
+        while (loginFrame.isPressed()== false)
+        loginFrame.setVisible(true);
+        String id = loginFrame.getTextUserID();
+        String password = loginFrame.getPasswordEntered();
+        if(database.getPassword(id) == password && isLoggedIn == false)
+        {
+            this.superStation = superStation;
+            superStation.screen.enable();
+            superStation.keyboard.enable();
+            isLoggedIn = true;
+        }
+        else {
+            loginFrame.dispose();
+            FailedLogin failFrame = new FailedLogin();
+            failFrame.setVisible(true);
+        }
+    }
 	
 	//logout and disable screen and keyboard
 	public void logout(SupervisionStation superStation) {
