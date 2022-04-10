@@ -32,6 +32,9 @@ public class AttendantActions {
     public void attendantBlockStation(SelfCheckoutStation station) {
         Data data = Data.getInstance();
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
 =======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
@@ -45,6 +48,9 @@ public class AttendantActions {
         station.cardReader.disable();
         data.setIsDisabled(true);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
 =======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
@@ -58,6 +64,9 @@ public class AttendantActions {
     public void attendantUnBlockStation(SelfCheckoutStation station) {
         Data data = Data.getInstance();
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
 =======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
@@ -71,6 +80,9 @@ public class AttendantActions {
         station.cardReader.enable();
         data.setIsDisabled(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
 =======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
