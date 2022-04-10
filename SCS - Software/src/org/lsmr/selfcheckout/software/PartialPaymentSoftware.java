@@ -30,11 +30,12 @@ public class PartialPaymentSoftware {
         scss.scs.mainScanner.disable();
 
         // update total paid amount with partial payment
-        scss.amountPaid[0] = scss.amountPaid[0].add(amount);
+        //scss.amountPaid[0] = scss.amountPaid[0].add(amount);
+        scss.addAmountPaid(amount);
 
         // if total amount paid then go for checkout using parent method
         BigDecimal total = scss.total();
-        if (total.compareTo(scss.amountPaid[0]) <= 0) {
+        if (total.compareTo(scss.getAmountPaid()) <= 0) {
             scss.checkout();
         }
 
@@ -46,6 +47,6 @@ public class PartialPaymentSoftware {
     }
 
     public BigDecimal getAmountPaid() {
-        return scss.amountPaid[0];
+        return scss.getAmountPaid();
     }
 }

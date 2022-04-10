@@ -27,18 +27,41 @@ public class CardSoftware implements CardReaderObserver {
     public boolean cardTapped = false;
     public boolean cardSwiped = false;
     public boolean cardInsert = false;
+    public BigDecimal paymentAmount;
+    private SelfCheckoutStationSoftware scss;
     private SelfCheckoutStation scs;
     private int holdNumber;
+    public CardIssuer cardIssuer;
 
     /**
      * Parameterized constructor for the CardSoftware class
      * the cardReader is attached to the selfcheckoutstation
      * @param selfCheckoutStation the selfCheckoutStation used
      */
-    public CardSoftware(SelfCheckoutStation selfCheckoutStation) {
-        scs = selfCheckoutStation;
+    public CardSoftware(SelfCheckoutStationSoftware software) {
+    	scss = software;
+        scs = scss.scs;
         scs.cardReader.attach(this);
         cardReader = new CardReader();
+    }
+    
+    public void payWithCard(CardData data) {
+    	String cardNumber = data.getNumber();
+    	
+    	// Verify the card is good through the card issuer
+    	BigDecimal actualAmount = paymentAmount.min(scss.getAmountLeftToPay());
+    	
+    	if(actualAmount.compareTo(BigDecimal.ZERO) < 0) {
+    		System.out.println("paying....");
+	    	int holdNumber = cardIssuer.authorizeHold(cardNumber, actualAmount);
+	    	if(holdNumber != -1 && cardIssuer.postTransaction(cardNumber, holdNumber, actualAmount)) {
+	    		// Amount has been paid in full
+	    		cardIssuer.releaseHold(cardNumber, holdNumber);
+	    		scss.addAmountPaid(actualAmount);
+	    	}
+	    	else
+	    		System.out.println("Something went during card authorization/transaction.");
+    	}
     }
 
     /**
@@ -310,7 +333,7 @@ public class CardSoftware implements CardReaderObserver {
     @Override
     public void cardDataRead(CardReader reader, CardData data) {
         this.cardData = data;
-
+        payWithCard(data);
     }
 
 }

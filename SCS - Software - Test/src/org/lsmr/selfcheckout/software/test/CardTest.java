@@ -14,8 +14,10 @@ import org.lsmr.selfcheckout.InvalidPINException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.software.CardSoftware;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 public class CardTest {
+	private SelfCheckoutStationSoftware scss;
     private SelfCheckoutStation scs;
     CardSoftware pay;
     Card creditCard_tap;
@@ -46,6 +48,12 @@ public class CardTest {
         expiry.add(Calendar.YEAR, 2022);
         scs = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, weightLimitInGrams,
                 sensitivity);
+        try {
+			scss = new SelfCheckoutStationSoftware(scs);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         creditCard_tap = new Card("credit", "3924294505943847", "Bubby", "056", "1234", true, true);
         debitcard = new Card("debit", "3924294505943847", "Bubby", "056", "1234", true, true);
         creditCard_noTap = new Card("credit", "3924294505943847", "bubby", "056", "1234", false, true);
@@ -59,8 +67,62 @@ public class CardTest {
 
         payinfo = new CardIssuer("Binance");
         payinfo.addCardData("3924294505943847", "Bubby", expiry, "056", new BigDecimal(10000));
-        pay = new CardSoftware(scs);
+        pay = scss.cardSoftware;
+        pay.cardIssuer = payinfo;
+        scss.cardSoftware.paymentAmount = new BigDecimal("1000000");
 
+    }
+    
+    @Test
+    public void testPayWithCard() {
+    	scss.amountDue = new BigDecimal("100.00");
+    	scss.cardSoftware.paymentAmount = new BigDecimal("100.00");
+
+    	try {
+			scs.cardReader.swipe(creditCard);
+			
+			// Should pay full amount
+			assertEquals("Amount paid not correct.", BigDecimal.ZERO, scss.getAmountPaid());
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    @Test
+    public void testPayWithCardPartial() {
+    	scss.amountDue = new BigDecimal("100.00");
+    	scss.cardSoftware.paymentAmount = new BigDecimal("50.00");
+    	
+    	try {
+			scs.cardReader.swipe(creditCard);
+			
+			assertEquals("Amount paid not correct.", new BigDecimal("50.00"), scss.getAmountPaid());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    @Test
+    public void testPayWithUnfullCard() {
+    	scss.amountDue = new BigDecimal("100.00");
+    	scss.cardSoftware.paymentAmount = new BigDecimal("100.00");
+    	
+    	Calendar.Builder b = new Calendar.Builder();
+    	b.setDate(2024, 8, 13);
+    	payinfo.addCardData("123456789", "Emu", b.build(), "016", new BigDecimal("50.00"));
+    	Card testCard = new Card("credit", "123456789", "Emu", "016", "1234", true, true);
+    	
+    	try {
+			scs.cardReader.swipe(testCard);
+			
+			assertEquals("No amount should have been paid", new BigDecimal("0"), scss.getAmountPaid());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -75,7 +137,6 @@ public class CardTest {
 
     @Test
     public void Credit_isValid() throws IOException {
-
         assertTrue(pay.PayWithcreditcard(creditCard_tap, 1, new BigDecimal(6), "0000", new BigDecimal(6), payinfo));
 
     }

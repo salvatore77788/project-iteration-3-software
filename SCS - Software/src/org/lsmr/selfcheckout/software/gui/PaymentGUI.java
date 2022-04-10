@@ -1,20 +1,82 @@
 package org.lsmr.selfcheckout.software.gui;
 
 import java.awt.CardLayout;
+import java.math.BigDecimal;
+import java.util.Currency;
+import java.util.Locale;
 
-public class PaymentGUI extends javax.swing.JFrame {
+import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
+import org.lsmr.selfcheckout.software.SelfCheckoutSystemSoftwareObserver;
+
+public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystemSoftwareObserver {
+	private static final String PAY_CARD_TEXT = "Please scan, swipe, or insert card.";
+	private static final String PAY_CASH_TEXT = "Please insert coins and dollars.";
+	private static final String MEMBERSHIP_TEXT = "Please swipe membership card.";
+	
+	// Move out
+	static int[] bnDenoms = new int[] {5, 10, 20, 50, 100};
+	static BigDecimal[] coinDenoms = new BigDecimal[] {new BigDecimal("0.05"), new BigDecimal("0.10"), new BigDecimal("0.25"), 
+			new BigDecimal("1.00"), new BigDecimal("2.00")};
+	static Currency currency = Currency.getInstance(Locale.CANADA);
+	
+	private enum PaymentGUIState {
+		SELECTION,
+		CASH,
+		DEBIT,
+		CREDIT,
+		GIFT,
+		MEMBERSHIP
+	}
+	
     CardLayout cardLayout;
+    
+    private PaymentGUIState state = PaymentGUIState.SELECTION;
+    private Boolean membershipCardScanned = false;
+    
+    private SelfCheckoutStationSoftware software;
 
     /**
      * Creates new form PaymentGUI
      */
-    public PaymentGUI() {
+    public PaymentGUI(SelfCheckoutStationSoftware software) {
         initComponents();
         
+        this.software = software;
+        
+        // Get the card layout so we can quickly swap cards
         cardLayout = (CardLayout)(jPanelPaymentTop.getLayout());
-        cardLayout.last(jPanelPaymentTop);
         
         setLocation(1000, 300);
+        
+        jTextAreaInfo.setWrapStyleWord(true);
+        jTextAreaInfo.setLineWrap(true);
+        
+        updatePaymentLabels();
+    }
+    
+    private void updatePaymentLabels() {
+    	jLabelAmountDue.setText("Amount Due: $" + software.amountDue);
+    	jLabelAmountPaid.setText("Amount Paid: $" + software.getAmountPaid());
+    }
+    
+    private void switchToPaymentPanel() {
+    	// Change help text depending on payment method chosen
+    	String s;
+    	if(state == PaymentGUIState.CREDIT || state == PaymentGUIState.DEBIT || state == PaymentGUIState.GIFT)
+    		s = PAY_CARD_TEXT;
+    	else if(state == PaymentGUIState.CASH)
+    		s = PAY_CASH_TEXT;
+    	else if(state == PaymentGUIState.MEMBERSHIP)
+    		s = MEMBERSHIP_TEXT;
+    	else
+    		s = "Whoops";
+    	
+    	jTextAreaInfo.setText(s);
+    	
+    	cardLayout.last(jPanelPaymentTop);
     }
 
     /**
@@ -42,8 +104,8 @@ public class PaymentGUI extends javax.swing.JFrame {
         jTextAreaInfo = new javax.swing.JTextArea();
         jButtonInfoScreenBack = new javax.swing.JButton();
         jPanelPaymentInfo = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabelAmountDue = new javax.swing.JLabel();
+        jLabelAmountPaid = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -182,13 +244,13 @@ public class PaymentGUI extends javax.swing.JFrame {
 
         jPanelPaymentInfo.setBackground(new java.awt.Color(153, 153, 255));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Amount Due: $129.99");
+        jLabelAmountDue.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabelAmountDue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelAmountDue.setText("Amount Due: $129.99");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Amount Paid: 120");
+        jLabelAmountPaid.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabelAmountPaid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelAmountPaid.setText("Amount Paid: 120");
 
         javax.swing.GroupLayout jPanelPaymentInfoLayout = new javax.swing.GroupLayout(jPanelPaymentInfo);
         jPanelPaymentInfo.setLayout(jPanelPaymentInfoLayout);
@@ -196,20 +258,20 @@ public class PaymentGUI extends javax.swing.JFrame {
             jPanelPaymentInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPaymentInfoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(jLabelAmountDue)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPaymentInfoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addComponent(jLabelAmountPaid)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelPaymentInfoLayout.setVerticalGroup(
             jPanelPaymentInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPaymentInfoLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel1)
+                .addComponent(jLabelAmountDue)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(jLabelAmountPaid)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -250,39 +312,54 @@ public class PaymentGUI extends javax.swing.JFrame {
     }                                                     
 
     private void jButtonPayGiftcardActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-        // TODO add your handling code here:
+    	state = PaymentGUIState.GIFT;
+        switchToPaymentPanel();
     }                                                  
 
     private void jButtonPayDebitActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
+    	state = PaymentGUIState.DEBIT;
+        switchToPaymentPanel();
     }                                               
 
     private void jButtonPayCashActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
+    	state = PaymentGUIState.CASH;
+        switchToPaymentPanel();
     }                                              
 
     private void jButtonPayCreditActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        // TODO add your handling code here:
+        state = PaymentGUIState.CREDIT;
+        switchToPaymentPanel();
     }                                                
 
     private void jButtonPaymentGoBackActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         // TODO add your handling code here:
+    	// Should link to adding items+scanning GUI part
     }                                                    
 
     private void jButtonScanMembershipCardActionPerformed(java.awt.event.ActionEvent evt) {                                                          
-        // TODO add your handling code here:
+        state = PaymentGUIState.MEMBERSHIP;
+        switchToPaymentPanel();
     }                                                         
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PaymentGUI().setVisible(true);
-            }
-        });
+    	SelfCheckoutStation station = new SelfCheckoutStation(Currency.getInstance(Locale.CANADA), bnDenoms, coinDenoms, 1000, 1);
+    	try {
+			SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(station);
+		
+	        /* Create and display the form */
+	        java.awt.EventQueue.invokeLater(new Runnable() {
+	            public void run() {
+	                new PaymentGUI(software).setVisible(true);
+	            }
+	        });
+        
+    	} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     // Variables declaration - do not modify                     
@@ -293,8 +370,8 @@ public class PaymentGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonPayGiftcard;
     private javax.swing.JButton jButtonPaymentGoBack;
     private javax.swing.JButton jButtonScanMembershipCard;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelAmountDue;
+    private javax.swing.JLabel jLabelAmountPaid;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanelPayment;
     private javax.swing.JPanel jPanelPaymentInfo;
@@ -305,4 +382,40 @@ public class PaymentGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaInfo;
     // End of variables declaration                   
+
+	@Override
+	public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void amountPaid(SelfCheckoutStationSoftware software, BigDecimal amount) {
+		// TODO Auto-generated method stub
+		// An amount was paid
+		if(state != PaymentGUIState.SELECTION && state != PaymentGUIState.MEMBERSHIP) {
+			// A payment was made
+			updatePaymentLabels();
+			
+			// TODO: Finish checkout here; i.e. print receipt and go to closing screen
+	    	if(software.amountDue.compareTo(software.getAmountPaid()) <= 0)
+	    		System.out.println("Payment complete. Ready to checkout.");
+			
+			cardLayout.first(jPanelPaymentTop); // Go back to the previous screen
+		}
+	}
+
+	@Override
+	public void membershipCardScanned(SelfCheckoutStationSoftware software, String memberCN) {
+		// Membership card was scanned
+		jButtonScanMembershipCard.setEnabled(false);
+		membershipCardScanned = true;
+		cardLayout.first(jPanelPaymentTop);
+	}
 }
