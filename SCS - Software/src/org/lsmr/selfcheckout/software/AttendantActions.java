@@ -26,22 +26,42 @@ public class AttendantActions {
 	
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be disgussed in the meating
+<<<<<<< HEAD
     public static void blockStation(SelfCheckoutStation station) {
+=======
+    public void attendantBlockStation(SelfCheckoutStation station) {
+        Data data = Data.getInstance();
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
         station.baggingArea.disable();
         station.scanningArea.disable();
         station.handheldScanner.disable();
         station.mainScanner.disable();
+<<<<<<< HEAD
 //        station.cardReader.disable();
+=======
+        station.cardReader.disable();
+        data.setIsDisabled(true);
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
     }
 
     // Unblocks the self checkout station by enabling its crucial components
     // Could be used to approve a weight discrepancy
+<<<<<<< HEAD
     public static void unBlockStation(SelfCheckoutStation station) {
+=======
+    public void attendantUnBlockStation(SelfCheckoutStation station) {
+        Data data = Data.getInstance();
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
         station.baggingArea.enable();
         station.scanningArea.enable();
         station.handheldScanner.enable();
         station.mainScanner.enable();
+<<<<<<< HEAD
 //        station.cardReader.enable();
+=======
+        station.cardReader.enable();
+        data.setIsDisabled(false);
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
     }
     
     /*
