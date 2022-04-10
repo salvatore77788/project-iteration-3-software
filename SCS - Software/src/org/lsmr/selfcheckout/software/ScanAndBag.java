@@ -9,6 +9,9 @@ import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.products.*;
 import java.util.ArrayList;
 
+import org.lsmr.selfcheckout.software.gui.ScanningItemGUI;
+
+
 /**
  * Class ScanAndBag that represents the use case of when the customer scans and bags the items.
  * @version updated to implement customer adding and using their own bags

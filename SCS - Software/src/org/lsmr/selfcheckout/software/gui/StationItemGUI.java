@@ -1,5 +1,6 @@
 package org.lsmr.selfcheckout.software.gui;
 
+import org.lsmr.selfcheckout.software.*;
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;

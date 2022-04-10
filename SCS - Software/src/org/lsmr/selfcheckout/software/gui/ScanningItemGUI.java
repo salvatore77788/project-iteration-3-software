@@ -1,5 +1,6 @@
 package org.lsmr.selfcheckout.software.gui;
 
+import org.lsmr.selfcheckout.software.*;
 
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
@@ -77,7 +78,7 @@ public class ScanningItemGUI extends JFrame {
 	
 	PersonalBagPromptGUI personalBagGUI;
 	
-	FakeCheckoutGUI checkoutGUI;
+	//FakeCheckoutGUI checkoutGUI;
 	
 	boolean bagPromptedAlready = false;
 
@@ -525,17 +526,19 @@ public class ScanningItemGUI extends JFrame {
 	}
 	
 	public void checkoutOn() {
-		checkoutGUI = new FakeCheckoutGUI(itemsScanned);
-		checkoutGUI.setVisible(true);
+		//checkoutGUI = new FakeCheckoutGUI(itemsScanned);
+		//checkoutGUI.setVisible(true);
 		
 	}
  	
 	public void checkoutOff() {
+		/*
 		if(checkoutGUI != null) {
 			checkoutGUI.dispose();
 		} else {
 			System.out.println("Can't checkout");
 		}
+		*/
 	}
 	
 	public void bagsOn() {

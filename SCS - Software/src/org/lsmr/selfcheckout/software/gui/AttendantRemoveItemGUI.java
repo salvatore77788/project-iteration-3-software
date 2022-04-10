@@ -4,6 +4,7 @@ import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.products.*;
+import org.lsmr.selfcheckout.software.*;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
