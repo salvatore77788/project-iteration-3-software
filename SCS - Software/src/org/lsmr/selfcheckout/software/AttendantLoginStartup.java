@@ -94,7 +94,7 @@ public class AttendantLoginStartup {
 			new HashMap<SelfCheckoutStation, ArrayList<CoinTrayObserver>>();
 	
 	
-	 Login loginFrame = new Login();
+	 public Login loginFrame = new Login();
     
     // add a supervision station to allSuperStationObservers
     public void addStation(SupervisionStation ss, 

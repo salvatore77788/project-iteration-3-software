@@ -107,6 +107,17 @@ public class Login extends JFrame {
 		return pressed;
 	}
 
+	public void setTextFieldUserID(JTextField textFieldUserID) {
+		this.textFieldUserID = textFieldUserID;
+	}
+
+	public void setpasswordField(JPasswordField pass) {
+		this.passwordField = pass;
+		
+	}
+	
+	
+
 	
 	
 }

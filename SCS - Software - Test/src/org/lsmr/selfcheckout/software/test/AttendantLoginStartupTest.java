@@ -77,6 +77,10 @@ public class AttendantLoginStartupTest {
     	pdata.AddLoginDetails("0", "0");
     	JTextField id = new JTextField("0");
     	JPasswordField pass = (JPasswordField) new JTextField("0");
+    	
+    	loginStartup.loginFrame.setTextFieldUserID(id);
+    	loginStartup.loginFrame.setpasswordField(pass);
+    	
         loginStartup.login(superStation, pdata); 
         
         //not sure how to test gui input so that it puts in correct login information
