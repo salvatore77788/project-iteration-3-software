@@ -14,7 +14,7 @@ public class PaymentGUI extends javax.swing.JFrame {
         cardLayout = (CardLayout)(jPanelPaymentTop.getLayout());
         cardLayout.last(jPanelPaymentTop);
         
-        setLocation(100, 300);
+        setLocation(1000, 300);
     }
 
     /**
@@ -30,10 +30,10 @@ public class PaymentGUI extends javax.swing.JFrame {
         jPanelPaymentTop = new javax.swing.JPanel();
         jPanelPaymentSelection = new javax.swing.JPanel();
         jPanelPaymentMethods = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jButtonPayGiftcard = new javax.swing.JButton();
+        jButtonPayDebit = new javax.swing.JButton();
+        jButtonPayCash = new javax.swing.JButton();
+        jButtonPayCredit = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jButtonScanMembershipCard = new javax.swing.JButton();
         jButtonPaymentGoBack = new javax.swing.JButton();
@@ -51,41 +51,41 @@ public class PaymentGUI extends javax.swing.JFrame {
 
         jPanelPaymentMethods.setLayout(new java.awt.GridLayout(2, 2, 64, 32));
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton3.setText("Gift Card");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPayGiftcard.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButtonPayGiftcard.setText("Gift Card");
+        jButtonPayGiftcard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonPayGiftcardActionPerformed(evt);
             }
         });
-        jPanelPaymentMethods.add(jButton3);
+        jPanelPaymentMethods.add(jButtonPayGiftcard);
 
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton2.setText("Debit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPayDebit.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButtonPayDebit.setText("Debit");
+        jButtonPayDebit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonPayDebitActionPerformed(evt);
             }
         });
-        jPanelPaymentMethods.add(jButton2);
+        jPanelPaymentMethods.add(jButtonPayDebit);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton1.setText("Cash");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPayCash.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButtonPayCash.setText("Cash");
+        jButtonPayCash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonPayCashActionPerformed(evt);
             }
         });
-        jPanelPaymentMethods.add(jButton1);
+        jPanelPaymentMethods.add(jButtonPayCash);
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jButton4.setText("Credit");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPayCredit.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButtonPayCredit.setText("Credit");
+        jButtonPayCredit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButtonPayCreditActionPerformed(evt);
             }
         });
-        jPanelPaymentMethods.add(jButton4);
+        jPanelPaymentMethods.add(jButtonPayCredit);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -249,21 +249,21 @@ public class PaymentGUI extends javax.swing.JFrame {
         cardLayout.first(jPanelPaymentTop);
     }                                                     
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButtonPayGiftcardActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         // TODO add your handling code here:
-    }                                        
+    }                                                  
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButtonPayDebitActionPerformed(java.awt.event.ActionEvent evt) {                                                
         // TODO add your handling code here:
-    }                                        
+    }                                               
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButtonPayCashActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
-    }                                        
+    }                                              
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButtonPayCreditActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
-    }                                        
+    }                                                
 
     private void jButtonPaymentGoBackActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         // TODO add your handling code here:
@@ -286,11 +286,11 @@ public class PaymentGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonInfoScreenBack;
+    private javax.swing.JButton jButtonPayCash;
+    private javax.swing.JButton jButtonPayCredit;
+    private javax.swing.JButton jButtonPayDebit;
+    private javax.swing.JButton jButtonPayGiftcard;
     private javax.swing.JButton jButtonPaymentGoBack;
     private javax.swing.JButton jButtonScanMembershipCard;
     private javax.swing.JLabel jLabel1;
