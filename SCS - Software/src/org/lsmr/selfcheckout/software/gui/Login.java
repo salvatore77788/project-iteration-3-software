@@ -116,6 +116,10 @@ public class Login extends JFrame {
 		
 	}
 	
+	public void unPressed()
+	{
+		pressed=false;
+	}
 	
 
 	
