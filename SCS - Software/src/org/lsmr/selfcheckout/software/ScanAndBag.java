@@ -7,10 +7,9 @@ import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.products.*;
-import java.util.ArrayList;
-
 import org.lsmr.selfcheckout.software.gui.ScanningItemGUI;
 
+import java.util.ArrayList;
 
 /**
  * Class ScanAndBag that represents the use case of when the customer scans and bags the items.
@@ -56,7 +55,7 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	 * @param productMap the hashMap for products used 
 	 * @param itemMap the hashMap for items used
 	 */
-	public ScanAndBag(SelfCheckoutStation theStation, TestDatabase db)
+	public ScanAndBag(SelfCheckoutStation theStation, TestDatabase db, SelfCheckoutStationSoftware scss)
 	{
 		this.currentWeight = 0;
 		this.weightAtLastEvent = 0;
@@ -84,9 +83,13 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 //			this.overloaded = true;
 		}
 		
-		scanGUI = new ScanningItemGUI(itemsScanned);
+		scanGUI = new ScanningItemGUI(itemsScanned, scss);
 		scanGUI.setVisible(true);
 		
+	}
+	
+	public void continueGUI() {
+		scanGUI.setVisible(true);
 	}
 	
 	// FOR TESTING PURPOSES

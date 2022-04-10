@@ -78,7 +78,9 @@ public class ScanningItemGUI extends JFrame {
 	
 	PersonalBagPromptGUI personalBagGUI;
 	
-	//FakeCheckoutGUI checkoutGUI;
+	PaymentGUI paymentGUI;
+	
+	SelfCheckoutStationSoftware scss;
 	
 	boolean bagPromptedAlready = false;
 
@@ -103,10 +105,12 @@ public class ScanningItemGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ScanningItemGUI(ArrayList<ItemInfo> is) {
+	public ScanningItemGUI(ArrayList<ItemInfo> is, SelfCheckoutStationSoftware software) {
 		if(is != null) {
 			itemsScanned = is;
 		}
+		
+		scss = software;
 		/*
 		items.add("2L Milk $5 1");
 		items.add("2L Milk $5 2");
@@ -178,6 +182,7 @@ public class ScanningItemGUI extends JFrame {
 		checkoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Checkout");
+				System.out.println(software.total());
 				
 				if(itemsScanned.size() == 0) {
 			        JOptionPane.showMessageDialog(null, "You must scan an item before checking out!","No Items Scanned", JOptionPane.WARNING_MESSAGE);
@@ -526,19 +531,14 @@ public class ScanningItemGUI extends JFrame {
 	}
 	
 	public void checkoutOn() {
+		paymentGUI = new PaymentGUI(scss);
 		//checkoutGUI = new FakeCheckoutGUI(itemsScanned);
 		//checkoutGUI.setVisible(true);
 		
 	}
  	
 	public void checkoutOff() {
-		/*
-		if(checkoutGUI != null) {
-			checkoutGUI.dispose();
-		} else {
-			System.out.println("Can't checkout");
-		}
-		*/
+		
 	}
 	
 	public void bagsOn() {

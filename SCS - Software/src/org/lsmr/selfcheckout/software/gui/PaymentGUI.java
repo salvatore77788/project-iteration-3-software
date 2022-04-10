@@ -71,7 +71,7 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
     
     private void initTesting() {
     	// Testing
-        software.amountDue = new BigDecimal("1000.00");
+        software.amountDue = software.total();
         software.cardSoftware.paymentAmount = new BigDecimal("100.0");
         software.cardSoftware.cardIssuer = new CardIssuer("Test Financing");
         PaymentTesterGUI paymentTester = new PaymentTesterGUI(software);
@@ -188,6 +188,9 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
         jButtonPaymentGoBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPaymentGoBackActionPerformed(evt);
+                frame.dispose();
+                software.continueScanGUI();
+                
             }
         });
 
