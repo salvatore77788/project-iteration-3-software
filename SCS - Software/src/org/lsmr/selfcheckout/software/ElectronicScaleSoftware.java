@@ -11,7 +11,8 @@ public class ElectronicScaleSoftware implements ElectronicScaleObserver{
 	private double weightAtLastEvent;
 	private boolean isDisabled;
 	private SelfCheckoutStation scs;
-	
+	private boolean attendantRemoved;
+
 	
 	public ElectronicScaleSoftware(SelfCheckoutStation aSCS) {
 		this.scs = aSCS;
@@ -35,11 +36,20 @@ public class ElectronicScaleSoftware implements ElectronicScaleObserver{
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
 		if(this.isDisabled == true)
 			return;
-		
+	
 		this.weightAtLastEvent = this.currentWeight;
 		if (weightInGrams >= 0)
 			this.currentWeight = weightInGrams;
-		else
+		else if(attendantRemoved) { 
+			// If attendant removed item, weight change will be negative
+			
+			// Update weight after product removal 
+			this.weightAtLastEvent = weightInGrams;
+			this.currentWeight = weightInGrams;
+
+			// Reset boolean to false
+			attendantRemoved = false; 
+		} else 
 			System.err.println("weightChanged in ElectronicScaleSoftware is negative. weightInGrams: " + weightInGrams);
 	}
 
@@ -61,5 +71,9 @@ public class ElectronicScaleSoftware implements ElectronicScaleObserver{
 	
 	public double getWeightAtLastEvent() {
 		return this.weightAtLastEvent;
+	}
+
+	public void setAttendantRemovedItem() {
+		this.attendantRemoved = true;
 	}
 }

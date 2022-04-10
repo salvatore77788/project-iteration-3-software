@@ -24,12 +24,14 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public ScanMembershipCard memberCardObserver;
 	public TouchScreenSoftware touchSnObserver;
 	public CardSoftware cardSoftware;
+	public ScanAndBag scanAndBag;
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant stationæ
 	protected AttendantActions at; // added attendant actions
 	private String memberNumber;
 	public MembersDatabase membersRecord;
+	public int stationNumber;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -81,6 +83,14 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.scs.cardReader.attach(memberCardObserver);
 		this.scs.screen.attach(touchSnObserver);
 
+		// Connect software to attendant station
+		AttendantStation aStation = new AttendantStation();
+
+		// Assign the station a number
+		this.stationNumber = aStation.assignStationNumber();
+		
+		// Connect the software to the attendant station
+		aStation.connectToAttendantStation(scs,this, ess, bss, banknoteSlotSoftware, scanAndBag);
 		// create new change class
 	}
 
@@ -341,7 +351,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 
 	public void checkout() throws EmptyException, OverloadException, InterruptedException {
-		promptForBags();
+		//promptForBags();
 
 		BigDecimal total = total();
 		BigDecimal totalChange = this.amountPaid[0].subtract(total);
@@ -355,6 +365,10 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 			rp.detectLowInk(rp.getinkAmount());
 			rp.detectLowPaper(rp.getpaperAmount());
 			print(total);
+
+			while(ess.getCurrentWeight() > 0.01) {
+				System.out.println("Please take your bags!");
+			}
 			resetVars();
 		} else {
 			System.out.println("Insuficient funds to complete checkout!");
