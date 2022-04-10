@@ -20,10 +20,14 @@ public class SelfCheckoutStationSoftware {
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
+	public TouchScreenSoftware touchSnObserver;
 
 	protected ReceiptPrint rp; // added receipt print
-	protected AttendantStation as; // added attendant station
+	protected AttendantStation as; // added attendant stationæ
 	protected AttendantActions at; //added attendant actions
+	private String memberNumber;
+	public MembersDatabase membersRecord;
+
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -54,7 +58,13 @@ public class SelfCheckoutStationSoftware {
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
-		this.memberCardObserver = new ScanMembershipCard(this.scs);
+		this.membersRecord = new MembersDatabase();
+		this.memberCardObserver = new ScanMembershipCard(this);
+		
+		
+		// This Touch Screen Observer is meant for a SelfCheckoutStation.
+		// There is another constructor that uses an Attendant Station.
+		this.touchSnObserver = new TouchScreenSoftware(this.scs);
 
 		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
@@ -65,6 +75,7 @@ public class SelfCheckoutStationSoftware {
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
+		this.scs.screen.attach(touchSnObserver);
 
 		// create new change class
 	}
@@ -281,6 +292,19 @@ public class SelfCheckoutStationSoftware {
 		}
 		System.out.println(changeLine);
 
+		
+		// Printing Member Number onto receipt code.
+		System.out.println("Member Number: ");
+		// For iterating through characters of string named memberNumber.
+		detectLowInkPaper(changeLine.toCharArray().length, 1);
+		for(char c : memberNumber.toCharArray()) {
+			scs.printer.print(c);
+			ink--;
+			paper--;
+		}
+		
+		
+		
 		scs.printer.cutPaper();
 	}
 
@@ -373,6 +397,14 @@ public class SelfCheckoutStationSoftware {
 
 	public void startUpGUI() {
 		// does nothing for now
+	}
+	
+	public String getMemberCardNumber() {
+		return this.memberNumber;
+	}
+	
+	public void setMemberCardNumber(String memberCN) {
+		this.memberNumber = memberCN;
 	}
 
 }

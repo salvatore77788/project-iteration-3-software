@@ -1,4 +1,4 @@
-# SENG-300-Iteration2
+# SENG 300 Iteration 3 
 
 ## Requirements:
 1. Java 17 JDK
@@ -10,7 +10,7 @@
 
 ## Understanding the file structure
 * The repository contains 3 main folders (these are 3 Eclipse projects):
-    + SCS - Hardware - v2.0
+    + SCS - Hardware - v3.1
         + This is a project that contains a simulation of hardware for a self checkout station. Written by Dr. Walker.
     + SCS - Software 
         + This project contains all the software classes that interacts with the hardware interface.
@@ -61,7 +61,7 @@
 
 ## Downloading the project:
 * Easiest way is to clone the repository:
-    + [SENG-300-Iteration2 GitHub](https://github.com/benjaminmesser/SENG300ProjectIteration2Group33)
+    + [SENG 300 Iteration3 GitHub](https://github.com/salvatore77788/project-iteration-3-software)
         + You will need to be added to the repository as it is a private repository.
     + Alternatively, if you're a TA or Professor, you need to move our code into a file system where you have permissions to run and compile code.
 
@@ -81,10 +81,20 @@
 
 
 ##  Contributors:
-* Parry Chirakorn
-* Allison Grothman
 * Emir Avci
-* Jessica Hoang
-* Jeremy Kimotho
-* Kamrul Ahsan Noor
-* Kanishka Roy
+* Quyanna Campbell
+* Doowen Cho
+* MD AZHARUL ISLAM FAHIM
+* Jordan Humenjuk
+* James Khalil
+* Alisha Lalani
+* Paul Latkovic
+* Raine Legary
+* Sneh Patel
+* Guillaume Pluta
+* Vincent Salvatore
+* Anson Sieu
+* Sean Stacey
+* Jordan Tran
+* Carlos Veintimilla
+* Mitchell Wilson
