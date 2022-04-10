@@ -21,37 +21,33 @@
                 + This tests our implementation of the BarcodeScannerObserver interface.
             + ElectronicScaleSoftwareTest.java
                 + This tests our implementation of the ElectronicScaleObserver interface.
-            + CreditCardTest.java
-                + This test our implementation for CreditCardSoftware.
+            + CardTest.java
+                + This tests our implementation for CardSoftware (payment with credit, debit, and gift card).
                 + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
-                + This random probility of error is about 10% of the time.
-            + DebitCardTest.java
-                + This test our implementation for DebitCardSoftware.
-                + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
-                + This random probility of error is about 10% of the time.
+                + The random probility of error is about 10% of the time.
             + ReturnChangeTest.java
-                + This test our implementation for ReturnChangeSoftware. 
-                + This test our implementation for "how many bags did you use?"
+                + This tests our implementation for ReturnChangeSoftware. 
+                + This tests our implementation for "how many bags did you use?"
                 + If using it as a testing unit only, then please put in a "0" for all cases
                 + If using it as a program, then any number of bag input works
             + ScanMembershipCardTest.java
-                + This test our implementation for ScanMembershipCard.
+                + This tests our implementation for ScanMembershipCard.
                 + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
-                + This random probility of error is about 10% of the time.
+                + The random probility of error is about 10% of the time.
             + TouchScreenTest.java
-                + This test our implementation for TouchScreenSoftware. 
-                + This testing is for "how should adding baggs communicate with electronic scale". 
+                + This tests our implementation for TouchScreenSoftware. 
+                + This testing is for "how should adding bags communicate with electronic scale". 
                 + The touch screen does not exist yet however the user can still interact with the interface through terminal/command line. 
             + BaggingAreaSofwareTest.java
-                + This test our implementation for SelfCheckoutStationSoftware.
+                + This tests our implementation for SelfCheckoutStationSoftware.
                 + Bagging area software is inside the SelfCheckoutStationSoftware class.
                 + This testing for "customer failing adding items to bagging area.
                 + Due to random probility of scanning an item fails, %10 of the time this test will result in failing.
             + PartialPaymentTest.java
-                + This test our implementation for PartialPaymentSoftware.
+                + This tests our implementation for PartialPaymentSoftware.
                 + This testing is for handling the partial payments.
             + Testing.java
-                + This test our implementation for
+                + This tests our implementation for
                 + This provides a simulation of our software, including the following functions:
                     + Printing receipt.
                     + Returning change.
@@ -98,3 +94,5 @@
 * Jordan Tran
 * Carlos Veintimilla
 * Mitchell Wilson
+* Chirag Asrani
+* Cebrail Durna
