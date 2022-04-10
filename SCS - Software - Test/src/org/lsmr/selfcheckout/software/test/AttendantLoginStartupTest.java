@@ -87,8 +87,6 @@ public class AttendantLoginStartupTest {
     	loginStartup.loginFrame.setpasswordField(pass);
     	
         loginStartup.login(superStation, pdata); 
-        
-        //not sure how to test gui input so that it puts in correct login information
  
         Assert.assertTrue(loginStartup.getLoginStatus() == true);
   
