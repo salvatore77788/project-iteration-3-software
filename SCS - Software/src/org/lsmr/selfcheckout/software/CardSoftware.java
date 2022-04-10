@@ -45,6 +45,10 @@ public class CardSoftware implements CardReaderObserver {
         cardReader = new CardReader();
     }
     
+    /**
+     * Called whenever a card is swiped, inserted, or tapped. Performs the payment on the software side.
+     * @param data Card data of the card inputed.
+     */
     public void payWithCard(CardData data) {
     	String cardType = data.getType();
     	
@@ -66,7 +70,7 @@ public class CardSoftware implements CardReaderObserver {
 	    		scss.addAmountPaid(actualAmount);
 	    	}
 	    	else
-	    		System.out.println("Something went during card authorization/transaction.");
+	    		System.out.println("Something went wrong during card authorization/transaction.");
     	}
     }
 

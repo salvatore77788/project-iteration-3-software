@@ -15,6 +15,10 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
+/**
+ * Utility/demo GUI for testing all payment options: credit, debit, gift, coins, banknotes, as well as swiping
+ * a membership card.
+ */
 public class PaymentTesterGUI extends javax.swing.JFrame {
 
 	private SelfCheckoutStation station;

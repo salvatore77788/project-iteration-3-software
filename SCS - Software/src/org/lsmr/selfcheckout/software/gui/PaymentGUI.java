@@ -12,6 +12,9 @@ import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 import org.lsmr.selfcheckout.software.SelfCheckoutSystemSoftwareObserver;
 
+/**
+ * Presents the GUI frame for choosing payment options, swiping membership card, and checking total due/paid.
+ */
 public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystemSoftwareObserver {
 	private static final String PAY_CARD_TEXT = "Please scan, swipe, or insert card.";
 	private static final String PAY_CASH_TEXT = "Please insert coins and dollars.";
@@ -404,6 +407,8 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
 		// TODO Auto-generated method stub
 		
 	}
+	
+	// Observer overrides
 
 	@Override
 	public void amountPaid(SelfCheckoutStationSoftware software, BigDecimal amount) {
