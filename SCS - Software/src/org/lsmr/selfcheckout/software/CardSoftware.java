@@ -27,18 +27,51 @@ public class CardSoftware implements CardReaderObserver {
     public boolean cardTapped = false;
     public boolean cardSwiped = false;
     public boolean cardInsert = false;
+    public BigDecimal paymentAmount;
+    private SelfCheckoutStationSoftware scss;
     private SelfCheckoutStation scs;
     private int holdNumber;
+    public CardIssuer cardIssuer;
 
     /**
      * Parameterized constructor for the CardSoftware class
      * the cardReader is attached to the selfcheckoutstation
      * @param selfCheckoutStation the selfCheckoutStation used
      */
-    public CardSoftware(SelfCheckoutStation selfCheckoutStation) {
-        scs = selfCheckoutStation;
+    public CardSoftware(SelfCheckoutStationSoftware software) {
+    	scss = software;
+        scs = scss.scs;
         scs.cardReader.attach(this);
         cardReader = new CardReader();
+    }
+    
+    /**
+     * Called whenever a card is swiped, inserted, or tapped. Performs the payment on the software side.
+     * @param data Card data of the card inputed.
+     */
+    public void payWithCard(CardData data) {
+    	String cardType = data.getType();
+    	
+    	// Not a paying card
+    	if(cardType != "credit" && cardType != "debit" && cardType != "gift")
+    		return;
+    	
+    	String cardNumber = data.getNumber();
+    	
+    	// Verify the card is good through the card issuer
+    	BigDecimal actualAmount = paymentAmount.min(scss.getAmountLeftToPay());
+    	
+    	int c = actualAmount.compareTo(BigDecimal.ZERO);
+    	if(c > 0) {
+	    	int holdNumber = cardIssuer.authorizeHold(cardNumber, actualAmount);
+	    	if(holdNumber != -1 && cardIssuer.postTransaction(cardNumber, holdNumber, actualAmount)) {
+	    		// Amount has been paid in full
+	    		cardIssuer.releaseHold(cardNumber, holdNumber);
+	    		scss.addAmountPaid(actualAmount);
+	    	}
+	    	else
+	    		System.out.println("Something went wrong during card authorization/transaction.");
+    	}
     }
 
     /**
@@ -310,7 +343,7 @@ public class CardSoftware implements CardReaderObserver {
     @Override
     public void cardDataRead(CardReader reader, CardData data) {
         this.cardData = data;
-
+        payWithCard(data);
     }
 
 }

@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.selfcheckout.software.BanknoteSlotSoftware;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSetup;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 
 /*The reason why we have these as null is because the methods aren't really implemented for this iteration.*/
@@ -25,7 +27,12 @@ public class BanknoteSlotTest {
 		//We give the BanknoteSlotSoftware a reference to this class' variable called amountPaid.
 		amountPaid = new BigDecimal[1];
 		amountPaid[0] = new BigDecimal("0");
-		bss = new BanknoteSlotSoftware(amountPaid);
+		try {
+			bss = new BanknoteSlotSoftware(new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

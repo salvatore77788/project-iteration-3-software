@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
@@ -11,7 +12,7 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
 
-public class SelfCheckoutStationSoftware {
+public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSystemSoftwareObserver> {
 
 	public BigDecimal totalGUI;
 	public SelfCheckoutStation scs;
@@ -22,6 +23,7 @@ public class SelfCheckoutStationSoftware {
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
 	public TouchScreenSoftware touchSnObserver;
+	public CardSoftware cardSoftware;
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant stationæ
@@ -36,7 +38,8 @@ public class SelfCheckoutStationSoftware {
 	// vars.
 	public ArrayList<ItemInfo> itemsScanned;
 	public final double weightThreshold = 10;
-	public BigDecimal[] amountPaid;
+	public BigDecimal amountDue;
+	private BigDecimal[] amountPaid;
 	public int bagsUsed;
 	public int maximumBags;
 	public BigDecimal priceOfBags;
@@ -45,6 +48,7 @@ public class SelfCheckoutStationSoftware {
 
 	public SelfCheckoutStationSoftware(SelfCheckoutStation scs) throws Exception {
 		this.itemsScanned = new ArrayList<ItemInfo>();
+		this.amountDue = BigDecimal.ZERO;
 		this.amountPaid = new BigDecimal[1];
 		this.amountPaid[0] = BigDecimal.ZERO;
 		this.bagsUsed = 0;
@@ -57,15 +61,16 @@ public class SelfCheckoutStationSoftware {
 		this.db = new TestDatabase();
 		this.ess = new ElectronicScaleSoftware(scs);
 		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
-		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
+		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this);
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
+		this.cardSoftware = new CardSoftware(this);
 
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
 		this.touchSnObserver = new TouchScreenSoftware(this.scs);
 
-		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
+		this.coinSlotSoftware = new CoinSlotSoftware(this);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
 
 		// attach the ess and bss to the selfcheckout hardware
@@ -92,6 +97,19 @@ public class SelfCheckoutStationSoftware {
 
 	public BigDecimal getAmountReturned() {
 		return amountReturned;
+	}
+	
+	public BigDecimal getAmountLeftToPay() {
+		return amountDue.subtract(amountPaid[0]);
+	}
+	
+	public void addAmountPaid(BigDecimal amount) {
+		amountPaid[0] = amountPaid[0].add(amount);
+		notifyAmountPaid(amount);
+	}
+	
+	public BigDecimal getAmountPaid() {
+		return amountPaid[0];
 	}
 
 	/**
@@ -419,6 +437,7 @@ public class SelfCheckoutStationSoftware {
 
 	public void setMemberCardNumber(String memberCN) {
 		this.memberNumber = memberCN;
+		notifyMembershipCardScanned(memberCN);
 	}
 
 	public BigDecimal getTotalGUI() {
@@ -427,6 +446,16 @@ public class SelfCheckoutStationSoftware {
 
 	public void setTotalGUI(BigDecimal totalGUI) {
 		this.totalGUI = totalGUI;
+	}
+	
+	private void notifyAmountPaid(BigDecimal amount) {
+		for(SelfCheckoutSystemSoftwareObserver l: observers)
+			l.amountPaid(this, amount);
+	}
+	
+	private void notifyMembershipCardScanned(String memberCN) {
+		for(SelfCheckoutSystemSoftwareObserver l: observers)
+			l.membershipCardScanned(this, memberCN);
 	}
 
 }

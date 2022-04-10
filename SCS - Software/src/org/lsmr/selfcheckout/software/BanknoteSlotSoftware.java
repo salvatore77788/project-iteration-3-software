@@ -15,10 +15,10 @@ import org.lsmr.selfcheckout.devices.observers.BanknoteValidatorObserver;
 
 public class BanknoteSlotSoftware implements BanknoteDispenserObserver, BanknoteStorageUnitObserver, BanknoteValidatorObserver{
 	
-	BigDecimal[] amountPaid;
+	private SelfCheckoutStationSoftware software;
 	
-	public BanknoteSlotSoftware(BigDecimal[] amountPaid) {
-		this.amountPaid = amountPaid;
+	public BanknoteSlotSoftware(SelfCheckoutStationSoftware software) {
+		this.software = software;
 	}
 	
 
@@ -94,8 +94,7 @@ public class BanknoteSlotSoftware implements BanknoteDispenserObserver, Banknote
 
 	@Override
 	public void validBanknoteDetected(BanknoteValidator validator, Currency currency, int value) {
-		BigDecimal inserted = (amountPaid[0].add(BigDecimal.valueOf(value)));
-		this.amountPaid[0] = inserted;
+		software.addAmountPaid(new BigDecimal(value));
 		
 	}
 
