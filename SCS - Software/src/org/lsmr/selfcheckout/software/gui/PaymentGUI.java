@@ -8,6 +8,9 @@ import java.util.Locale;
 import javax.swing.JFrame;
 
 import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.DisabledException;
+import org.lsmr.selfcheckout.devices.EmptyException;
+import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.external.CardIssuer;
@@ -44,6 +47,7 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
     
     private SelfCheckoutStationSoftware software;
     private JFrame frame;
+    PaymentTesterGUI paymentTester;
 
     /**
      * Creates new form PaymentGUI
@@ -62,7 +66,6 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
         jTextAreaInfo.setLineWrap(true);
         
         initTesting();
-        
         updatePaymentLabels();
         
         frame.setLocation(1000, 300);
@@ -74,14 +77,36 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
         software.amountDue = software.total();
         software.cardSoftware.paymentAmount = new BigDecimal("100.0");
         software.cardSoftware.cardIssuer = new CardIssuer("Test Financing");
-        PaymentTesterGUI paymentTester = new PaymentTesterGUI(software);
+        paymentTester = new PaymentTesterGUI(software);
         paymentTester.setVisible(true);
         paymentTester.setLocation(400, 300);
+    }
+    
+    private void finishPayment() {
+    	if(software.getAmountPaid().compareTo(software.amountDue) >= 0) {
+    		System.out.println("Done!");
+    		frame.dispose();
+    		paymentTester.dispose();
+    		try {
+				software.returnChange(software.getAmountPaid().subtract(software.amountDue));
+			} catch (OverloadException | EmptyException | DisabledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		PaymentCompleteGUI complete = new PaymentCompleteGUI(software);
+    		complete.setVisible(true);
+    	}
+    }
+    
+    public void reset() {
+        frame.setVisible(true);
+    	updatePaymentLabels();
     }
     
     private void updatePaymentLabels() {
     	jLabelAmountDue.setText("Amount Due: $" + software.amountDue);
     	jLabelAmountPaid.setText("Amount Paid: $" + software.getAmountPaid());
+    	finishPayment();
     }
     
     private void switchToPaymentPanel() {
@@ -109,7 +134,7 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
+    	
         jPanelPayment = new javax.swing.JPanel();
         jPanelPaymentTop = new javax.swing.JPanel();
         jPanelPaymentSelection = new javax.swing.JPanel();
