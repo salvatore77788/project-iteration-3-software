@@ -380,60 +380,64 @@ public class AttendantLoginStartup {
 		  return allSelfScanningAreaObservers.get(scs);
 	  }
 	  
-	  public ArrayList<TouchScreenObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<TouchScreenObserver> getSelfScreenObservers(SelfCheckoutStation scs) {
+		  return allSelfScreenObservers.get(scs);
 	  }
 	  
-	  public ArrayList<ReceiptPrinterObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<ReceiptPrinterObserver> getSelfPrinterObservers(SelfCheckoutStation scs) {
+		  return allSelfPrinterObservers.get(scs);
 	  }
 	  
-	  public ArrayList<CardReaderObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<CardReaderObserver> getSelfCardReaderObservers(SelfCheckoutStation scs) {
+		  return allSelfCardReaderObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BarcodeScannerObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BarcodeScannerObserver> getSelfMainScannerObservers(SelfCheckoutStation scs) {
+		  return allSelfMainScannerObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BarcodeScannerObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BarcodeScannerObserver> getSelfHandheldScannerObservers(SelfCheckoutStation scs) {
+		  return allSelfHandheldScannerObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BanknoteSlotObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BanknoteSlotObserver> getSelfBanknoteInputObservers(SelfCheckoutStation scs) {
+		  return allSelfBanknoteInputObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BanknoteSlotObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BanknoteSlotObserver> getSelfBanknoteOutputObservers(SelfCheckoutStation scs) {
+		  return allSelfBanknoteOutputObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BanknoteValidatorObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BanknoteValidatorObserver> getSelfBanknoteValidatorObservers(SelfCheckoutStation scs) {
+		  return allSelfBanknoteValidatorObservers.get(scs);
 	  }
 	  
-	  public ArrayList<BanknoteStorageUnitObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<BanknoteStorageUnitObserver> getSelfBanknoteStorageObservers(SelfCheckoutStation scs) {
+		  return allSelfBanknoteStorageObservers.get(scs);
 	  }
 	  
-	  ...
-	  
-	  public ArrayList<CoinSlotObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public Map<Integer, ArrayList<BanknoteDispenserObserver>> getSelfBanknoteDispenserObservers(SelfCheckoutStation scs) {
+		  return allSelfBanknoteDispenserObservers.get(scs);
 	  }
 	  
-	  public ArrayList<CoinValidatorObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<CoinSlotObserver> getSelfCoinSlotObservers(SelfCheckoutStation scs) {
+		  return allSelfCoinSlotObservers.get(scs);
 	  }
 	  
-	  public ArrayList<CoinStorageUnitObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public ArrayList<CoinValidatorObserver> getSelfCoinValidatorObservers(SelfCheckoutStation scs) {
+		  return allSelfCoinValidatorObservers.get(scs);
 	  }
 	  
-	  ...
+	  public ArrayList<CoinStorageUnitObserver> getSelfCoinStorageObservers(SelfCheckoutStation scs) {
+		  return allSelfCoinStorageObservers.get(scs);
+	  }
 	  
-	  public ArrayList<CoinTrayObserver> getSelfObservers(SelfCheckoutStation scs) {
-		  return allSelfObservers.get(scs);
+	  public Map<BigDecimal, ArrayList<CoinDispenserObserver>> getSelfCoinDispenserObservers(SelfCheckoutStation scs) {
+		  return allSelfCoinDispenserObservers.get(scs);
+	  }
+	  
+	  public ArrayList<CoinTrayObserver> getSelfCoinTrayObservers(SelfCheckoutStation scs) {
+		  return allSelfCoinTrayObservers.get(scs);
 	  }
 	  
 	  
