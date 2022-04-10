@@ -23,9 +23,11 @@ public class SelfCheckoutStationSoftware {
 	public TouchScreenSoftware touchSnObserver;
 
 	protected ReceiptPrint rp; // added receipt print
-	protected AttendantStation as; // added attendant station
+	protected AttendantStation as; // added attendant stationæ
+	protected AttendantActions at; //added attendant actions
 	private String memberNumber;
 	public MembersDatabase membersRecord;
+
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
