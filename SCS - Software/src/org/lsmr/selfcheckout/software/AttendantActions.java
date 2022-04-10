@@ -29,11 +29,11 @@ public class AttendantActions {
        // data.setIsDisabled(false); //commented out for errors thrown during testing for print
     }
     
-    public void fillInk(ReceiptPrint printer) throws OverloadException {
-    	printer.setinkAmount(1<<20);
+    public void fillInk(ReceiptPrint printer, int amount) throws OverloadException {
+    	printer.setinkAmount(amount);
     }
-    public void fillPaper(ReceiptPrint printer) throws OverloadException {
-        printer.setpaperAmount(1<<10);
+    public void fillPaper(ReceiptPrint printer, int amount) throws OverloadException {
+        printer.setpaperAmount(amount);
     }
 
 }

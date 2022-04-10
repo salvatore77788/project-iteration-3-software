@@ -15,12 +15,4 @@ public class AttendantStation {
 	public void BagsAdded(ElectronicScale scale) {
 		scale.enable();
 	}
-	
-	public void resetInk(AttendantActions att, ReceiptPrint print) throws OverloadException {
-		att.fillInk(print);
-	}
-	
-	public void resetPaper(AttendantActions att, ReceiptPrint print) throws OverloadException {
-		att.fillPaper(print);
-	}
 }

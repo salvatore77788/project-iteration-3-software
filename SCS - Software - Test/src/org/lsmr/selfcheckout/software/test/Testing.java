@@ -24,7 +24,7 @@ public class Testing {
 
 		// test.testBanknoteValidator();
 		test.testCheckout();
-
+		System.exit(0);
 		// test.testReceiptPrinter();
 
 		// test.testRegularCash();
@@ -105,6 +105,9 @@ public class Testing {
 		// In the simulation scan the milk item
 		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 100);
 		testHardware.scs.banknoteValidator.accept(bn);
+
+		// To replicate how the member number would show in the receipt.
+		software.setMemberCardNumber("85052420");
 
 		software.checkout();
 
