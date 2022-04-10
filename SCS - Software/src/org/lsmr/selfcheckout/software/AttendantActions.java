@@ -15,11 +15,20 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 public class AttendantActions {
 
 	// We need references to selfcheckout stations
+	/* 
+	 * !!! A list of selcheckout stations can be retrived from the SupervisionStation class if needed
+	 * */
+	
 	// Make a static array of selfcheckout stations
+	/* 
+	 * !!! Again an array of selfcheckout stations exist in  SupervisionStation class but I believe it to be redundant to 
+	 * implement it here
+	 * */
+
 	
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be disgussed in the meating
-    public void attendantBlockStation(SelfCheckoutStation station) {
+    public static void blockStation(SelfCheckoutStation station) {
         station.baggingArea.disable();
         station.scanningArea.disable();
         station.handheldScanner.disable();
@@ -29,7 +38,7 @@ public class AttendantActions {
 
     // Unblocks the self checkout station by enabling its crucial components
     // Could be used to approve a weight discrepancy
-    public void attendantUnBlockStation(SelfCheckoutStation station) {
+    public static void unBlockStation(SelfCheckoutStation station) {
         station.baggingArea.enable();
         station.scanningArea.enable();
         station.handheldScanner.enable();

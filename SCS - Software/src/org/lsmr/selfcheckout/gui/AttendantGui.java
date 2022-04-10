@@ -118,7 +118,7 @@ public class AttendantGui {
         initGUI();
         
         // Initialize 
-        frame.setLocation(1500, 300);
+        frame.setLocation(100, 300);
         frame.setVisible(true);
     }
 
@@ -721,12 +721,14 @@ public class AttendantGui {
 
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // Block the current station
+    	AttendantActions.blockStation(currentSoftware.station);
     	currentSoftware.isBlocked = true;
     	setStation();
     }                                                   
 
     private void jButtonUnblockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                      
     	// Unblock the current station
+    	AttendantActions.unBlockStation(currentSoftware.station);
     	currentSoftware.isBlocked = false;
     	setStation();
     }                                                     
