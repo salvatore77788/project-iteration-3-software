@@ -12,6 +12,8 @@ import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 import org.lsmr.selfcheckout.devices.observers.KeyboardObserver;
 import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
 import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
+import org.lsmr.selfcheckout.software.gui.FailedLogin;
+import org.lsmr.selfcheckout.software.gui.Login;
 import org.lsmr.selfcheckout.devices.observers.BanknoteDispenserObserver;
 import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
 import org.lsmr.selfcheckout.devices.observers.BanknoteValidatorObserver;
