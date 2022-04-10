@@ -6,6 +6,8 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
+import org.lsmr.selfcheckout.software.AttendantActions;
+
 
 public class ReceiptPrint implements ReceiptPrinterObserver {
 
@@ -22,37 +24,37 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
     private static final int MAXIMUM_INK = 1 << 20;
     private static final int MAXIMUM_PAPER = 1 << 10;
 
+    AttendantActions attendant = new AttendantActions();
+    
     public String removePrintedreceipt() {
         return scs.printer.removeReceipt();
     }
 
     public void detectLowInk(int inkAmount) throws InterruptedException {
         int lowPercentageInk = MAXIMUM_INK % 5;
-
+        int refillInk = MAXIMUM_INK % 90;
         if (inkAmount < lowPercentageInk) {
-            //this.lowAmountInk = true;
+            this.lowAmountInk = true;
             while (inkAmount < lowPercentageInk) {
-                //this.lowAmountInk = true;
-                Thread.sleep(30000); //system just waits until attendant verifies the ink is filled
-                //System.out.println("The ink amount is 5%, please refill.");
-                //AttendantActions.fillInk();
+                this.lowAmountInk = true;
+                Thread.sleep(30000);
+                System.out.println("The ink amount is 5%, it is getting refilled.");
+                setinkAmount(refillInk);
             }
         }
     }
 
     public void detectLowPaper(int paperAmount) throws InterruptedException {
         int lowPercentagePaper = MAXIMUM_PAPER % 5;
+        int refillPaper = MAXIMUM_PAPER % 90;
 
         if (paperAmount < lowPercentagePaper) {
-            //this.lowAmountPaper = true;
+            this.lowAmountPaper = true;
             while (inkAmount < lowPercentagePaper) {
-                //this.lowAmountInk = true;
+                this.lowAmountInk = true;
                 Thread.sleep(30000);
-                //System.out.println("The paper amount is 5%, please refill.");
-                //AttendantActions.fillInk();
-                // warn attendant
-                // If attendant comes do this:
-                // setpaperAmount(MAXIMUM_PAPER);
+                System.out.println("The paper amount is 5%, it is getting refilled.");
+                setpaperAmount(refillPaper);
             }
         }
     }
