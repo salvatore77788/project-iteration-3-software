@@ -80,4 +80,5 @@ public class Keyboard extends AbstractDevice<KeyboardObserver> {
 		for(KeyboardObserver l : observers)
 			l.keyPressed(this, c);
 	}
+
 }

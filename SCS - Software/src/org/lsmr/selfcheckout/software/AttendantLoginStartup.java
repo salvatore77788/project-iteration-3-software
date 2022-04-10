@@ -313,8 +313,8 @@ public class AttendantLoginStartup {
 	}
 	
 	
-	//id and password inputted for a given superVisionStation and database
-	public void login(int id, String password, SupervisionStation superStation, PasswordDatabase database) {
+	//id and password inputed for a given superVisionStation and database
+	public void login(String id, String password, SupervisionStation superStation, PasswordDatabase database) {
 		
 		//login if password matches id
 		if(database.getPassword(id) == password && isLoggedIn == false)
