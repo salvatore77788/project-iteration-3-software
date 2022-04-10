@@ -53,7 +53,6 @@ public class TouchScreenTest {
 		Assert.assertTrue("TouchScreenSoftware.isDisabled should be false", tss.getIsDisabled() == false);
 	}
 
-	//
 	@Test
 	public void testAddBagsWhileEnabled() {
 		try {
@@ -74,5 +73,4 @@ public class TouchScreenTest {
 		}
 		System.err.println("Touchscreen should be disabled");
 	}
-
 }
