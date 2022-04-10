@@ -47,6 +47,8 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	
 	public ScanningItemGUI scanGUI;
 	
+	private boolean attendantRemoved = false; 
+	
 	/**
 	 * Constructor for the class ScanAndBag 
 	 * The constructor, the checkout station and the respective hashMaps for the Items and Products should be passed into it
@@ -168,7 +170,23 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 			}
 		}
 		else {
-			// Case where an item is removed
+			// Case where attendant removed item
+			if(attendantRemoved) {
+				
+				// Get new weight
+				latestItemWeight = weightInGrams;
+				
+				// Set new weight at last event
+				this.weightAtLastEvent = latestItemWeight;
+				
+				// Reset boolean 
+				setAttendantRemoved(false);
+			} else {
+				
+				// Prompt wrong weight and alert attendant
+				scanGUI.wrongWeightOn();
+			}
+			
 		}
 		
 		
@@ -336,6 +354,10 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 		} else {
 			// throw new SimulationException("Cannot restock negative bags!");
 		}
+	}
+	
+	public void setAttendantRemoved(boolean bool) {
+		attendantRemoved = bool;
 	}
 	
 	//getter method for bags in stock

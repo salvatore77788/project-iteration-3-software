@@ -73,6 +73,7 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 		welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
 		welcomeText.setFont(new Font("Tahoma", Font.BOLD, 40));
 		welcomeText.setText("Welcome!");
+		welcomeText.setEditable(false);
 		welcomeText.setBounds(42, 28, 867, 170);
 		contentPane.add(welcomeText);
 		welcomeText.setColumns(10);
@@ -83,6 +84,7 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 				software.startScanGUI();
 				ItemInfo item = new ItemInfo(new BigDecimal("2.00"), 1.0, "testRemove1");
 				software.scanAndBag.addToList(item);
+				System.out.println(software.scanAndBag.getCurrentWeight());
 				dispose();
 				//ScanAndBag scan = new ScanAndBag(scs, software.db, software);
 				//ItemInfo item = new ItemInfo(new BigDecimal("2.00"), 1.0, "testRemove1");

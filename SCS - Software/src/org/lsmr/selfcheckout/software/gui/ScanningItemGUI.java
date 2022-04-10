@@ -531,6 +531,7 @@ public class ScanningItemGUI extends JFrame {
 	}
 	
 	public void checkoutOn() {
+		paymentGUI = null;
 		paymentGUI = new PaymentGUI(scss);
 		//checkoutGUI = new FakeCheckoutGUI(itemsScanned);
 		//checkoutGUI.setVisible(true);

@@ -445,9 +445,15 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 
 	public void resetVars() {
+		
 		this.itemsScanned = new ArrayList<ItemInfo>();
+		this.amountDue = BigDecimal.ZERO;
+		this.amountPaid = new BigDecimal[1];
 		this.amountPaid[0] = BigDecimal.ZERO;
 		this.bagsUsed = 0;
+		this.maximumBags = 10;
+		this.priceOfBags = new BigDecimal("0.05");
+		System.out.println(amountPaid[0]);
 	}
 
 	public void startUpGUI() {
