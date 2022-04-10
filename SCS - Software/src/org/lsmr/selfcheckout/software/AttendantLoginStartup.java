@@ -358,9 +358,10 @@ public class AttendantLoginStartup {
 		  return allSuperStations;
 	  }
 	  
-		  //fill hashmap
-		  return selfStationObservers;
+	  public ArrayList<TouchScreenObserver> getSuperTouchScreenObservers(SupervisionStation ss) {
+		  return allSuperTouchScreenObservers.get(ss);
 	  }
+	  
 	  public ArrayList<KeyboardObserver> getSuperKeyboardObservers(SupervisionStation ss) {
 		  return allSuperKeyboardObservers.get(ss);
 	  }
