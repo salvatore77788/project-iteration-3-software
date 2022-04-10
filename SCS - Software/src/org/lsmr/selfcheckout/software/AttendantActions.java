@@ -31,6 +31,9 @@ public class AttendantActions {
 =======
     public void attendantBlockStation(SelfCheckoutStation station) {
         Data data = Data.getInstance();
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
         station.baggingArea.disable();
         station.scanningArea.disable();
@@ -41,6 +44,9 @@ public class AttendantActions {
 =======
         station.cardReader.disable();
         data.setIsDisabled(true);
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
     }
 
@@ -51,6 +57,9 @@ public class AttendantActions {
 =======
     public void attendantUnBlockStation(SelfCheckoutStation station) {
         Data data = Data.getInstance();
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
         station.baggingArea.enable();
         station.scanningArea.enable();
@@ -61,6 +70,9 @@ public class AttendantActions {
 =======
         station.cardReader.enable();
         data.setIsDisabled(false);
+<<<<<<< HEAD
+>>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
+=======
 >>>>>>> parent of 0da5779 (Remove Data ref as it is no longer in the project)
     }
     
