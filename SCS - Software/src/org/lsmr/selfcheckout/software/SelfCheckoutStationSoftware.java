@@ -67,6 +67,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
 		this.cardSoftware = new CardSoftware(this);
+		this.scanAndBag = new ScanAndBag(scs, db, this);
 
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.

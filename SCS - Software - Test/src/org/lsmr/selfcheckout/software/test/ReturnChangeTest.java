@@ -23,6 +23,7 @@ public class ReturnChangeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		
 	}
 
 	@After
@@ -35,6 +36,7 @@ public class ReturnChangeTest {
 	public void testCheckoutChangeWithBanknoteAndCoin() throws Exception {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
+		software.setMemberCardNumber("12345");
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
@@ -63,6 +65,7 @@ public class ReturnChangeTest {
 	public void testCheckoutChangeWithBanknote() throws Exception {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
+		software.setMemberCardNumber("12345");
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
@@ -89,6 +92,7 @@ public class ReturnChangeTest {
 	public void testCheckoutChangeWithCoin() throws Exception {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
+		software.setMemberCardNumber("12345");
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
@@ -115,6 +119,7 @@ public class ReturnChangeTest {
 	public void testCheckoutChangeWithCoin2() throws Exception {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
+		software.setMemberCardNumber("12345");
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
@@ -141,6 +146,7 @@ public class ReturnChangeTest {
 	public void testCheckoutChangeWithBanknoteAndCoin2() throws Exception {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
+		software.setMemberCardNumber("12345");
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
