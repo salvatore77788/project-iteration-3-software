@@ -71,6 +71,7 @@ public class EnterMemberCard implements ActionListener{
 			
 			memberNumberProvided = theKeypad.getMemberNumber();
 			
+			// membersRecord is the Member Database (HashMap) that contains registered members.
 			if(theSoftware.membersRecord.authenticateByNumber(memberNumberProvided) == true) {
 				theSoftware.setMemberCardNumber(memberNumberProvided);
 			}
@@ -110,8 +111,9 @@ public class EnterMemberCard implements ActionListener{
 		        		},
 				5000,2);
 
-		// Contains observers within.
+		// Constructor requires software
 		SelfCheckoutStationSoftware theSoftware = new SelfCheckoutStationSoftware(testStation);
+		// To make it show up, we'll make an instance of it and run the mainMenu() function.
 		EnterMemberCard aGUI = new EnterMemberCard(theSoftware);
 		aGUI.mainMenu();
 	}
