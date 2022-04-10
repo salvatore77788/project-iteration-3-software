@@ -19,8 +19,6 @@ public class TouchScreenTest {
 	private TouchScreenSoftware tss;
 	// private ElectronicScale es;
 	private TouchScreenStub ts;
-	private ElectronicScaleSoftware escaleObserver;
-
 	private TestHardware testHardware;
 
 	private class TouchScreenStub extends AbstractDevice<TouchScreenSoftware> {

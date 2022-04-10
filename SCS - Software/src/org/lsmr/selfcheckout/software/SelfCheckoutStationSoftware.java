@@ -15,8 +15,7 @@ public class SelfCheckoutStationSoftware {
 
 	public SelfCheckoutStation scs;
 	public TestDatabase db; // in an actual system this would connect to a db or something
-	public ElectronicScaleSoftware ess;
-	public BarcodeScannerSoftware bss;
+	public ScanAndBag bss;
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
@@ -51,8 +50,7 @@ public class SelfCheckoutStationSoftware {
 		this.rp = new ReceiptPrint();
 		this.as = new AttendantStation();
 		this.db = new TestDatabase();
-		this.ess = new ElectronicScaleSoftware(scs);
-		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
+		this.bss = new ScanAndBag(scs, db);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this.amountPaid);
 		this.memberCardObserver = new ScanMembershipCard(this.scs);
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
@@ -62,9 +60,10 @@ public class SelfCheckoutStationSoftware {
 		this.coinSlotSoftware = new CoinSlotSoftware(this.amountPaid);
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
 
-		// attach the ess and bss to the selfcheckout hardware
+		// attach the bss to the selfcheckout hardware
 		this.scs.mainScanner.attach(bss);
-		this.scs.baggingArea.attach(ess);
+		this.scs.baggingArea.attach(bss);
+		this.scs.handheldScanner.attach(bss);
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
@@ -338,7 +337,7 @@ public class SelfCheckoutStationSoftware {
 		double itemWeight = item.weight;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
-		double previousWeight = this.ess.getWeightAtLastEvent();
+		double previousWeight = this.bss.getWeightAtLastEvent();
 
 		boolean existsInScannedList = false;
 

@@ -18,9 +18,7 @@ import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.CoinStorageUnit;
 import org.lsmr.selfcheckout.devices.CoinTray;
 import org.lsmr.selfcheckout.devices.CoinValidator;
-import org.lsmr.selfcheckout.software.BarcodeScannerSoftware;
 import org.lsmr.selfcheckout.software.CoinSlotSoftware;
-import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.ItemInfo;
 import org.lsmr.selfcheckout.software.TestDatabase;
 
