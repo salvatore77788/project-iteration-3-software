@@ -408,10 +408,10 @@ public class PaymentGUI extends javax.swing.JFrame implements SelfCheckoutSystem
 	@Override
 	public void amountPaid(SelfCheckoutStationSoftware software, BigDecimal amount) {
 		System.out.println("amount paid: " + amount);
+		updatePaymentLabels();
 		// An amount was paid
 		if(state != PaymentGUIState.SELECTION && state != PaymentGUIState.MEMBERSHIP) {
 			// A payment was made
-			updatePaymentLabels();
 			
 			// TODO: Finish checkout here; i.e. print receipt and go to closing screen
 	    	if(software.amountDue.compareTo(software.getAmountPaid()) <= 0)
