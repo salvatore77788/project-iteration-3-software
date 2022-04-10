@@ -20,7 +20,7 @@ import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
 
 public class TouchScreenSoftware implements TouchScreenObserver {
 	private boolean isDisabled;
-	private AttendantStation as;
+	private AttendantStation as = new AttendantStation();
 	public SelfCheckoutStation theStation;
 	
 	
