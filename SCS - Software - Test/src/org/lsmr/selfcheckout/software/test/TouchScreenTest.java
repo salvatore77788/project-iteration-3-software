@@ -118,7 +118,7 @@ public class TouchScreenTest {
 				};
 			int defaultMaxScaleWeight = 1000;
 			int defaultSensitivity = 1;
-			SelfCheckoutStation giota = new SelfCheckoutStation(currency, banknoteDenoms, coinDenoms, defaultMaxScaleWeight, defaultSensitivity);
+			SelfCheckoutStation scs = new SelfCheckoutStation(currency, banknoteDenoms, coinDenoms, defaultMaxScaleWeight, defaultSensitivity);
 			
 		new TestHardware();
 		

@@ -76,9 +76,6 @@ public class CardsPayment {
 	JLabel memberNumLabel = new JLabel("Number:");
 	JLabel memberNameLabel = new JLabel("Name:");
 	
-	// JPanel for scanning and bagging items
-	JLabel runningTotalLabel = new JLabel("Running total: $" + scs.total());
-	
 	// JPanel for selecting payment type
 	JPanel selectPaymentType = new JPanel();
 	JLabel paymentTypeLabel = new JLabel("Please select your payment type.");
@@ -159,17 +156,6 @@ public class CardsPayment {
 		selectPaymentType.add(paymentGoBackButton, gbc);
 		paymentGoBackButton.setPreferredSize(new Dimension(400, 120));
 		
-		
-		// Action Listener for cashButton
-		cashButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cardLayout.show(container, "cash");
-				outstandingBalance.setText("Outstanding Balance: $" + cart.getCumPrice().subtract(new BigDecimal(notePayment.getTotalCashInserted()).add(coinPayment.getTotalCoinInserted())).setScale(2, RoundingMode.HALF_UP));
-			}
-		});
-		
 		// Action Listener for creditButton
 		creditButton.addActionListener(new ActionListener() {
 			
@@ -196,7 +182,12 @@ public class CardsPayment {
 				Card giftCard = new Card("gift card", "6750056347755", "Andrew", null, null, false, false);
 				CardIssuer coop = new CardIssuer("Co-op");
 				coop.addCardData("6750056347755", "Andrew", expiry, "000", new BigDecimal(100));
-				cardPayment.PayWithGiftCard(giftCard, cart.getCumPrice(), coop);
+				try {
+					cardPayment.PaywithGiftCard(giftCard, 1, new BigDecimal (6), scs.getTotalGUI(), coop);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -237,7 +228,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithCreditCard(creditCard, 2, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithcreditcard(creditCard, 2, new BigDecimal(6), "9876", scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -246,7 +242,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithCreditCard(creditCard, 0, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithcreditcard(creditCard, 1, new BigDecimal(6), "9876", scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -255,7 +256,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithCreditCard(creditCard, 1, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithcreditcard(creditCard, 3, new BigDecimal(6),"9876",scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -286,7 +292,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithDebitCard(debitCard, 2, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithDebitCard(debitCard, 2, new BigDecimal(6), "9876",scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -295,7 +306,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithDebitCard(debitCard, 0, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithDebitCard(debitCard, 1, new BigDecimal(6), "9876", scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -304,7 +320,12 @@ public class CardsPayment {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cardPayment.PayWithDebitCard(debitCard, 1, cart.getCumPrice(), "9876", Bank);
+				try {
+					cardPayment.PayWithDebitCard(debitCard, 3, new BigDecimal(6), "9876",scs.getTotalGUI(), Bank);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 		});

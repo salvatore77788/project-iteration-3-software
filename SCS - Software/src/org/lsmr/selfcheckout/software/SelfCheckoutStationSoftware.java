@@ -13,6 +13,7 @@ import org.lsmr.selfcheckout.software.ReceiptPrint;
 
 public class SelfCheckoutStationSoftware {
 
+	public BigDecimal totalGUI;
 	public SelfCheckoutStation scs;
 	public TestDatabase db; // in an actual system this would connect to a db or something
 	public ElectronicScaleSoftware ess;
@@ -85,7 +86,7 @@ public class SelfCheckoutStationSoftware {
 		}
 
 		total = total.add(priceOfBags.multiply(new BigDecimal(Integer.toString(bagsUsed))));
-
+		setTotalGUI(total);
 		return total;
 	}
 
@@ -418,6 +419,14 @@ public class SelfCheckoutStationSoftware {
 
 	public void setMemberCardNumber(String memberCN) {
 		this.memberNumber = memberCN;
+	}
+
+	public BigDecimal getTotalGUI() {
+		return totalGUI;
+	}
+
+	public void setTotalGUI(BigDecimal totalGUI) {
+		this.totalGUI = totalGUI;
 	}
 
 }
