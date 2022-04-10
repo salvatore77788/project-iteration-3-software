@@ -61,18 +61,22 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
         jTextAreaInfo.setWrapStyleWord(true);
         jTextAreaInfo.setLineWrap(true);
         
-        // Testing
+        initTesting();
+        
+        updatePaymentLabels();
+        
+        frame.setLocation(1000, 300);
+        frame.setVisible(true);
+    }
+    
+    private void initTesting() {
+    	// Testing
         software.amountDue = new BigDecimal("1000.00");
         software.cardSoftware.paymentAmount = new BigDecimal("100.0");
         software.cardSoftware.cardIssuer = new CardIssuer("Test Financing");
         PaymentTesterGUI paymentTester = new PaymentTesterGUI(software);
         paymentTester.setVisible(true);
         paymentTester.setLocation(400, 300);
-        
-        updatePaymentLabels();
-        
-        frame.setLocation(1000, 300);
-        frame.setVisible(true);
     }
     
     private void updatePaymentLabels() {
