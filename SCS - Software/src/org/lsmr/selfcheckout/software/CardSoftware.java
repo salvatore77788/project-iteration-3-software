@@ -12,6 +12,14 @@ import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
 import org.lsmr.selfcheckout.external.CardIssuer;
 
+/**
+ * Class CardSoftware that simulates the use cases where the customer pays with either a debit card, a credit card, or a giftcard, at the checkout.
+ */
+
+/**
+ * implements the CardReaderObserver
+ */
+
 public class CardSoftware implements CardReaderObserver {
 
     public final CardReader cardReader;
@@ -22,6 +30,11 @@ public class CardSoftware implements CardReaderObserver {
     private SelfCheckoutStation scs;
     private int holdNumber;
 
+    /**
+     * Parameterized constructor for the CardSoftware class
+     * the cardReader is attached to the selfcheckoutstation
+     * @param selfCheckoutStation the selfCheckoutStation used
+     */
     public CardSoftware(SelfCheckoutStation selfCheckoutStation) {
         scs = selfCheckoutStation;
         scs.cardReader.attach(this);
@@ -29,13 +42,25 @@ public class CardSoftware implements CardReaderObserver {
     }
 
     /**
-     * This class is a simulation of paying with a credit card at the checkout.
+     * Simulates paying with a credit card at the checkout.
      * 
-     * The type of payment (creditcard) needs to be credit card.
-     * The option of payment (paymentOption) has to be either tap, swipe or insert.
-     * The card limit (totalBalance) needs to be more than the amount owed.
-     * The pin (pin) entered by the user has to be correct.
-     * Return true if payment is successful, false otherwise.
+     * @param creditcard 
+     * 			the type of card used for the payment (credit card in this case)
+     * @param paymentMethod 
+     * 			the method of payment (paymentOption) has to be either tap, swipe or insert.
+     * @param totalBalance 
+     * 			the card limit (totalBalance) needs to be more than the amount owed.
+     * @param pin 
+     * 			the pin entered by the user (pin) has to be correct
+     * @param total 
+     * 			the total amount the customer has to pay at checkout
+     * @param payinfo 
+     * 			the CardIssuer
+     * 
+     * @return true if payment is successful, or false otherwise
+     * 
+     * @throws IOException 
+     * 			if the credit card is declined
      */
 
     public boolean PayWithcreditcard(Card creditcard, int paymentMethod, BigDecimal totalBalance, String pin,
@@ -103,13 +128,25 @@ public class CardSoftware implements CardReaderObserver {
     }
 
     /**
-     * This class is a simulation of paying with a debit card at the checkout.
+     * Simulates paying with a debit card at the checkout.
      * 
-     * The type of payment (creditcard) needs to be debit card.
-     * The option of payment (paymentOption) has to be either tap, swipe or insert.
-     * The card limit (totalBalance) needs to be more than the amount owed.
-     * The pin (pin) entered by the user has to be correct.
-     * Return true if payment is successful, false otherwise.
+     * @param debitcard 
+     * 			the type of card used for the payment (debit card in this case)
+     * @param paymentMethod 
+     * 			the method of payment (paymentOption) has to be either tap, swipe or insert.
+     * @param totalBalance 
+     * 			the card limit (totalBalance) needs to be more than the amount owed.
+     * @param pin 
+     * 			the pin entered by the user (pin) has to be correct
+     * @param total 
+     * 			the total amount the customer has to pay at checkout
+     * @param payinfo 
+     * 			the CardIssuer
+     * 
+     * @return true if payment is successful, or false otherwise
+     * 
+     * @throws IOException 
+     * 			if the debit card is declined
      */
 
     public boolean PayWithDebitCard(Card debitCard, int paymentMethod, BigDecimal totalBalance, String pin,
@@ -177,13 +214,23 @@ public class CardSoftware implements CardReaderObserver {
     }
 
     /**
-     * This class is a simulation of paying with a credit card at the checkout.
+     * Simulates paying with a gift card at the checkout.
      * 
-     * The type of payment (giftcard) needs to be credit card.
-     * The option of payment (paymentOption) has to be either tap, swipe or insert.
-     * The card limit (totalBalance) needs to be more than the amount owed.
-     * The pin (pin) entered by the user has to be correct.
-     * Return true if payment is successful, false otherwise.
+     * @param giftcard 
+     * 			the type of card used for the payment (gift card in this case)
+     * @param paymentMethod 
+     * 			the method of payment (paymentOption) has to be swipe.
+     * @param totalBalance 
+     * 			the card limit (totalBalance) needs to be more than the amount owed.
+     * @param total 
+     * 			the total amount the customer has to pay at checkout
+     * @param payinfo 
+     * 			the CardIssuer
+     * 
+     * @return true if payment is successful, or false otherwise
+     * 
+     * @throws IOException 
+     * 			if the gift card is declined
      */
 
     public boolean PaywithGiftCard(Card giftcard, int paymentMethod, BigDecimal totalBalance,
