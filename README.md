@@ -13,47 +13,87 @@
     + SCS - Hardware - v3.1
         + This is a project that contains a simulation of hardware for a self checkout station. Written by Dr. Walker.
     + SCS - Software 
-        + This project contains all the software classes that interacts with the hardware interface.
+        + This project contains all the software and gui classes that interacts with the hardware interface.
         + The class that ties most of the software together is the class named "SelfCheckoutStationSoftware.java"
+        * Our Graphical User Interface implements the following usecases:
+            + Scanning Items
+                + StationItemGUI
+                + RemoveItemGUI
+                + ScanLargeItemGUI
+                + WrongWeightGUI
+            + Checkout
+                + VirtualKeypad
+                + BagsGUI
+                + PersonalBagPromptGUI
+                + TakeBagPromptGUI
+            + Customer makes a Payment
+                + EnterMemberCard
+                + PaymentGUI
+                + PaymentTesterGUI
+            + Attendant Panel
+                + AttendantRemoveItemGUI
     + SCS - Software - Test
         + This project contains all the JUnit 4 tests for our software.
-            + BarcodeScannerSoftwareTest.java
-                + This tests our implementation of the BarcodeScannerObserver interface.
-            + ElectronicScaleSoftwareTest.java
-                + This tests our implementation of the ElectronicScaleObserver interface.
-            + CardTest.java
-                + This tests our implementation for CardSoftware (payment with credit, debit, and gift card).
-                + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
-                + The random probility of error is about 10% of the time.
-            + ReturnChangeTest.java
-                + This tests our implementation for ReturnChangeSoftware. 
-                + This tests our implementation for "how many bags did you use?"
-                + If using it as a testing unit only, then please put in a "0" for all cases
-                + If using it as a program, then any number of bag input works
-            + ScanMembershipCardTest.java
-                + This tests our implementation for ScanMembershipCard.
-                + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
-                + The random probility of error is about 10% of the time.
-            + TouchScreenTest.java
-                + This tests our implementation for TouchScreenSoftware. 
-                + This testing is for "how should adding bags communicate with electronic scale". 
-                + The touch screen does not exist yet however the user can still interact with the interface through terminal/command line. 
+         + The class that combines most of the usecases togeher is called "Testing.java". This class is simulating the SelfCheckoutStation through command prompt.
+
             + BaggingAreaSofwareTest.java
                 + This tests our implementation for SelfCheckoutStationSoftware.
                 + Bagging area software is inside the SelfCheckoutStationSoftware class.
                 + This testing for "customer failing adding items to bagging area.
                 + Due to random probility of scanning an item fails, %10 of the time this test will result in failing.
+
+            + BarcodeScannerSoftwareTest.java
+                + This tests our implementation of the BarcodeScannerObserver interface.
+
+            + BanknoteSlotTest.java
+                + This tests our implementation for BanknoteSlotSoftware.
+                + This testing checks any payments with banknotes.
+
+            + CardTest.java
+                + This tests our implementation for CardSoftware (payment with credit, debit, and gift card).
+                + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
+                + The random probility of error is about 10% of the time.
+
+            + CoinSlotSoftwareTest.java
+                + This tests our implementation for CoinSlotSoftware
+                + This testing checks any payments with coins.
+
+            + ElectronicScaleSoftwareTest.java
+                + This tests our implementation of the ElectronicScaleObserver interface.
+
+            + EnterMembershipCardTest.java
+                + This tests our implementation for ScanMembershipCard.
+                + This testing provides %100 coverage however due to random probility of swipe and tap features failing, sometimes the testing gives error. 
+                + The random probility of error is about 10% of the time.
+
             + PartialPaymentTest.java
                 + This tests our implementation for PartialPaymentSoftware.
                 + This testing is for handling the partial payments.
+
+            + ReceiptPrintTest.java
+                + This tests our implementation of the ReceiptPrint.
+                + This testing our implementation of the ink and paper.
+
+            + ReturnChangeTest.java
+                + This tests our implementation for ReturnChangeSoftware. 
+                + This tests our implementation for "how many bags did you use?"
+                + If using it as a testing unit only, then please put in a "0" for all cases, otherwise program will not run!
+                + If using it as a program, then any number of bag input works
+                 
+            + TestHardware.java
+                + This tests our implementation for TestHardware.
+
             + Testing.java
                 + This tests our implementation for
-                + This provides a simulation of our software, including the following functions:
-                    + Printing receipt.
-                    + Returning change.
+                + This provides a simulation of our software through command prompt, make sure to enter your specified number of bags to run this program.
+
             + TestItems.java
                 + This test is for our Barcoded Items.
                 + It tests each item we have in the shopping cart.
+
+            + TouchScreenTest.java
+                + This tests our implementation for TouchScreenSoftware. 
+                + This testing is for "how should adding bags communicate with electronic scale and the station.".
 
 ## Downloading the project:
 * Easiest way is to clone the repository:
@@ -86,7 +126,6 @@
 * Alisha Lalani
 * Paul Latkovic
 * Raine Legary
-* Sneh Patel
 * Guillaume Pluta
 * Vincent Salvatore
 * Anson Sieu
