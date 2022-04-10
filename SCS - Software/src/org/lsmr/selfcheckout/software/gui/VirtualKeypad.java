@@ -13,7 +13,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-// source: https://learn-java-by-example.com/java/calculator-keypad/
+// Modified code from the following source: https://learn-java-by-example.com/java/calculator-keypad/
+
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
+
 
 public class VirtualKeypad extends JPanel implements ActionListener {
 
@@ -23,12 +26,16 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	JButton returnMenuButton;
 	JTextField displayField;
 	JFrame frame;
-	String memberNumberProvided;
+	
+	private String memberNumberProvided;
+	
 	
 
 	public VirtualKeypad() {
 	      super(new BorderLayout());
 
+	      
+	      
 	      // Create a panel for the buttons
 	      // We'll use a GridLayout to display the buttons in a grid
 	      JPanel buttons = new JPanel(new GridLayout(4, 3,5,5));
@@ -89,6 +96,11 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	      display = displayField.getDocument();
 	      add(BorderLayout.CENTER, buttons);
 	      add(BorderLayout.SOUTH, displayField);
+	   }
+	
+	
+	   public String getMemberNumber() {
+		   return memberNumberProvided;
 	   }
 
 	   /**

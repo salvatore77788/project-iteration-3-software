@@ -37,6 +37,16 @@ public class MembersDatabase {
 		
 	}
 	
+	// meant for GUI only.
+	public boolean authenticateByNumber(String cardNumberProvided) {
+		if(members.containsKey(cardNumberProvided)) {
+			return true;
+		}
+		
+		else
+			return false;
+	}
+	
 	// In the case that the member wishes to opt out 
 		// of the membership.
 	public void leaveMembership(CardData cardInfo) {

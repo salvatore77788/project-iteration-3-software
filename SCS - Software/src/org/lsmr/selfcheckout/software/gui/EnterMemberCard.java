@@ -18,17 +18,18 @@ import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 public class EnterMemberCard implements ActionListener{
 	
-	public SelfCheckoutStation theStation;
+	public SelfCheckoutStationSoftware theSoftware;
 	// The keyPadFrame provided by screen in scs.
 	JFrame stationFrame;
 	// needs to be able to "dispose" of frame from the other class.
 	static JFrame keyPadFrame;
 	JButton enterMemberNumberButton;
+	public String memberNumberProvided;
 
-	public EnterMemberCard(SelfCheckoutStation aSCS) {
+	public EnterMemberCard(SelfCheckoutStationSoftware aSCSsoftware) {
 		
-		this.theStation = aSCS;
-		theStation.screen.enable();
+		this.theSoftware = aSCSsoftware;
+		theSoftware.scs.screen.enable();
 		
 		//theStation.screen.
 		
@@ -37,7 +38,7 @@ public class EnterMemberCard implements ActionListener{
 	public void mainMenu() {
 		//System.out.println("Entered windowShows");
 		
-		stationFrame = theStation.screen.getFrame();
+		stationFrame = theSoftware.scs.screen.getFrame();
 		stationFrame.setSize(700,700);
 		stationFrame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		stationFrame.setVisible(true);
@@ -65,13 +66,26 @@ public class EnterMemberCard implements ActionListener{
 			keyPadFrame = new JFrame("Keypad");
 			keyPadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			// Creates Pane with buttons along with its own Action Listener.
-			keyPadFrame.getContentPane().add(new VirtualKeypad());
+			VirtualKeypad theKeypad = new VirtualKeypad();
+			keyPadFrame.getContentPane().add(theKeypad);
+			
+			memberNumberProvided = theKeypad.getMemberNumber();
+			
+			if(theSoftware.membersRecord.authenticateByNumber(memberNumberProvided) == true) {
+				theSoftware.setMemberCardNumber(memberNumberProvided);
+			}
 			 
 			keyPadFrame.pack();
 			keyPadFrame.setVisible(true);
 		}
 		
 	}
+	
+	
+	public String getMemberNumberProvided() {
+		return memberNumberProvided;
+	}
+	
 	
 	// so far not used.
 	public void showKeypad() {
@@ -98,7 +112,7 @@ public class EnterMemberCard implements ActionListener{
 
 		// Contains observers within.
 		SelfCheckoutStationSoftware theSoftware = new SelfCheckoutStationSoftware(testStation);
-		EnterMemberCard aGUI = new EnterMemberCard(theSoftware.scs);
+		EnterMemberCard aGUI = new EnterMemberCard(theSoftware);
 		aGUI.mainMenu();
 	}
 
