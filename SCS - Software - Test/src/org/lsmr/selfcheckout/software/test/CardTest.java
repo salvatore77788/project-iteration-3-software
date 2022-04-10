@@ -82,7 +82,7 @@ public class CardTest {
 			scs.cardReader.swipe(creditCard);
 			
 			// Should pay full amount
-			assertEquals("Amount paid not correct.", BigDecimal.ZERO, scss.getAmountPaid());
+			assertEquals("Amount paid not correct.", new BigDecimal("100.00"), scss.getAmountPaid());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
