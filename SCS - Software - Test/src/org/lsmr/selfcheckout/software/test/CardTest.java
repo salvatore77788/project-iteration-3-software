@@ -15,7 +15,13 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.external.CardIssuer;
 import org.lsmr.selfcheckout.software.CardSoftware;
 
+/**
+ * Class CardTest for performing tests on the CardSoftware class
+ *
+ */
 public class CardTest {
+	
+	//declare testing variables and objects
     private SelfCheckoutStation scs;
     CardSoftware pay;
     Card creditCard_tap;
@@ -34,6 +40,7 @@ public class CardTest {
     private Currency currency;
 
     @Before
+    //runs before each test
     public void setup() {
         currency = Currency.getInstance("CAD");
         int[] banknoteDenominations = { 5, 10, 20, 50 };
@@ -63,9 +70,11 @@ public class CardTest {
 
     }
 
-    /**
-     * Following testing is for Credit Card.
-     */
+    
+/**
+ * TESTS FOR PAYMENT WITH CREDIT CARD.
+ */
+
     @Test
     public void Credit_isNull() throws IOException {
 
@@ -133,10 +142,11 @@ public class CardTest {
                 payinfo));
     }
 
-    /**
-     * Following testing is for Debit Card.
-     * 
-     */
+
+/**
+ * TESTS FOR PAYMENT WITH DEBIT CARD.
+ * 
+ */
 
     @Test
     public void Debit_is_Null() throws IOException {
@@ -204,10 +214,11 @@ public class CardTest {
                 pay.PayWithDebitCard(debitCard_noTap, 3, new BigDecimal(1000), "1234", new BigDecimal(1001), payinfo));
     }
 
-    /**
-     * Following testing is for Gift Card.
-     * 
-     */
+
+/**
+ * TESTS FOR PAYMENT WITH DEBIT CARD.
+ * 
+ */
 
     @Test
     public void Gift_isNull() throws IOException {
