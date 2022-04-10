@@ -88,23 +88,12 @@ public class ReceiptPrinterSoftwareTest {
 		
 	}
 	
-	@Test
-	public void testAttnFillInk() throws Exception
-	{
-		rcpt.setinkAmount(1<<20);
-		rcpt.setinkAmount(1);
-		//System.out.print(rcpt.toString());
-		att.fillInk(rcpt);
-		assertTrue("ink amount expected (1<<20)", rcpt.getinkAmount() == 1<<20 );		
-	}
 	
 	@Test
 	public void testAttnFill() throws Exception
 	{
 		rcpt.setinkAmount(1<<20);
 		rcpt.setpaperAmount(1);
-		//System.out.print(rcpt.toString());
-		att.fillPaper(rcpt);
 		assertTrue("ink amount expected (1<<20)", rcpt.getinkAmount() == 1<<20 );		
 	}
 }
