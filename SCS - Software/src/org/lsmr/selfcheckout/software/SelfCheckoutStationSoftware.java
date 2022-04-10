@@ -94,8 +94,17 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		// create new change class
 	}
 
+	public void startScanGUI() {
+		scanAndBag = new ScanAndBag(scs, db, this);
+	}
+	
+	public void continueScanGUI() {
+		scanAndBag.continueGUI();
+	}
+	
 	public BigDecimal total() {
 		BigDecimal total = BigDecimal.ZERO;
+		itemsScanned = scanAndBag.getItemsScanned();
 		for (ItemInfo i : itemsScanned) {
 			total = total.add(i.price);
 		}
