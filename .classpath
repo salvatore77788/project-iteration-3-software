@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="SCS - Hardware - v3/1/src/|SCS - Hardware - v3.1/src/|SCS - Software/src/|SCS - Software/src/|SCS - Software - Test/src/|SCS - Software - Test/src/" kind="src" path=""/>
+	<classpathentry kind="src" path="SCS - Hardware - v3.1/src"/>
+	<classpathentry kind="src" path="SCS - Software/src"/>
+	<classpathentry kind="src" path="SCS - Software - Test/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

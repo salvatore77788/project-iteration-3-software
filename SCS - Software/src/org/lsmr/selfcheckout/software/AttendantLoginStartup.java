@@ -103,6 +103,7 @@ public class AttendantLoginStartup {
     		ArrayList<KeyboardObserver> superKeyboardObservers) {
     	
 		if (!isLoggedIn) return;
+		if (allSuperStations.contains(ss)) return;
 		
 		allSuperStations.add(ss);
 		allSuperTouchScreenObservers.put(ss, superTouchScreenObservers);
@@ -127,7 +128,9 @@ public class AttendantLoginStartup {
     		ArrayList<CoinStorageUnitObserver> selfCoinStorageObservers,
     		HashMap<BigDecimal, ArrayList<CoinDispenserObserver>> selfCoinDispenserObservers,
     		ArrayList<CoinTrayObserver> selfCoinTrayObservers) {
-    	if (!isLoggedIn) return;   	
+    	
+    	if (!isLoggedIn) return;
+    	if (allSelfStations.contains(scs)) return;
     	
     	allSelfStations.add(scs);
     	allSelfBaggingAreaObservers.put(scs, selfBaggingAreaObservers);
@@ -186,6 +189,9 @@ public class AttendantLoginStartup {
 	
 	// start supervisor station up by attaching its potential observers
 	public <T> void startup(SupervisionStation ss) {
+		if (!isLoggedIn) return;
+		if (!allSuperStations.contains(ss)) return;
+		
 		ArrayList<TouchScreenObserver> screenObservers = allSuperTouchScreenObservers.get(ss);
 		for (TouchScreenObserver observer: screenObservers) {
 			ss.screen.attach(observer);
@@ -319,6 +325,7 @@ public class AttendantLoginStartup {
 	
 	
 	public void login(SupervisionStation superStation, PasswordDatabase database) {
+		if (isLoggedIn) return;
         database.AddLoginDetails("admin","admin");
         loginFrame.unPressed();
         while (loginFrame.isPressed()== false)
@@ -326,7 +333,8 @@ public class AttendantLoginStartup {
       
         String id = loginFrame.getTextUserID();
         String password = loginFrame.getPasswordEntered();
-        if(database.getPassword(id) == password && isLoggedIn == false)
+        
+        if(database.getPassword(id).equals(password))
         {
             this.superStation = superStation;
             superStation.screen.enable();
