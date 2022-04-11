@@ -177,9 +177,11 @@ public class AttendantActions {
     	// This should be displayed on the touch screen.
     	BigDecimal totalValue = new BigDecimal(0);
     	for (int i = 0; i < storageContents.size(); i++) {
-    		totalValue.add(storageContents.get(i).getValue());
+    		Coin c = storageContents.get(i);
+    		if(c != null)
+    			totalValue.add(c.getValue());
     	}
-    	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
+    	//System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
 
     	return storageContents;
     }
@@ -215,7 +217,9 @@ public class AttendantActions {
     	// This should be displayed on the touch screen.
     	int totalValue = 0;
     	for (int i = 0; i < storageContents.size(); i++) {
-    		totalValue += storageContents.get(i).getValue();
+    		Banknote bn = storageContents.get(i);
+    		if(bn != null)
+    			totalValue += bn.getValue();
     	}
     	System.out.printf("$%d removed from banknote storage unit.\n", totalValue);
 

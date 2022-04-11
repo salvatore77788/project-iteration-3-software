@@ -19,32 +19,27 @@ import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.SimulationException;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.BanknoteStorageUnit;
 import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.CoinStorageUnit;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSetup;
 
 public class AttendantActionsTestAUC2 {
-
+	SelfCheckoutStation station;
+	Currency currency;
+	
 	@Before
 	public void setUp() throws Exception {
-//		Currency currency = Currency.getInstance("CAD");
-//		int[] banknoteDenominations = {1, 5, 10, 20, 50, 100};
-//		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25)};
-//		
-//		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
+		currency = Currency.getInstance("CAD");
+		
+		station = SelfCheckoutStationSetup.createSelfCheckoutStationFromInit();
 	}
 
 	@Test
-	public void overfillCoinDispenserTest() throws OverloadException {
-		Currency currency = Currency.getInstance("CAD");
-		int[] banknoteDenominations = {5, 10, 20, 50, 100};
-		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25), BigDecimal.valueOf(1), BigDecimal.valueOf(2)};
-		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-		
-		AttendantActions testAttendant = new AttendantActions();
-		
+	public void overfillCoinDispenserTest() throws OverloadException {	
 		BigDecimal penny = new BigDecimal(0.01);
 		Coin coin = new Coin(currency, penny);
 		
@@ -53,19 +48,12 @@ public class AttendantActionsTestAUC2 {
 		
 		station.coinDispensers.put(penny, dispenser);
 		
-		testAttendant.fillCoinDispenser(station, penny, coin);
-		testAttendant.fillCoinDispenser(station, penny, coin);
+		AttendantActions.fillCoinDispenser(station, penny, coin);
+		AttendantActions.fillCoinDispenser(station, penny, coin);
 	}
 	
 	@Test
 	public void overfillBanknoteDispenserTest() throws OverloadException {
-		Currency currency = Currency.getInstance("CAD");
-		int[] banknoteDenominations = {5, 10, 20, 50, 100};
-		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25), BigDecimal.valueOf(1), BigDecimal.valueOf(2)};
-		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-		
-		AttendantActions testAttendant = new AttendantActions();
-		
 		int banknoteValue = 5;
 		Banknote banknote = new Banknote(currency, banknoteValue);
 		
@@ -75,22 +63,12 @@ public class AttendantActionsTestAUC2 {
 		
 		station.banknoteDispensers.put(banknoteValue, dispenser);
 		
-		testAttendant.fillBanknoteDispenser(station, banknoteValue, banknote);
-		testAttendant.fillBanknoteDispenser(station, banknoteValue, banknote);
+		AttendantActions.fillBanknoteDispenser(station, banknoteValue, banknote);
+		AttendantActions.fillBanknoteDispenser(station, banknoteValue, banknote);
 	}
 	
 	@Test
 	public void emptyCoinStorageUnitTest() throws SimulationException, OverloadException {
-		Currency currency = Currency.getInstance("CAD");
-		int[] banknoteDenominations = {5, 10, 20, 50, 100};
-		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25), BigDecimal.valueOf(1), BigDecimal.valueOf(2)};
-		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-		
-		AttendantActions testAttendant = new AttendantActions();
-		
-		int capacity = 1000;
-		CoinStorageUnit storage = new CoinStorageUnit(capacity);
-		
 		BigDecimal value = new BigDecimal(0.01);
 		Coin coin = new Coin(currency, value);
 		
@@ -98,18 +76,24 @@ public class AttendantActionsTestAUC2 {
 		
 		List<Coin> storageContents = new ArrayList<Coin>();
 		storageContents.add(coin);
-		testAttendant.emptyCoinStorageUnit(station);
-		Assert.assertEquals(storageContents, testAttendant.emptyCoinStorageUnit(station));
+		//Assert.assertEquals(storageContents, AttendantActions.emptyCoinStorageUnit(station));
+		Assert.assertEquals(coin, AttendantActions.emptyCoinStorageUnit(station).get(0));
+	
+	}
+	
+	@Test
+	public void emptyBanknoteStorageUnitTest() throws SimulationException, OverloadException {
+		Banknote bn = new Banknote(currency, 5);
+		
+		station.banknoteStorage.load(bn);
+		
+		//Assert.assertEquals(storageContents, AttendantActions.emptyCoinStorageUnit(station));
+		Assert.assertEquals(bn, AttendantActions.emptyBanknoteStorageUnit(station).get(0));
 	
 	}
 	
 	@Test
 	public void blockStationTest() {
-		Currency currency = Currency.getInstance("CAD");
-		int[] banknoteDenominations = {1, 5, 10, 20, 50, 100};
-		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25)};
-		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-	
 		AttendantActions testAttendant = new AttendantActions();
 		
 		testAttendant.attendantBlockStation(station);
@@ -117,11 +101,6 @@ public class AttendantActionsTestAUC2 {
 	
 	@Test
 	public void unBlockStationTest() {
-		Currency currency = Currency.getInstance("CAD");
-		int[] banknoteDenominations = {1, 5, 10, 20, 50, 100};
-		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25)};
-		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-		
 		AttendantActions testAttendant = new AttendantActions();
 		
 		testAttendant.attendantUnBlockStation(station);
