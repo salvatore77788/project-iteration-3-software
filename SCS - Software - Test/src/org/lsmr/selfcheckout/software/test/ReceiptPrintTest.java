@@ -31,7 +31,6 @@ import static org.junit.Assert.assertTrue;
 public class ReceiptPrintTest {
 	
 	private TestHardware testHardwarePrint = new TestHardware();
-	private ReceiptPrint rcpt = new ReceiptPrint();
 	private SelfCheckoutStationSoftware software;
 	private AttendantStation atstat;
 	private AttendantActions att = new AttendantActions();
@@ -59,16 +58,16 @@ public class ReceiptPrintTest {
 	@Test (expected=EmptyException.class)
 	public void testEmptyInk() throws EmptyException, OverloadException, InterruptedException
 	{
-		rcpt.setpaperAmount(1<<10);
-		rcpt.detectLowInk(rcpt.getInkAmount());
+		software.rp.setpaperAmount(1<<10);
+		software.rp.detectLowInk(software.rp.getInkAmount());
 		software.checkout();
 	}	
 	
 	@Test (expected = EmptyException.class)
 	public void testLowInk() throws InterruptedException, EmptyException, OverloadException
 	{
-		rcpt.setpaperAmount(1<<10);
-		rcpt.setinkAmount(0);
+		software.rp.setpaperAmount(1<<10);
+		software.rp.setinkAmount(0);
 		software.checkout();
 		
 	}
@@ -76,7 +75,8 @@ public class ReceiptPrintTest {
 	@Test (expected = EmptyException.class)
 	public void testEmptyPaper() throws InterruptedException, EmptyException, OverloadException
 	{
-		rcpt.setinkAmount(1<<20);
+		software.rp.setinkAmount(1<<20);
+		software.rp.setpaperAmount(0);
 		software.checkout();
 		
 	}
@@ -84,8 +84,8 @@ public class ReceiptPrintTest {
 	@Test (expected = EmptyException.class)
 	public void testLowPaper() throws InterruptedException, EmptyException, OverloadException
 	{
-		rcpt.setinkAmount(1<<20);
-		rcpt.setpaperAmount(1);
+		software.rp.setinkAmount(1<<20);
+		software.rp.setpaperAmount(1);
 		software.checkout();
 		
 	}
@@ -94,8 +94,8 @@ public class ReceiptPrintTest {
 	@Test
 	public void testAttnFill() throws Exception
 	{
-		rcpt.setinkAmount(1<<20);
-		rcpt.setpaperAmount(1);
-		assertTrue("ink amount expected (1<<20)", rcpt.getInkAmount() == 1<<20 );		
+		software.rp.setinkAmount(1<<20);
+		software.rp.setpaperAmount(1);
+		assertTrue("ink amount expected (1<<20)", software.rp.getInkAmount() == 1<<20 );		
 	}
 }

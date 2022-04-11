@@ -12,8 +12,8 @@ import org.lsmr.selfcheckout.software.AttendantActions;
 public class ReceiptPrint implements ReceiptPrinterObserver {
 
     private SelfCheckoutStation scs;
-    public int inkAmount = 0;
-    public int paperAmount = 0;
+    public int inkAmount = 1 << 20;
+    public int paperAmount =  1 << 10;
     public boolean noPaper = true;
     public boolean noInk = true;
     private boolean addPaper;
@@ -40,9 +40,9 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         int refillInk = MAXIMUM_INK % 90;
         if (inkAmount < lowPercentageInk) {
             this.lowAmountInk = true;
-            while (inkAmount < lowPercentageInk) {
+            while (this.inkAmount < lowPercentageInk) {
                 this.lowAmountInk = true;
-                Thread.sleep(30000);
+                Thread.sleep(300);
                 System.out.println("The ink amount is 5%, it is getting refilled.");
                 setinkAmount(refillInk);
             }
@@ -55,9 +55,9 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
 
         if (paperAmount < lowPercentagePaper) {
             this.lowAmountPaper = true;
-            while (inkAmount < lowPercentagePaper) {
-                this.lowAmountInk = true;
-                Thread.sleep(30000);
+            while (this.paperAmount < lowPercentagePaper) {
+                this.lowAmountPaper = true;
+                Thread.sleep(300);
                 System.out.println("The paper amount is 5%, it is getting refilled.");
                 setpaperAmount(refillPaper);
             }

@@ -88,7 +88,7 @@ public class Testing {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
 
-		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+		ReceiptPrint ReceiptPrint = new ReceiptPrint(software.scs);
 
 		int paper = ReceiptPrint.paperAmount;
 		int ink = ReceiptPrint.inkAmount;
@@ -117,7 +117,7 @@ public class Testing {
 		TestHardware testHardware = new TestHardware();
 		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
 
-		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+		ReceiptPrint ReceiptPrint = new ReceiptPrint(software.scs);
 
 		int paper = ReceiptPrint.paperAmount;
 		int ink = ReceiptPrint.inkAmount;
