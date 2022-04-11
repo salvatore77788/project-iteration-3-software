@@ -141,7 +141,7 @@ public class MainFrame extends javax.swing.JFrame
                 //Add to cart here
             }
         });
-
+        
         jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
