@@ -1,4 +1,6 @@
-# SENG 300 Iteration 3 
+# SENG 300 Self Checkout Station Final Iteration 
+This project was made by Computer Science Undergraduate students from the University of Calgary
+for the SENG 300 Winter 2022 Introduction to Software Engineering course.
 
 ## Requirements:
 1. Java 17 JDK
@@ -14,14 +16,17 @@
         + This is a project that contains a simulation of hardware for a self checkout station. Written by Dr. Walker.
     + SCS - Software 
         + This project contains all the software and gui classes that interacts with the hardware interface.
-        + The class that ties most of the software together is the class named "SelfCheckoutStationSoftware.java"
+        + The class that ties most of the software together is the class named **"SelfCheckoutStationSoftware.java"**
+        + In order to run our Graphical User Interface please run **SelfCheckoutStationSoftwareGUI.java**
         * Our Graphical User Interface implements the following usecases:
             + Scanning Items
+                + RemoveItemPromptGUI
                 + StationItemGUI
                 + RemoveItemGUI
                 + ScanLargeItemGUI
                 + WrongWeightGUI
             + Checkout
+                + SelfCheckoutStationSoftwareGUI
                 + VirtualKeypad
                 + BagsGUI
                 + PersonalBagPromptGUI
@@ -30,11 +35,16 @@
                 + EnterMemberCard
                 + PaymentGUI
                 + PaymentTesterGUI
+                + PaymentCompleteGUI
             + Attendant Panel
+                + Login
+                + FailedLogin
                 + AttendantRemoveItemGUI
+                + AttendantApproveLargeItemGUI
+                + RequestAssistanceGUI
     + SCS - Software - Test
         + This project contains all the JUnit 4 tests for our software.
-         + The class that combines most of the usecases togeher is called "Testing.java". This class is simulating the SelfCheckoutStation through command prompt.
+         + The class that combines most of the usecases togeher is called **"Testing.java"**. This class is simulating the SelfCheckoutStation through command prompt.
 
             + BaggingAreaSofwareTest.java
                 + This tests our implementation for SelfCheckoutStationSoftware.
