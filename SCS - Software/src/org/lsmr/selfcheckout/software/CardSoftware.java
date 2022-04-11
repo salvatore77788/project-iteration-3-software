@@ -43,6 +43,7 @@ public class CardSoftware implements CardReaderObserver {
         scs = scss.scs;
         scs.cardReader.attach(this);
         cardReader = new CardReader();
+        paymentAmount = BigDecimal.ZERO;
     }
     
     /**
