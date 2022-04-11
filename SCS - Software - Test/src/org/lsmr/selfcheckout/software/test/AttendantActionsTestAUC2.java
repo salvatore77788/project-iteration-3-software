@@ -19,6 +19,7 @@ import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.SimulationException;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
+import org.lsmr.selfcheckout.devices.BanknoteStorageUnit;
 import org.lsmr.selfcheckout.devices.CoinDispenser;
 import org.lsmr.selfcheckout.devices.CoinStorageUnit;
 import org.lsmr.selfcheckout.devices.OverloadException;
@@ -26,15 +27,6 @@ import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
 
 public class AttendantActionsTestAUC2 {
-
-	@Before
-	public void setUp() throws Exception {
-//		Currency currency = Currency.getInstance("CAD");
-//		int[] banknoteDenominations = {1, 5, 10, 20, 50, 100};
-//		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25)};
-//		
-//		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-	}
 
 	@Test
 	public void overfillCoinDispenserTest() throws OverloadException {
@@ -80,25 +72,49 @@ public class AttendantActionsTestAUC2 {
 	}
 	
 	@Test
+	public void emptyBanknoteStorageUnitTest() throws SimulationException, OverloadException {
+		Currency currency = Currency.getInstance("CAD");
+		int[] banknoteDenominations = {5, 10, 20, 50, 100};
+		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25), BigDecimal.valueOf(1), BigDecimal.valueOf(2)};
+		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
+	
+		AttendantActions testAttendant = new AttendantActions();
+		
+		int capacity = 1000;
+		BanknoteStorageUnit storageUnit = new BanknoteStorageUnit(capacity);
+		
+		Banknote banknote = new Banknote(currency, 5);
+		station.banknoteStorage.load(banknote);
+		
+		List<Banknote> storageContents = new ArrayList<Banknote>(capacity);
+		
+		storageUnit.load(banknote);
+		storageContents = storageUnit.unload();
+		
+		Assert.assertEquals(storageContents, testAttendant.emptyBanknoteStorageUnit(station));
+	}
+	
+	@Test
 	public void emptyCoinStorageUnitTest() throws SimulationException, OverloadException {
 		Currency currency = Currency.getInstance("CAD");
 		int[] banknoteDenominations = {5, 10, 20, 50, 100};
 		BigDecimal[] coinDenominations = {BigDecimal.valueOf(0.01), BigDecimal.valueOf(0.05), BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.25), BigDecimal.valueOf(1), BigDecimal.valueOf(2)};
 		SelfCheckoutStation station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, 1000, 1);
-		
+	
 		AttendantActions testAttendant = new AttendantActions();
 		
 		int capacity = 1000;
-		CoinStorageUnit storage = new CoinStorageUnit(capacity);
+		CoinStorageUnit storageUnit = new CoinStorageUnit(capacity);
 		
-		BigDecimal value = new BigDecimal(0.01);
-		Coin coin = new Coin(currency, value);
-		
+		BigDecimal penny = new BigDecimal(0.01);
+		Coin coin = new Coin(currency, penny);
 		station.coinStorage.load(coin);
 		
-		List<Coin> storageContents = new ArrayList<Coin>();
-		storageContents.add(coin);
-		testAttendant.emptyCoinStorageUnit(station);
+		List<Coin> storageContents = new ArrayList<Coin>(capacity);
+		
+		storageUnit.load(coin);
+		storageContents = storageUnit.unload();
+		
 		Assert.assertEquals(storageContents, testAttendant.emptyCoinStorageUnit(station));
 	
 	}
