@@ -117,7 +117,7 @@ public class ScanMembershipCardTest {
 	public void SwipeTest3() {
 
 		Card cardTest3 = new Card(
-				"debit",
+				"credit",
 				"85802420",
 				"John Smith",
 				"567", // cvv
