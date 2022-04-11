@@ -48,7 +48,7 @@ public class ReturnChangeTest {
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
 		testHardware.scs.mainScanner.scan(milkItem);
 		testHardware.scs.baggingArea.add(milkItem);
-		BarcodedItem item = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.eight }));
+		BarcodedItem item = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.two }));
 		testHardware.scs.mainScanner.scan(item);
 
 		// In the simulation scan the milk item
@@ -57,7 +57,7 @@ public class ReturnChangeTest {
 
 		software.checkout();
 		BigDecimal actual = software.getAmountReturned();
-		BigDecimal expected = BigDecimal.valueOf(78.45);
+		BigDecimal expected = BigDecimal.valueOf(71.45);
 
 		assertEquals("Not equal.", expected, actual);
 

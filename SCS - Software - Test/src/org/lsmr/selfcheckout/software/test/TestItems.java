@@ -31,7 +31,7 @@ public class TestItems {
 		item = new BarcodedItem(barcode, 212);
 		product = new BarcodedProduct(barcode,
 				"This is a super long line. This is a super long line. This is a super long line",
-				new BigDecimal("26.96"), 1);
+				new BigDecimal("1226.96"), 1);
 		listOfItems.put(barcode, item);
 		listOfProducts.put(barcode, product);
 
