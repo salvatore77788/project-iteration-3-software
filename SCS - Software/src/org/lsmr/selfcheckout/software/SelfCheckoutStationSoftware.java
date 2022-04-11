@@ -12,8 +12,11 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
 import org.lsmr.selfcheckout.software.gui.SelfCheckoutSystemSoftwareGUI;
+import org.lsmr.selfcheckout.software.Data;
 
 public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSystemSoftwareObserver> {
+	public Data d = Data.getInstance();
+
 	public enum SCSStatus {
 		GOOD,
 		BAD,
@@ -120,6 +123,15 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		itemsScanned = scanAndBag.getItemsScanned();
 		for (ItemInfo i : itemsScanned) {
 			total = total.add(i.price);
+		}
+		ArrayList<BarcodedProduct> x = d.getBarcodeScanned();
+		for (int i =0;i<x.size();i++){
+			total = total.add(x.getPrice());
+		}
+
+		ArrayList<PLUCodedProduct> x = d.getPluScanned();
+		for (int i =0;i<x.size();i++){
+			total = total.add(x.getPrice());
 		}
 
 		total = total.add(priceOfBags.multiply(new BigDecimal(Integer.toString(bagsUsed))));
