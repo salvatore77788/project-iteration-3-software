@@ -174,8 +174,8 @@ public class ScanningItemGUI extends JFrame {
 		updateItemText();
 		updatePriceText();
 
-		//=======================================================================================================================\\
-		// START BUTTONS CODE
+
+		// region Button Code
 
 
 
@@ -347,10 +347,7 @@ public class ScanningItemGUI extends JFrame {
 		pluButton.setBounds(853, 268, 243, 74);
 		contentPane.add(pluButton);
 
-
-
-		// END BUTTONS CODE
-		//=======================================================================================================================\\
+		// endregion
 
 	}
 
