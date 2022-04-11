@@ -29,61 +29,7 @@ public class AttendantGui {
 	private static final Color STATUS_GOOD_COLOR = new Color(51, 153, 0);
 	private static final Color STATUS_BAD_COLOR = new Color(204, 0, 0);
 	private static final Color STATUS_OFF_COLOR = Color.LIGHT_GRAY;
-	
-	// Test station software class
-	// This should be replaced with SelfCheckoutStationSoftware when it is ready
-	/*private class SCSSoftware {
-		public SelfCheckoutStation station;
-		
-		public ArrayList<ItemInfo> itemsScanned;
-		public int inkLeft;
-		public int paperLeft;
-		
-		public Boolean isBlocked;
-		public Boolean isShutdown;
-		
-		public SCSStatus status;
-		
-		public AvailableFunds funds;
-		
-		public SCSSoftware(SelfCheckoutStation station) {
-			this.station = station;
-			
-			itemsScanned = new ArrayList<ItemInfo>();
-			
-			inkLeft = 0;
-			paperLeft = 0;
-			
-			isBlocked = false;
-			isShutdown = true;
-			
-			funds = new AvailableFunds(station);
-			
-			status = SCSStatus.OFF;
-		}
-		
-		public int getPercentageInkLeft() {
-			return toPercent(inkLeft, ReceiptPrinter.MAXIMUM_INK);
-		}
-		
-		public int getPercentagePaperLeft() {
-			return toPercent(paperLeft, ReceiptPrinter.MAXIMUM_PAPER);
-		}
-		
-		public void startUp() {
-			funds.attachAll();
-			isShutdown = false;
-			isBlocked = true; // Start blocked?
-			status = SCSStatus.GOOD;
-		}
-		
-		public void shutDown() {
-			funds.detachAll();
-			isShutdown = true;
-			status = SCSStatus.OFF;
-		}
-	}*/
-	
+	public static final int NUM_STATIONS = 10; // Maybe push to constructor
 
 	// For now, just use a testing Attendant station instance
 	private SupervisionStation superStation;
@@ -131,22 +77,22 @@ public class AttendantGui {
     			SelfCheckoutStationSoftware software = stationSoftwares[index];
     			String text = (String)value;
     			
-    			setText(text);
     			if(software.isShutdown)
     				setForeground(Color.LIGHT_GRAY);
     			else {
     				setForeground(Color.BLACK);
-    				if(software.status == SelfCheckoutStationSoftware.SCSStatus.BAD)
+    				if(software.status == SelfCheckoutStationSoftware.SCSStatus.WARNING)
         				text += "(!)";
     				}
     			
+    			setText(text);
     			return comp;
     		}
     	});
     	
     	// Create some test stations
-    	stationSoftwares = new SelfCheckoutStationSoftware[3];
-    	for(int i = 0; i < 3; i++) {
+    	stationSoftwares = new SelfCheckoutStationSoftware[NUM_STATIONS];
+    	for(int i = 0; i < NUM_STATIONS; i++) {
     		SelfCheckoutStation s = new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1);
     		superStation.add(s);
     		try {
@@ -198,13 +144,13 @@ public class AttendantGui {
 		jButtonUnblockStation.setEnabled(!isStationNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
 		jButtonShutdown.setEnabled(!isStationNull && !currentSoftware.isShutdown);
 		jButtonStartUp.setEnabled(!isStationNull && currentSoftware.isShutdown);
-    	jButtonRefillBanknoteDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillCoinDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonRefillBanknoteDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	jButtonRefillCoinDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
     	jButtonRefresh.setEnabled(!isStationNull && !currentSoftware.isShutdown);
-    	jButtonUnloadBanknoteStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
-    	jButtonUnloadCoinStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && currentSoftware.isBlocked);
+    	jButtonUnloadBanknoteStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	jButtonUnloadCoinStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
     	
     	// Set up coin denomination list
     	coinDispLM.clear();
@@ -238,6 +184,17 @@ public class AttendantGui {
     	}
     }
     
+    public SelfCheckoutStationSoftware getSoftware(int index) {
+    	if(index < 0 || index >= stationSoftwares.length)
+    		return null;
+    	
+    	return stationSoftwares[index];
+    }
+    
+    public int getNumberOfStations() {
+    	return stationSoftwares.length;
+    }
+    
     private int getCoinPercentage(BigDecimal coinDenom) {
 		int coinCount = currentSoftware.funds.getCoinCount(coinDenom);
 		return toPercent(coinCount, SelfCheckoutStation.COIN_DISPENSER_CAPACITY);
@@ -256,7 +213,7 @@ public class AttendantGui {
     	switch(status) {
     	case GOOD:
     		return STATUS_GOOD_COLOR;
-    	case BAD:
+    	case WARNING:
     		return STATUS_BAD_COLOR;
     	default:
     		return STATUS_OFF_COLOR;
@@ -716,7 +673,7 @@ public class AttendantGui {
         frame.pack();
     }// </editor-fold>                        
 
-    private void jListStationsValueChanged(javax.swing.event.ListSelectionEvent evt) {                                           
+    private void jListStationsValueChanged(javax.swing.event.ListSelectionEvent evt) {
         setStation();
     }                                          
 
@@ -752,6 +709,7 @@ public class AttendantGui {
         
         if(idx >= 0) {
         	int denom = bnDenoms[idx];
+        	System.out.println("Hi");
         	
         	int refillCount = SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY - currentSoftware.funds.getBanknoteCount(denom);
         	AttendantActions.fillBanknoteDispenser(currentSoftware.scs, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
@@ -791,7 +749,7 @@ public class AttendantGui {
 
     private void jButtonRefillInkActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         try {
-			AttendantActions.fillInk(currentSoftware.rp, ReceiptPrinter.MAXIMUM_INK-currentSoftware.rp.getInkAmount());
+			AttendantActions.fillInk(currentSoftware, ReceiptPrinter.MAXIMUM_INK);
 			setStation();
 		} catch (OverloadException e) {
 			// TODO Auto-generated catch block
@@ -801,7 +759,7 @@ public class AttendantGui {
 
     private void jButtonRefillPaperActionPerformed(java.awt.event.ActionEvent evt) {                                                   
     	try {
-			AttendantActions.fillInk(currentSoftware.rp, ReceiptPrinter.MAXIMUM_PAPER-currentSoftware.rp.getPaperAmount());
+			AttendantActions.fillPaper(currentSoftware, ReceiptPrinter.MAXIMUM_PAPER);
 			setStation();
 		} catch (OverloadException e) {
 			// TODO Auto-generated catch block
@@ -862,40 +820,40 @@ public class AttendantGui {
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton jButtonBlockStation;
-    private javax.swing.JButton jButtonRefillBanknoteDispenser;
-    private javax.swing.JButton jButtonRefillCoinDispenser;
-    private javax.swing.JButton jButtonRefillInk;
-    private javax.swing.JButton jButtonRefillPaper;
-    private javax.swing.JButton jButtonRefresh;
-    private javax.swing.JButton jButtonShutdown;
-    private javax.swing.JButton jButtonStartUp;
-    private javax.swing.JButton jButtonUnblockStation;
-    private javax.swing.JButton jButtonUnloadBanknoteStorage;
-    private javax.swing.JButton jButtonUnloadCoinStorage;
-    private javax.swing.JLabel jLabelBD;
-    private javax.swing.JLabel jLabelBanknoteStorage;
-    private javax.swing.JLabel jLabelCD;
-    private javax.swing.JLabel jLabelCoinStorage;
-    private javax.swing.JLabel jLabelInk;
-    private javax.swing.JLabel jLabelPaper;
-    private javax.swing.JLabel jLabelSC;
-    private javax.swing.JLabel jLabelStationName;
-    private javax.swing.JLabel jLabelStatus;
-    private javax.swing.JLabel jLabelStatusCode;
-    private javax.swing.JList<String> jListBanknoteDispensers;
-    private javax.swing.JList<String> jListCoinDispensers;
-    private javax.swing.JList<String> jListShoppingCart;
-    private javax.swing.JList<String> jListStations;
+    public javax.swing.JButton jButtonBlockStation;
+    public javax.swing.JButton jButtonRefillBanknoteDispenser;
+    public javax.swing.JButton jButtonRefillCoinDispenser;
+    public javax.swing.JButton jButtonRefillInk;
+    public javax.swing.JButton jButtonRefillPaper;
+    public javax.swing.JButton jButtonRefresh;
+    public javax.swing.JButton jButtonShutdown;
+    public javax.swing.JButton jButtonStartUp;
+    public javax.swing.JButton jButtonUnblockStation;
+    public javax.swing.JButton jButtonUnloadBanknoteStorage;
+    public javax.swing.JButton jButtonUnloadCoinStorage;
+    public javax.swing.JLabel jLabelBD;
+    public javax.swing.JLabel jLabelBanknoteStorage;
+    public javax.swing.JLabel jLabelCD;
+    public javax.swing.JLabel jLabelCoinStorage;
+    public javax.swing.JLabel jLabelInk;
+    public javax.swing.JLabel jLabelPaper;
+    public javax.swing.JLabel jLabelSC;
+    public javax.swing.JLabel jLabelStationName;
+    public javax.swing.JLabel jLabelStatus;
+    public javax.swing.JLabel jLabelStatusCode;
+    public javax.swing.JList<String> jListBanknoteDispensers;
+    public javax.swing.JList<String> jListCoinDispensers;
+    public javax.swing.JList<String> jListShoppingCart;
+    public javax.swing.JList<String> jListStations;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItemMBQuit;
-    private javax.swing.JMenuItem jMenuItemMBLogout;
-    private javax.swing.JMenuItem jMenuItemMBShutDownAll;
-    private javax.swing.JMenuItem jMenuItemMBStartUpAll;
-    private javax.swing.JMenuItem jMenuItemSCAddItem;
-    private javax.swing.JMenuItem jMenuItemSCRemoveItem;
+    public javax.swing.JMenuItem jMenuItemMBQuit;
+    public javax.swing.JMenuItem jMenuItemMBLogout;
+    public javax.swing.JMenuItem jMenuItemMBShutDownAll;
+    public javax.swing.JMenuItem jMenuItemMBStartUpAll;
+    public javax.swing.JMenuItem jMenuItemSCAddItem;
+    public javax.swing.JMenuItem jMenuItemSCRemoveItem;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu jPopupMenuShoppingCart;

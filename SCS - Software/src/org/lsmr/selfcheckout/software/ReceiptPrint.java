@@ -12,10 +12,10 @@ import org.lsmr.selfcheckout.software.AttendantActions;
 public class ReceiptPrint implements ReceiptPrinterObserver {
 
     private SelfCheckoutStation scs;
-    public int inkAmount = 1 << 20;
-    public int paperAmount = 1 << 10;
-    private boolean noPaper;
-    private boolean noInk;
+    public int inkAmount = 0;
+    public int paperAmount = 0;
+    public boolean noPaper = true;
+    public boolean noInk = true;
     private boolean addPaper;
     private boolean addInk;
     private boolean lowAmountPaper;
@@ -25,6 +25,11 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
     private static final int MAXIMUM_PAPER = 1 << 10;
 
     AttendantActions attendant = new AttendantActions();
+    
+    public ReceiptPrint(SelfCheckoutStation scs) {
+    	this.scs = scs;
+    	scs.printer.attach(this);
+    }
     
     public String removePrintedreceipt() {
         return scs.printer.removeReceipt();

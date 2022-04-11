@@ -104,47 +104,6 @@ public class AvailableFunds {
 		}
 		
 	};
-//	private BanknoteOutputSlotWatcher banknoteOutputSlotWatcher;
-	
-//	// Concrete observer classes
-//	/**
-//	 * A concrete implementation of a BanknoteSlotObserver
-//	 * Watches for when a banknote is removed, then if disbursing change,
-//	 * emit the next banknote/coins.
-//	 */
-//	private class BanknoteOutputSlotWatcher implements BanknoteSlotObserver {
-//
-//		@Override
-//		public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void banknoteInserted(BanknoteSlot slot) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		@Override
-//		public void banknotesEjected(BanknoteSlot slot) {
-//			// TODO Auto-generated method stub
-//		}
-//
-//		@Override
-//		public void banknoteRemoved(BanknoteSlot slot) {
-//			// TODO Auto-generated method stub
-//			if(disbursingChange)
-//				disburseNextBanknote();
-//		}
-//		
-//	}
 	
 	/**
 	 * Maintains a count of the banknotes for a hardware banknote dispenser
@@ -155,7 +114,7 @@ public class AvailableFunds {
 		
 		public BanknoteDispenserWatcher(int denomination) {
 			this.denomination = denomination;
-			count = 0;
+			count = SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY;
 		}
 		
 		public int getDenomination() {
@@ -226,7 +185,7 @@ public class AvailableFunds {
 		
 		public CoinDispenserWatcher(BigDecimal denom) {
 			denomination = denom;
-			count = 0;
+			count = SelfCheckoutStation.COIN_DISPENSER_CAPACITY;
 		}
 		
 		public BigDecimal getDenomination() {
@@ -409,95 +368,4 @@ public class AvailableFunds {
 		else
 			return 0;
 	}
-	
-//	/**
-//	 * Begins the process of disbursing change to the customer.
-//	 * @param amount The amount of change to disburse.
-//	 */
-//	public void beginDisbursingChange(BigDecimal amount) {
-//		if(disbursingChange)
-//			throw new IllegalStateException("Change is already being disbursed to the customer.");
-//		
-//		changeAmount = amount;
-//		bnChangeIndex = banknoteDispenserWatchers.length-1;
-//		disbursingChange = true;
-//		
-//		disburseNextBanknote();
-//	}
-//	
-//	/**
-//	 * Attempts to emit the next banknote as change.
-//	 * When the amount of change left to be dispensed is less than the denomination of the smallest
-//	 * bill or there are no bills left to be dispensed, disburses the rest as coins.
-//	 */
-//	private void disburseNextBanknote() {		
-//		BanknoteDispenserWatcher w = banknoteDispenserWatchers[bnChangeIndex];
-//		BigDecimal denom = new BigDecimal(w.getDenomination());
-//		
-//		if(w.getCount() > 0 && changeAmount.compareTo(denom) >= 0) {
-//			try {
-//				changeAmount = changeAmount.subtract(denom);
-//				station.banknoteDispensers.get(denom.intValue()).emit();
-//				//System.out.println(denom);
-//			} catch (EmptyException | DisabledException | OverloadException e) {
-//				// TODO handle more gracefully
-//				e.printStackTrace();
-//			}
-//		}
-//		else {
-//			bnChangeIndex--;
-//			
-//			if(bnChangeIndex < 0) {
-//				disburseCoins();
-//			}
-//			else
-//				disburseNextBanknote();
-//		}
-//	}
-//	
-//	/**
-//	 * Disburses the rest of the change amount as coins, if possible, and finishes
-//	 * the process of disbursing change to the customer. 
-//	 */
-//	private void disburseCoins() {
-//		// Coins now
-//		if(changeAmount.compareTo(BigDecimal.ZERO) == 1) {
-//			for(int i = coinDispenserWatchers.length-1; i >= 0; i --) {
-//				CoinDispenserWatcher w = coinDispenserWatchers[i];
-//				BigDecimal denom = w.getDenomination();
-//				
-//				while(w.getCount() > 0 && changeAmount.compareTo(denom) >= 0) {
-//					// Output a coin
-//					try {
-//						station.coinDispensers.get(denom).emit();
-//						changeAmount = changeAmount.subtract(denom);
-//					} catch (OverloadException | EmptyException | DisabledException e) {
-//						// TODO handle more gracefully
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		}
-//		
-//		// TODO some message or something that indicates whether the full amount of change has been disbursed or not
-//		
-//		disbursingChange = false;
-//	}
-//	
-//	/**
-//	 * Whether change is being given to the customer or not.
-//	 * @return True if change is being disbursed. False otherwise.
-//	 */
-//	public Boolean isDisbursingChange() {
-//		return disbursingChange;
-//	}
-//	
-//	/**
-//	 * The amount of change currently left to be returned. This is valid whether change is currently being returned or after.
-//	 * @return The amount of change left to be disbursed.
-//	 */
-//	public BigDecimal changeLeft() {
-//		return changeAmount;
-//	}
-	
 }

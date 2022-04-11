@@ -19,7 +19,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 
 	public enum SCSStatus {
 		GOOD,
-		BAD,
+		WARNING,
 		OFF
 	}
 
@@ -46,7 +46,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	
 	public Boolean isShutdown = true;
 	public Boolean isBlocked = true;
-	public SCSStatus status = SCSStatus.OFF;
+	public SCSStatus status = SCSStatus.GOOD;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -73,7 +73,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.priceOfBags = new BigDecimal("0.05");
 
 		this.scs = scs;
-		this.rp = new ReceiptPrint();
+		this.rp = new ReceiptPrint(scs);
 		this.as = new AttendantStation();
 		this.db = new TestDatabase();
 		this.ess = new ElectronicScaleSoftware(scs);
@@ -157,16 +157,12 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 	
 	public int getPercentageInkLeft() {
-		return toPercent(rp.getInkAmount(), ReceiptPrinter.MAXIMUM_INK);
+		return rp.noInk ? 0 : 100; // Receipt printer doesn't give an actual count and the ReceiptPrinter class doesn't keep track automatically
 	}
 	
 	public int getPercentagePaperLeft() {
-		return toPercent(rp.getPaperAmount(), ReceiptPrinter.MAXIMUM_PAPER);
+		return rp.noPaper ? 0 : 100;
 	}
-	
-	private int toPercent(double num, double denom) {
-    	return (int)(num/denom*100);
-    }
 
 	/**
 	 * Purpose: return the correct amount of change to the user, giving them the
@@ -495,7 +491,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public void startUp() {
 		funds.attachAll();
 		isShutdown = false;
-		isBlocked = false;
+		isBlocked = true;
 		status = SCSStatus.GOOD;
 		
 		softwareGUI = new SelfCheckoutSystemSoftwareGUI(scs, this);
@@ -507,7 +503,8 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		isShutdown = true;
 		status = SCSStatus.OFF;
 		
-		softwareGUI.setVisible(false);
+		if(softwareGUI != null)
+			softwareGUI.setVisible(false);
 	}
 	
 	private void notifyAmountPaid(BigDecimal amount) {

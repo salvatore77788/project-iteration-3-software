@@ -41,11 +41,13 @@ public class AttendantActions {
        // data.setIsDisabled(false); //commented out for errors thrown during testing for print
     }
 
-    public static void fillInk(ReceiptPrint printer, int amount) throws OverloadException {
-    	printer.setinkAmount(amount);
+    public static void fillInk(SelfCheckoutStationSoftware software, int amount) throws OverloadException {
+    	software.rp.setinkAmount(amount);
+    	software.scs.printer.addInk(amount);
     }
-    public static void fillPaper(ReceiptPrint printer, int amount) throws OverloadException {
-        printer.setpaperAmount(amount);
+    public static void fillPaper(SelfCheckoutStationSoftware software, int amount) throws OverloadException {
+        software.rp.setpaperAmount(amount);
+        software.scs.printer.addPaper(amount);
     }
 
     // Remove scanned item from customer station
