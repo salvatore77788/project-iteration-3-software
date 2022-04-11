@@ -42,6 +42,8 @@ public class ReceiptPrintTest {
 		software = new SelfCheckoutStationSoftware(testHardwarePrint.scs);
 		//testHardwarePrint.scs.printer.addInk(1 << 20);
 		//testHardwarePrint.scs.printer.addPaper(1 << 10);
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
