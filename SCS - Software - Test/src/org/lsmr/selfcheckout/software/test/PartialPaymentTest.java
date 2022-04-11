@@ -18,7 +18,7 @@ public class PartialPaymentTest {
 
         TestHardware testHardware = new TestHardware();
         SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testHardware.scs);
-
+        software.setMemberCardNumber("12345");
         testHardware.scs.printer.addInk(10000);
         testHardware.scs.printer.addPaper(300);
         ;
