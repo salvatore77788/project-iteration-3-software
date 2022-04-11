@@ -1,20 +1,14 @@
 package org.lsmr.selfcheckout.software;
 
-import java.util.Scanner;
-
-import java.util.List;
-
 import java.math.BigDecimal;
-
+import java.util.List;
+import java.util.Scanner;
 
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
-import org.lsmr.selfcheckout.IllegalErrorPhaseSimulationException;
 import org.lsmr.selfcheckout.SimulationException;
 import org.lsmr.selfcheckout.devices.BanknoteDispenser;
-import org.lsmr.selfcheckout.devices.BanknoteStorageUnit;
 import org.lsmr.selfcheckout.devices.CoinDispenser;
-import org.lsmr.selfcheckout.devices.CoinStorageUnit;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 
@@ -25,7 +19,7 @@ public class AttendantActions {
 
     // Blocks the self checkout station by disabling its crucial components
     // Data class being the same instance for all stations should be discussed in the meeting
-    public void attendantBlockStation(SelfCheckoutStation station) {
+    public static void attendantBlockStation(SelfCheckoutStation station) {
        // Data data = Data.getInstance(); //commented out for errors thrown during testing for print
         station.baggingArea.disable();
         station.scanningArea.disable();
@@ -37,7 +31,7 @@ public class AttendantActions {
 
     // Unblocks the self checkout station by enabling its crucial components
     // Could be used to approve a weight discrepancy
-    public void attendantUnBlockStation(SelfCheckoutStation station) {
+    public static void attendantUnBlockStation(SelfCheckoutStation station) {
       //  Data data = Data.getInstance(); //commented out for errors thrown during testing for print
         station.baggingArea.enable();
         station.scanningArea.enable();
@@ -47,18 +41,19 @@ public class AttendantActions {
        // data.setIsDisabled(false); //commented out for errors thrown during testing for print
     }
 
-    public void fillInk(ReceiptPrint printer, int amount) throws OverloadException {
+    public static void fillInk(ReceiptPrint printer, int amount) throws OverloadException {
     	printer.setinkAmount(amount);
     }
-    public void fillPaper(ReceiptPrint printer, int amount) throws OverloadException {
+    public static void fillPaper(ReceiptPrint printer, int amount) throws OverloadException {
         printer.setpaperAmount(amount);
     }
 
     // Remove scanned item from customer station
     // Needs the software of the station that has the data stored
-    public void removeItem() throws Exception {
+    public static void removeItem(SelfCheckoutStationSoftware software, int itemIndex) {
+    	software.itemsScanned.remove(itemIndex);
 
-      Scanner scanner = new Scanner(System.in);
+      /*Scanner scanner = new Scanner(System.in);
       boolean exist = false;
 
       int stationNumber = 0;
@@ -146,7 +141,7 @@ public class AttendantActions {
         scaleSoftware.setAttendantRemovedItem();
 
         // Remove item
-        stationSoftware.itemsScanned.remove(item);
+        stationSoftware.itemsScanned.remove(item);*/
 
 
     }
