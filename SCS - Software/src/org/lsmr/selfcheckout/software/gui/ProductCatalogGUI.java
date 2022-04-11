@@ -59,7 +59,9 @@ public class ProductCatalogGUI extends javax.swing.JFrame {
 
 	public ArrayList<JButton> productButtons;
 	
+	// Variables for testing
 	public Product selectedProduct = null;
+	public Boolean wasGoBackPressed = false;
 
 	private static Barcode createBarcode(String bc) {
 		Numeral[] bcNums = new Numeral[bc.length()];
@@ -123,6 +125,7 @@ public class ProductCatalogGUI extends javax.swing.JFrame {
 	}
 
 	private void jButtonGoBackActionPerformed(java.awt.event.ActionEvent evt) {
+		wasGoBackPressed = true;
 		// TODO Go back to scanning GUI
 	}
 
@@ -185,7 +188,7 @@ public class ProductCatalogGUI extends javax.swing.JFrame {
 	}
 
 	// Variables declaration - do not modify
-	private javax.swing.JButton jButtonGoBack;
+	public javax.swing.JButton jButtonGoBack;
 	private javax.swing.JPanel jPanelProducts;
 	private javax.swing.JScrollPane jScrollPane1;
 	// End of variables declaration

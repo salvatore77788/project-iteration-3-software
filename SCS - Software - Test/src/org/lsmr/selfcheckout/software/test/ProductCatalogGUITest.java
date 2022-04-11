@@ -1,4 +1,4 @@
-package org.lsmr.selfcheckout.software.gui;
+package org.lsmr.selfcheckout.software.test;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +12,7 @@ import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
+import org.lsmr.selfcheckout.software.gui.ProductCatalogGUI;
 
 public class ProductCatalogGUITest {
 	ProductCatalogGUI gui;
@@ -56,5 +57,12 @@ public class ProductCatalogGUITest {
 				assertEquals("Selected product incorrect.", prod, gui.selectedProduct);
 			}
 		}
+	}
+	
+	@Test
+	public void testGoBackButton() {
+		gui.jButtonGoBack.doClick();
+		
+		assertTrue("Go back was not pressed.", gui.wasGoBackPressed);
 	}
 }
