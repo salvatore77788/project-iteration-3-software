@@ -27,13 +27,12 @@ public class AttendantStation {
 
 	
     // Connect the station and software to the attendant machine
-    public void connectToAttendantStation(SelfCheckoutStation scs, SelfCheckoutStationSoftware stationSoftware, ScanAndBag scaleSoftware,
-    		ScanAndBag barcodeScannerSoftware, BanknoteSlotSoftware banknoteSlotSoftware, ScanAndBag scanAndBag) {
+    public void connectToAttendantStation(SelfCheckoutStation scs, SelfCheckoutStationSoftware stationSoftware, BanknoteSlotSoftware banknoteSlotSoftware, ScanAndBag scanAndBag) {
     	
     	stationConnected.add(scs);
     	softwareStationConnected.add(stationSoftware);
-    	electronicScaleConnected.add(scaleSoftware);
-    	barcodeScannerConnected.add(barcodeScannerSoftware);
+    	electronicScaleConnected.add(scanAndBag);
+    	barcodeScannerConnected.add(scanAndBag);
     	banknoteSlotConnected.add(banknoteSlotSoftware);
     	scanAndBagConnected.add(scanAndBag);
     }

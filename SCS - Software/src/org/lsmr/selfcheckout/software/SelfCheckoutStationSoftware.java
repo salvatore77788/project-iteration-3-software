@@ -17,7 +17,8 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public BigDecimal totalGUI;
 	public SelfCheckoutStation scs;
 	public TestDatabase db; // in an actual system this would connect to a db or something
-	public ScanAndBag ScanAndBag;
+
+	public ScanAndBag scanNbag;
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
@@ -60,7 +61,9 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.rp = new ReceiptPrint();
 		this.as = new AttendantStation();
 		this.db = new TestDatabase();
-		this.ScanAndBag = new ScanAndBag(scs, db, this);
+
+		this.scanNbag = new ScanAndBag(scs, db, this);
+
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this);
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
@@ -74,8 +77,10 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
 
 		// attach the ess and bss to the selfcheckout hardware
-		this.scs.mainScanner.attach(ScanAndBag);
-		this.scs.baggingArea.attach(ScanAndBag);
+
+		this.scs.mainScanner.attach(scanNbag);
+		this.scs.baggingArea.attach(scanNbag);
+
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
@@ -88,7 +93,9 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.stationNumber = aStation.assignStationNumber();
 		
 		// Connect the software to the attendant station
-		aStation.connectToAttendantStation(scs,this, scanAndBag, scanAndBag, banknoteSlotSoftware, scanAndBag);
+
+		aStation.connectToAttendantStation(scs,this,banknoteSlotSoftware, scanAndBag);
+
 		// create new change class
 	}
 
@@ -408,7 +415,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		double itemWeight = item.weight;
 		double sensitivity = this.scs.baggingArea.getSensitivity();
 		double currentWeight = this.scs.baggingArea.getCurrentWeight();
-		double previousWeight = this.ess.getWeightAtLastEvent();
+		double previousWeight = this.scanNbag.getWeightAtLastEvent();
 
 		boolean existsInScannedList = false;
 
