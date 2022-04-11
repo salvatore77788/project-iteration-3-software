@@ -210,25 +210,6 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		}
 	}
 
-	private void promptForBags() {
-		while (true) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.print("How many bags did you use? ");
-			String numOfBagsRaw = scanner.nextLine();
-			try {
-				this.bagsUsed = Integer.parseInt(numOfBagsRaw);
-				if (bagsUsed > maximumBags || bagsUsed < 0) {
-					System.err.println("Please enter a valid number");
-					continue;
-				}
-				break;
-			} catch (Exception e) {
-				System.err.println("Please enter a valid number of bags!");
-				continue;
-			}
-		}
-	}
-
 	public void detectLowInkPaper(int inkNeeded, int paperNeeded) throws InterruptedException {
 
 		if (inkNeeded == 0) {
