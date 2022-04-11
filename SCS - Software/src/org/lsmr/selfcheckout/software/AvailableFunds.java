@@ -168,7 +168,7 @@ public class AvailableFunds {
 		@Override
 		public void banknotesUnloaded(BanknoteDispenser dispenser, Banknote... banknotes) {
 			// TODO Auto-generated method stub
-			count -= banknotes.length;
+			count = 0;
 		}
 		
 		public BigDecimal getAmountStored() {
@@ -241,7 +241,7 @@ public class AvailableFunds {
 		@Override
 		public void coinsUnloaded(CoinDispenser dispenser, Coin... coins) {
 			// TODO Auto-generated method stub
-			count -= coins.length;
+			count = 0;
 		}
 		
 		public BigDecimal getAmountStored() {
@@ -367,5 +367,17 @@ public class AvailableFunds {
 			return banknoteDispenserWatchers.get(bnDenom).getCount();
 		else
 			return 0;
+	}
+	
+	public void emptyAll() {
+		for(CoinDispenserWatcher w : coinDispenserWatchers.values()) {
+			station.coinDispensers.get(w.denomination).unload();
+		}
+		
+		for(BanknoteDispenserWatcher w: banknoteDispenserWatchers.values())
+			station.banknoteDispensers.get(w.denomination).unload();
+		
+		station.coinStorage.unload();
+		station.banknoteStorage.unload();
 	}
 }

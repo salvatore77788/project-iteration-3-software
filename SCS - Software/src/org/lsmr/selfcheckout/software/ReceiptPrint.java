@@ -13,7 +13,7 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
 
     private SelfCheckoutStation scs;
     public int inkAmount = 1 << 20;
-    public int paperAmount =  1 << 10;
+    public int paperAmount =  1;
     public boolean noPaper = true;
     public boolean noInk = true;
     private boolean addPaper;

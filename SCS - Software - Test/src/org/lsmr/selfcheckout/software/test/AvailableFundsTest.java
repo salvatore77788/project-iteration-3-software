@@ -49,6 +49,7 @@ public class AvailableFundsTest {
 		station = new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1);
 		funds = new AvailableFunds(station);
 		funds.attachAll();
+		funds.emptyAll();
 	}
 
 	@Test
