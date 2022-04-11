@@ -10,6 +10,8 @@ import org.lsmr.selfcheckout.devices.EmptyException;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.products.PLUCodedProduct;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
 import org.lsmr.selfcheckout.software.gui.SelfCheckoutSystemSoftwareGUI;
 import org.lsmr.selfcheckout.software.Data;
@@ -83,6 +85,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.memberCardObserver = new ScanMembershipCard(this);
 		this.cardSoftware = new CardSoftware(this);
 		this.funds = new AvailableFunds(scs);
+		this.scanAndBag = new ScanAndBag(scs, db, this);
 
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
@@ -124,14 +127,14 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		for (ItemInfo i : itemsScanned) {
 			total = total.add(i.price);
 		}
-		ArrayList<BarcodedProduct> x = d.getBarcodeScanned();
-		for (int i =0;i<x.size();i++){
-			total = total.add(x.getPrice());
+		ArrayList<BarcodedProduct> bcItems = d.getBarcodeScanned();
+		for (BarcodedProduct p : bcItems){
+			total = total.add(p.getPrice());
 		}
 
-		ArrayList<PLUCodedProduct> x = d.getPluScanned();
-		for (int i =0;i<x.size();i++){
-			total = total.add(x.getPrice());
+		ArrayList<PLUCodedProduct> pluItems = d.getPluScanned();
+		for (PLUCodedProduct p : pluItems){
+			total = total.add(p.getPrice());
 		}
 
 		total = total.add(priceOfBags.multiply(new BigDecimal(Integer.toString(bagsUsed))));
@@ -257,7 +260,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 
 	private void print(BigDecimal total) throws EmptyException, OverloadException, InterruptedException {
 
-		ReceiptPrint ReceiptPrint = new ReceiptPrint();
+		ReceiptPrint ReceiptPrint = new ReceiptPrint(scs);
 
 		int paper = ReceiptPrint.paperAmount;
 		int ink = ReceiptPrint.inkAmount;
