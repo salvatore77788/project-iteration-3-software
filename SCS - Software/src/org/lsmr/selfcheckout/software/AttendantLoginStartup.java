@@ -188,7 +188,7 @@ public class AttendantLoginStartup {
 	}
 	
 	// start supervisor station up by attaching its potential observers
-	public <T> void startup(SupervisionStation ss) {
+	public void startup(SupervisionStation ss) {
 		if (!isLoggedIn) return;
 		if (!allSuperStations.contains(ss)) return;
 		
