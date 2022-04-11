@@ -1,6 +1,16 @@
 # SENG 300 Self Checkout Station Final Iteration 
+
+
+## Description
 This project was made by Computer Science Undergraduate students from the University of Calgary
 for the SENG 300 Winter 2022 Introduction to Software Engineering course.
+
+## Table of Contents
+- [Description](#description)
+- [Requirements](#Requirements)
+- [Understanding the file structure](#understanding-files)
+- [Authors](#authors)
+- [License](#license)
 
 ## Requirements:
 1. Java 17 JDK
@@ -126,7 +136,7 @@ for the SENG 300 Winter 2022 Introduction to Software Engineering course.
             + Note: You will need JUnit 4 installed and you may need to fix your project setup so that it includes JUnit 4.
 
 
-##  Contributors:
+## AUTHORS:
 * Emir Avci
 * Quyanna Campbell
 * Doowen Cho
