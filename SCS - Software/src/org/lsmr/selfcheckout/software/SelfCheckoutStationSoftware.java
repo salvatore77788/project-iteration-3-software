@@ -377,7 +377,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 
 			resetVars();
 		} else {
-			System.out.println("Insuficient funds to complete checkout!");
+			System.out.println("Insufficient funds to complete checkout!");
 		}
 	}
 

@@ -41,11 +41,15 @@ public class ReturnChangeTest {
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
 		;
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
 		testHardware.scs.mainScanner.scan(milkItem);
-		testHardware.scs.mainScanner.scan(testItems.lookupItem(new Barcode(new Numeral[] { Numeral.two })));
+		testHardware.scs.baggingArea.add(milkItem);
+		BarcodedItem item = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.two }));
+		testHardware.scs.mainScanner.scan(item);
 
 		// In the simulation scan the milk item
 		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 100);
@@ -55,7 +59,7 @@ public class ReturnChangeTest {
 		BigDecimal actual = software.getAmountReturned();
 		BigDecimal expected = BigDecimal.valueOf(71.45);
 
-		assertTrue(expected.equals(actual));
+		assertEquals("Not equal.", expected, actual);
 
 	}
 
@@ -70,6 +74,8 @@ public class ReturnChangeTest {
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
 		;
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem guitarItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.nine }));
@@ -82,7 +88,7 @@ public class ReturnChangeTest {
 		software.checkout();
 		BigDecimal actual = software.getAmountReturned();
 		BigDecimal expected = new BigDecimal("40");
-		assertTrue(expected.equals(actual));
+		assertEquals("Not equal.", expected, actual);
 
 	}
 
@@ -96,7 +102,8 @@ public class ReturnChangeTest {
 
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
-		;
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem milkItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.one }));
@@ -109,7 +116,8 @@ public class ReturnChangeTest {
 		software.checkout();
 		BigDecimal actual = software.getAmountReturned();
 		BigDecimal expected = new BigDecimal("0.40");
-		assertTrue(expected.equals(actual));
+		//assertTrue("Not true", expected.equals(actual));
+		assertEquals("Not equal.", expected, actual);
 
 	}
 
@@ -124,19 +132,21 @@ public class ReturnChangeTest {
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
 		;
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem guitarItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.nine }));
 		testHardware.scs.mainScanner.scan(guitarItem);
 
 		// In the simulation scan the milk item
-		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 10);
+		Banknote bn = new Banknote(Currency.getInstance(Locale.CANADA), 100);
 		testHardware.scs.banknoteValidator.accept(bn);
 
 		software.checkout();
 		BigDecimal actual = software.getAmountReturned();
 		BigDecimal expected = new BigDecimal(40.00);
-		assertTrue(expected.equals(actual));
+		assertEquals("Not equal.", expected, actual);
 
 	}
 
@@ -151,6 +161,8 @@ public class ReturnChangeTest {
 		testHardware.scs.printer.addInk(10000);
 		testHardware.scs.printer.addPaper(300);
 		;
+		
+		software.startScanGUI();
 
 		TestItems testItems = new TestItems();
 		BarcodedItem maskItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.two }));
@@ -164,7 +176,7 @@ public class ReturnChangeTest {
 		BigDecimal actual = software.getAmountReturned();
 		BigDecimal expected = BigDecimal.valueOf(73.05);
 
-		assertTrue(expected.equals(actual));
+		assertEquals("Not equal.", expected, actual);
 
 	}
 

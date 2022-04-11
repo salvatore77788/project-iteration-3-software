@@ -88,6 +88,9 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 		scanGUI = new ScanningItemGUI(itemsScanned, scss);
 		scanGUI.setVisible(true);
 		
+		theStation.baggingArea.attach(this);
+		theStation.handheldScanner.attach(this);
+		theStation.mainScanner.attach(this);
 	}
 	
 	public void continueGUI() {
