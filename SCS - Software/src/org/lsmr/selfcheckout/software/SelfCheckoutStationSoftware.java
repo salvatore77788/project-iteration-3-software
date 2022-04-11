@@ -34,7 +34,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public AvailableFunds funds;
 	public SelfCheckoutSystemSoftwareGUI softwareGUI;
 
-	protected ReceiptPrint rp; // added receipt print
+	public ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant stationæ
 	protected AttendantActions at; // added attendant actions
 	private String memberNumber;
@@ -145,11 +145,11 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 	
 	public int getPercentageInkLeft() {
-		return toPercent(rp.getinkAmount(), ReceiptPrinter.MAXIMUM_INK);
+		return toPercent(rp.getInkAmount(), ReceiptPrinter.MAXIMUM_INK);
 	}
 	
 	public int getPercentagePaperLeft() {
-		return toPercent(rp.getpaperAmount(), ReceiptPrinter.MAXIMUM_PAPER);
+		return toPercent(rp.getPaperAmount(), ReceiptPrinter.MAXIMUM_PAPER);
 	}
 	
 	private int toPercent(double num, double denom) {
@@ -377,8 +377,8 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 				e.printStackTrace();
 			}
 			System.out.println("Amount paid is greater than total. Printing receipt");
-			rp.detectLowInk(rp.getinkAmount());
-			rp.detectLowPaper(rp.getpaperAmount());
+			rp.detectLowInk(rp.getInkAmount());
+			rp.detectLowPaper(rp.getPaperAmount());
 			print(total);
 
 			resetVars();
