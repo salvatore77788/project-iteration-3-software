@@ -39,6 +39,7 @@ public class CoinSlotSoftwareTest {
     private CoinDispenser dispenser;
     private Coin coin;
     private Coin coins;
+    private SelfCheckoutStationSoftware software;
 
 
     @Before
@@ -46,7 +47,8 @@ public class CoinSlotSoftwareTest {
         amountPaid = new BigDecimal[1];
         amountPaid[0] = BigDecimal.ZERO;
         try {
-			css = new CoinSlotSoftware(new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
+        	software = new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit());
+			css = software.coinSlotSoftware;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +78,7 @@ public class CoinSlotSoftwareTest {
         amountPaid[0] = new BigDecimal("0");
         BigDecimal value = new BigDecimal("0.5");
         css.validCoinDetected(null, value);
-        Assert.assertEquals("Amount Paid should be" + value, 0, amountPaid[0].compareTo(value));
+        Assert.assertEquals("Amount Paid should be" + value, 0, software.getAmountPaid().compareTo(value));
         amountPaid[0] = new BigDecimal("0");
     }
 
