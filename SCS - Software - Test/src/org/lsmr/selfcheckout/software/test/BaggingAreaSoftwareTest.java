@@ -10,6 +10,9 @@ import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.software.ItemInfo;
+
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 
 public class BaggingAreaSoftwareTest {
@@ -35,43 +38,66 @@ public class BaggingAreaSoftwareTest {
 		facemasks_item = new ItemInfo(new BigDecimal("26.96"), facemasks.getWeight(), "Random description");
  
 	}
+	
 
 	@Test
 	public void SingleItemTest() throws OverloadException{
-		Assert.assertTrue("Should return true as item hasn't been scanned yet so doesn't need to be in bagging area",
-				scss.checkBaggingAreaItem(milk_item));
+//		Assert.assertTrue("Should return true as item hasn't been scanned yet so doesn't need to be in bagging area",
+//				scss.checkBaggingAreaItem(milk_item));
 
 		testHardware.scs.mainScanner.scan(milk);
 
-		Assert.assertFalse("Should return false as item has been scanned but is not in bagging area",
-				scss.checkBaggingAreaItem(milk_item));
+//		Assert.assertFalse("Should return false as item has been scanned but is not in bagging area",
+//				scss.checkBaggingAreaItem(milk_item));
 
 		testHardware.scs.baggingArea.add(milk);
 
-		Assert.assertTrue("Should return true as item has been scanned and is on scale",
-				scss.checkBaggingAreaItem(milk_item));
+//		Assert.assertTrue("Should return true as item has been scanned and is on scale",
+//				scss.checkBaggingAreaItem(milk_item));
+		boolean expected = false;
+		boolean actual = testHardware.scs.mainScanner.isDisabled();
+		assertEquals("Item is scanned and is on the scale.",
+				expected, actual);
 	} 
 
 	@Test
 	public void MultipleItemTest() throws OverloadException{
 
-		Assert.assertTrue("Should return true as no items have been scanned so bagging area expected to be empty",
-				scss.checkBaggingAreaAll());
-
 		testHardware.scs.mainScanner.scan(milk);
-		testHardware.scs.mainScanner.scan(facemasks);
-
-		Assert.assertFalse("Should return false as items have been scanned and not placed in bagging area",
-				scss.checkBaggingAreaAll());
 
 		testHardware.scs.baggingArea.add(milk);
 
-		Assert.assertFalse("Should return false as two items have been scanned and only one added to bagging area",
-				scss.checkBaggingAreaAll());
-
+		testHardware.scs.mainScanner.scan(facemasks);
+		
 		testHardware.scs.baggingArea.add(facemasks);
+		
+		boolean expected = false;
+		boolean actual = testHardware.scs.mainScanner.isDisabled();
+		assertEquals("item is above the sensitivity.",
+				expected, actual);
+	}
+	
+	@Test
+	public void scanButDoNotPlace() throws OverloadException{
 
-		Assert.assertTrue("Should return true as both scanned items have been placed in bagging area",
-				scss.checkBaggingAreaAll());
+		testHardware.scs.mainScanner.scan(milk);
+
+		boolean expected = true;
+		boolean actual = testHardware.scs.mainScanner.isDisabled();
+		assertEquals("item is above the sensitivity.",
+				expected, actual);
+	}
+	
+	@Test
+	public void scan2ButDoNotPlace2nd() throws OverloadException{
+
+		testHardware.scs.mainScanner.scan(milk);
+		testHardware.scs.baggingArea.add(milk);
+		testHardware.scs.mainScanner.scan(facemasks);
+
+		boolean expected = true;
+		boolean actual = testHardware.scs.mainScanner.isDisabled();
+		assertEquals("item is above the sensitivity.",
+				expected, actual);
 	}
 }
