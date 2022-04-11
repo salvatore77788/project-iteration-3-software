@@ -99,7 +99,7 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         this.addPaper = state;
     }
 
-    public int getPaperAmount() {
+    public int getpaperAmount() {
         return this.paperAmount;
     }
 
@@ -116,7 +116,7 @@ public class ReceiptPrint implements ReceiptPrinterObserver {
         this.addInk = state;
     }
 
-    public int getInkAmount() {
+    public int getinkAmount() {
         return this.inkAmount;
     }
 

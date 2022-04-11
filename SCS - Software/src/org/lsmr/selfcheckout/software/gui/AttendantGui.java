@@ -15,7 +15,6 @@ import javax.swing.JList;
 
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
-import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
@@ -723,14 +722,12 @@ public class AttendantGui {
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // Block the current station
     	currentSoftware.isBlocked = true;
-    	AttendantActions.attendantBlockStation(currentSoftware.scs);
     	setStation();
     }                                                   
 
     private void jButtonUnblockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                      
     	// Unblock the current station
     	currentSoftware.isBlocked = false;
-    	AttendantActions.attendantUnBlockStation(currentSoftware.scs);
     	setStation();
     }                                                     
 
@@ -790,23 +787,11 @@ public class AttendantGui {
     }                                              
 
     private void jButtonRefillInkActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        try {
-			AttendantActions.fillInk(currentSoftware.rp, ReceiptPrinter.MAXIMUM_INK-currentSoftware.rp.getInkAmount());
-			setStation();
-		} catch (OverloadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        // TODO add your handling code here:
     }                                                
 
     private void jButtonRefillPaperActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-    	try {
-			AttendantActions.fillInk(currentSoftware.rp, ReceiptPrinter.MAXIMUM_PAPER-currentSoftware.rp.getPaperAmount());
-			setStation();
-		} catch (OverloadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        // TODO add your handling code here:
     }                                                  
 
     private void jMenuItemMBStartUpAllActionPerformed(java.awt.event.ActionEvent evt) {                                                      
@@ -840,12 +825,9 @@ public class AttendantGui {
     	System.exit(0);
     }
 
-    private void jMenuItemSCRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {  
-    	int idx = jListShoppingCart.getSelectedIndex();
-    	if(idx != -1) {
-			AttendantActions.removeItem(currentSoftware, idx);
-			setStation();
-    	}
+    private void jMenuItemSCRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        // TODO add your handling code here:
+    	// If the attendant is removing the item, we can assume they have verified this before hand, so just remove the item
     }
     
     private void jMenuItemSCAddItemActionPerformed(java.awt.event.ActionEvent evt) {
