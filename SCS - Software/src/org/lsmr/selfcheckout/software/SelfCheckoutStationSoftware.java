@@ -11,8 +11,14 @@ import org.lsmr.selfcheckout.devices.OverloadException;
 import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
+import org.lsmr.selfcheckout.software.gui.SelfCheckoutSystemSoftwareGUI;
 
 public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSystemSoftwareObserver> {
+	public enum SCSStatus {
+		GOOD,
+		BAD,
+		OFF
+	}
 
 	public BigDecimal totalGUI;
 	public SelfCheckoutStation scs;
@@ -25,6 +31,8 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public TouchScreenSoftware touchSnObserver;
 	public CardSoftware cardSoftware;
 	public ScanAndBag scanAndBag;
+	public AvailableFunds funds;
+	public SelfCheckoutSystemSoftwareGUI softwareGUI;
 
 	protected ReceiptPrint rp; // added receipt print
 	protected AttendantStation as; // added attendant stationæ
@@ -32,6 +40,10 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	private String memberNumber;
 	public MembersDatabase membersRecord;
 	public int stationNumber;
+	
+	public Boolean isShutdown = true;
+	public Boolean isBlocked = true;
+	public SCSStatus status = SCSStatus.OFF;
 
 	// self checkout station software
 	// NOTE: Any objects that are not primitive types are passed to other classes by
@@ -67,6 +79,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
 		this.cardSoftware = new CardSoftware(this);
+		this.funds = new AvailableFunds(scs);
 
 		// This Touch Screen Observer is meant for a SelfCheckoutStation.
 		// There is another constructor that uses an Attendant Station.
@@ -130,6 +143,18 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public BigDecimal getAmountPaid() {
 		return amountPaid[0];
 	}
+	
+	public int getPercentageInkLeft() {
+		return toPercent(rp.getinkAmount(), ReceiptPrinter.MAXIMUM_INK);
+	}
+	
+	public int getPercentagePaperLeft() {
+		return toPercent(rp.getpaperAmount(), ReceiptPrinter.MAXIMUM_PAPER);
+	}
+	
+	private int toPercent(double num, double denom) {
+    	return (int)(num/denom*100);
+    }
 
 	/**
 	 * Purpose: return the correct amount of change to the user, giving them the
@@ -453,6 +478,24 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 
 	public void setTotalGUI(BigDecimal totalGUI) {
 		this.totalGUI = totalGUI;
+	}
+	
+	public void startUp() {
+		funds.attachAll();
+		isShutdown = false;
+		isBlocked = false;
+		status = SCSStatus.GOOD;
+		
+		softwareGUI = new SelfCheckoutSystemSoftwareGUI(scs, this);
+		softwareGUI.setVisible(true);
+	}
+	
+	public void shutDown() {
+		funds.detachAll();
+		isShutdown = true;
+		status = SCSStatus.OFF;
+		
+		softwareGUI.setVisible(false);
 	}
 	
 	private void notifyAmountPaid(BigDecimal amount) {

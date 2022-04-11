@@ -149,10 +149,7 @@ public class AttendantActions {
         stationSoftware.itemsScanned.remove(item);
 
 
-      }
-
     }
-
     /*
      * Should we include a method to disable the
      */
@@ -174,7 +171,7 @@ public class AttendantActions {
      * Simulates the attendant emptying a coin storage unit.
      * @param station SelfCheckoutStation whose coin storage is to be unloaded.
      */
-    public List<Coin> emptyCoinStorageUnit(SelfCheckoutStation station) {
+    public static List<Coin> emptyCoinStorageUnit(SelfCheckoutStation station) {
     	List<Coin> storageContents = station.coinStorage.unload();
 
     	// This should be displayed on the touch screen.
@@ -212,7 +209,7 @@ public class AttendantActions {
      * Simulates the attendant emptying a banknote storage unit.
      * @param station SelfCheckoutStation whose banknote storage is to be unloaded.
      */
-    public List<Banknote> emptyBanknoteStorageUnit(SelfCheckoutStation station) {
+    public static List<Banknote> emptyBanknoteStorageUnit(SelfCheckoutStation station) {
     	List<Banknote> storageContents = station.banknoteStorage.unload();
 
     	// This should be displayed on the touch screen.

@@ -1,4 +1,4 @@
-package org.lsmr.selfcheckout.gui;
+package org.lsmr.selfcheckout.software.gui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -21,6 +21,7 @@ import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
 import org.lsmr.selfcheckout.software.AvailableFunds;
 import org.lsmr.selfcheckout.software.ItemInfo;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 
 public class AttendantGui {
@@ -28,15 +29,9 @@ public class AttendantGui {
 	private static final Color STATUS_BAD_COLOR = new Color(204, 0, 0);
 	private static final Color STATUS_OFF_COLOR = Color.LIGHT_GRAY;
 	
-	private enum SCSStatus {
-		GOOD,
-		BAD,
-		OFF
-	}
-	
 	// Test station software class
 	// This should be replaced with SelfCheckoutStationSoftware when it is ready
-	private class SCSSoftware {
+	/*private class SCSSoftware {
 		public SelfCheckoutStation station;
 		
 		public ArrayList<ItemInfo> itemsScanned;
@@ -86,15 +81,15 @@ public class AttendantGui {
 			isShutdown = true;
 			status = SCSStatus.OFF;
 		}
-	}
+	}*/
 	
 
 	// For now, just use a testing Attendant station instance
 	private SupervisionStation superStation;
 	private JFrame frame;
 	
-	private SCSSoftware[] stationSoftwares;
-	private SCSSoftware currentSoftware;
+	private SelfCheckoutStationSoftware[] stationSoftwares;
+	private SelfCheckoutStationSoftware currentSoftware;
 	
 	// List models
 	DefaultListModel<String> shoppingCartLM;
@@ -132,7 +127,7 @@ public class AttendantGui {
                     boolean isSelected, boolean cellHasFocus) {
     			Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     			
-    			SCSSoftware software = stationSoftwares[index];
+    			SelfCheckoutStationSoftware software = stationSoftwares[index];
     			String text = (String)value;
     			
     			setText(text);
@@ -140,7 +135,7 @@ public class AttendantGui {
     				setForeground(Color.LIGHT_GRAY);
     			else {
     				setForeground(Color.BLACK);
-    				if(software.status == SCSStatus.BAD)
+    				if(software.status == SelfCheckoutStationSoftware.SCSStatus.BAD)
         				text += "(!)";
     				}
     			
@@ -149,11 +144,16 @@ public class AttendantGui {
     	});
     	
     	// Create some test stations
-    	stationSoftwares = new SCSSoftware[3];
+    	stationSoftwares = new SelfCheckoutStationSoftware[3];
     	for(int i = 0; i < 3; i++) {
     		SelfCheckoutStation s = new SelfCheckoutStation(currency, bnDenoms, coinDenoms, 1000, 1);
     		superStation.add(s);
-    		stationSoftwares[i] = new SCSSoftware(s);
+    		try {
+				stationSoftwares[i] = new SelfCheckoutStationSoftware(s);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	
     	// Set up stations list
@@ -251,7 +251,7 @@ public class AttendantGui {
     	return (int)(num/denom*100);
     }
 
-	private Color getStatusColor(SCSStatus status) {
+	private Color getStatusColor(SelfCheckoutStationSoftware.SCSStatus status) {
     	switch(status) {
     	case GOOD:
     		return STATUS_GOOD_COLOR;
@@ -738,7 +738,7 @@ public class AttendantGui {
         	BigDecimal denom = coinDenoms[idx];
         	
         	int refillCount = SelfCheckoutStation.COIN_DISPENSER_CAPACITY - currentSoftware.funds.getCoinCount(denom);
-        	AttendantActions.fillCoinDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Coin(currency, denom)).toArray(new Coin[refillCount]));
+        	AttendantActions.fillCoinDispenser(currentSoftware.scs, denom, Collections.nCopies(refillCount, new Coin(currency, denom)).toArray(new Coin[refillCount]));
         }
         
         setStation();
@@ -751,19 +751,19 @@ public class AttendantGui {
         	int denom = bnDenoms[idx];
         	
         	int refillCount = SelfCheckoutStation.BANKNOTE_DISPENSER_CAPACITY - currentSoftware.funds.getBanknoteCount(denom);
-        	AttendantActions.fillBanknoteDispenser(currentSoftware.station, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
+        	AttendantActions.fillBanknoteDispenser(currentSoftware.scs, denom, Collections.nCopies(refillCount, new Banknote(currency, denom)).toArray(new Banknote[refillCount]));
         }
         
         setStation();
     }                                                              
 
     private void jButtonUnloadBanknoteStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                             
-        AttendantActions.emptyBanknoteStorageUnit(currentSoftware.station);
+        AttendantActions.emptyBanknoteStorageUnit(currentSoftware.scs);
         setStation();
     }                                                            
 
     private void jButtonUnloadCoinStorageActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    	AttendantActions.emptyCoinStorageUnit(currentSoftware.station);
+    	AttendantActions.emptyCoinStorageUnit(currentSoftware.scs);
     	setStation();
     }                                                        
 
@@ -796,7 +796,7 @@ public class AttendantGui {
 
     private void jMenuItemMBStartUpAllActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         for(int i = 0; i < stationSoftwares.length; i++) {
-        	SCSSoftware sw = stationSoftwares[i];
+        	SelfCheckoutStationSoftware sw = stationSoftwares[i];
         	if(sw.isShutdown)
         		sw.startUp();
         }
@@ -806,7 +806,7 @@ public class AttendantGui {
 
     private void jMenuItemMBShutDownAllActionPerformed(java.awt.event.ActionEvent evt) {                                                       
     	for(int i = 0; i < stationSoftwares.length; i++) {
-        	SCSSoftware sw = stationSoftwares[i];
+    		SelfCheckoutStationSoftware sw = stationSoftwares[i];
         	if(!sw.isShutdown)
         		sw.shutDown();
         }
