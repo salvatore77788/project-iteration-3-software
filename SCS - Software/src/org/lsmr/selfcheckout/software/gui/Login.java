@@ -30,8 +30,8 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();			
-					frame.setVisible(true);		
+					Login frame = new Login();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -50,30 +50,30 @@ public class Login extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		textFieldUserID = new JTextField());
+
+		textFieldUserID = new JTextField();
 		textFieldUserID.setToolTipText("UserID");
 		textFieldUserID.setBounds(101, 89, 299, 20);
 		contentPane.add(textFieldUserID);
 		textFieldUserID.setColumns(10);
-		
+
 		JTextArea txtrUserid = new JTextArea();
 		txtrUserid.setText("UserID");
 		txtrUserid.setBackground(UIManager.getColor("Button.background"));
 		txtrUserid.setForeground(UIManager.getColor("CheckBox.foreground"));
 		txtrUserid.setBounds(101, 59, 74, 22);
 		contentPane.add(txtrUserid);
-		
+
 		JTextArea txtrPassword = new JTextArea();
 		txtrPassword.setText("password");
 		txtrPassword.setBackground(UIManager.getColor("Button.background"));
 		txtrPassword.setBounds(101, 142, 74, 22);
 		contentPane.add(txtrPassword);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(101, 175, 299, 20);
 		contentPane.add(passwordField);
-		
+
 		JButton LoginButton = new JButton("Login");
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -84,25 +84,27 @@ public class Login extends JFrame {
 		LoginButton.setBounds(203, 224, 89, 23);
 		contentPane.add(LoginButton);
 	}
-	
 
-	public String getTextUserID(){
-		if (pressed == true);
+	public String getTextUserID() {
+		if (pressed == true)
+			;
 		String enteredID;
 		{
 			enteredID = textFieldUserID.getText();
 		}
 		return enteredID;
 	}
-	
+
 	public String getPasswordEntered() {
-		if (pressed == true);
+		if (pressed == true)
+			;
 		String pass;
 		{
 			pass = new String(passwordField.getPassword());
 		}
 		return pass;
 	}
+
 	public boolean isPressed() {
 		return pressed;
 	}
@@ -113,15 +115,11 @@ public class Login extends JFrame {
 
 	public void setpasswordField(JPasswordField pass) {
 		this.passwordField = pass;
-		
-	}
-	
-	public void unPressed()
-	{
-		pressed=false;
-	}
-	
 
-	
-	
+	}
+
+	public void unPressed() {
+		pressed = false;
+	}
+
 }
