@@ -16,6 +16,7 @@ import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 
 public class BanknoteSlotTest {
 
+	 private SelfCheckoutStationSoftware software;
 	 private BanknoteSlotSoftware bss;
 	 private BigDecimal[] amountPaid;
 
@@ -28,7 +29,8 @@ public class BanknoteSlotTest {
 		amountPaid = new BigDecimal[1];
 		amountPaid[0] = new BigDecimal("0");
 		try {
-			bss = new BanknoteSlotSoftware(new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
+			software = new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit());
+			bss = software.banknoteSlotSoftware;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -101,7 +103,7 @@ public class BanknoteSlotTest {
 	public void testInvalidBanknoteDetected() {
 		amountPaid[0] = new BigDecimal("0");
 		bss.invalidBanknoteDetected(null);
-		Assert.assertTrue("Amount paid should be zero", amountPaid[0].intValue() == 0);
+		Assert.assertTrue("Amount paid should be zero", software.getAmountPaid().intValue() == 0);
 		amountPaid[0] = new BigDecimal("0");
 	}
 	
@@ -110,7 +112,7 @@ public class BanknoteSlotTest {
 		amountPaid[0] = new BigDecimal("0");
 		int value = 5;
 		bss.validBanknoteDetected(null, Currency.getInstance(Locale.CANADA), value);
-		Assert.assertTrue("Amount Paid should be" + value, amountPaid[0].intValue() == value);
+		Assert.assertTrue("Amount Paid should be" + value, software.getAmountPaid().intValue() == value);
 		amountPaid[0] = new BigDecimal("0");
 	}
 }
