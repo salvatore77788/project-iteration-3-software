@@ -1,6 +1,5 @@
 package org.lsmr.selfcheckout.software.test;
 
-import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.ReceiptPrint;
 import org.lsmr.selfcheckout.software.AttendantStation;
 import org.lsmr.selfcheckout.software.AttendantActions;

@@ -83,7 +83,7 @@ public class AttendantActions {
         
       // Get the software for the right station
         SelfCheckoutStationSoftware stationSoftware = AttendantStation.softwareStationConnected.get(stationNumber);
-        ElectronicScaleSoftware scaleSoftware = AttendantStation.electronicScaleConnected.get(stationNumber);
+        ScanAndBag scaleSoftware = AttendantStation.electronicScaleConnected.get(stationNumber);
         
         int count = 0;
         

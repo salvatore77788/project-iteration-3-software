@@ -17,8 +17,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public BigDecimal totalGUI;
 	public SelfCheckoutStation scs;
 	public TestDatabase db; // in an actual system this would connect to a db or something
-	public ElectronicScaleSoftware ess;
-	public BarcodeScannerSoftware bss;
+	public ScanAndBag ScanAndBag;
 	public BanknoteSlotSoftware banknoteSlotSoftware;
 	public CoinSlotSoftware coinSlotSoftware;
 	public ScanMembershipCard memberCardObserver;
@@ -61,8 +60,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.rp = new ReceiptPrint();
 		this.as = new AttendantStation();
 		this.db = new TestDatabase();
-		this.ess = new ElectronicScaleSoftware(scs);
-		this.bss = new BarcodeScannerSoftware(db, ess, itemsScanned, weightThreshold);
+		this.ScanAndBag = new ScanAndBag(scs, db, this);
 		this.banknoteSlotSoftware = new BanknoteSlotSoftware(this);
 		this.membersRecord = new MembersDatabase();
 		this.memberCardObserver = new ScanMembershipCard(this);
@@ -76,8 +74,8 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.returnChangeSoftware = new ReturnChangeSoftware(scs);
 
 		// attach the ess and bss to the selfcheckout hardware
-		this.scs.mainScanner.attach(bss);
-		this.scs.baggingArea.attach(ess);
+		this.scs.mainScanner.attach(ScanAndBag);
+		this.scs.baggingArea.attach(ScanAndBag);
 		this.scs.banknoteValidator.attach(banknoteSlotSoftware);
 		this.scs.coinValidator.attach(coinSlotSoftware);
 		this.scs.cardReader.attach(memberCardObserver);
@@ -90,7 +88,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		this.stationNumber = aStation.assignStationNumber();
 		
 		// Connect the software to the attendant station
-		aStation.connectToAttendantStation(scs,this, ess, bss, banknoteSlotSoftware, scanAndBag);
+		aStation.connectToAttendantStation(scs,this, scanAndBag, scanAndBag, banknoteSlotSoftware, scanAndBag);
 		// create new change class
 	}
 

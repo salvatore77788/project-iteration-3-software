@@ -15,8 +15,8 @@ public class AttendantStation {
 
 	public static ArrayList<SelfCheckoutStation> stationConnected = new ArrayList<SelfCheckoutStation>();
 	public static ArrayList<SelfCheckoutStationSoftware> softwareStationConnected = new ArrayList<SelfCheckoutStationSoftware>();
-	public static ArrayList<ElectronicScaleSoftware> electronicScaleConnected = new ArrayList<ElectronicScaleSoftware>();
-	public static ArrayList<BarcodeScannerSoftware> barcodeScannerConnected = new ArrayList<BarcodeScannerSoftware>();
+	public static ArrayList<ScanAndBag> electronicScaleConnected = new ArrayList<ScanAndBag>();
+	public static ArrayList<ScanAndBag> barcodeScannerConnected = new ArrayList<ScanAndBag>();
 	public static ArrayList<BanknoteSlotSoftware> banknoteSlotConnected = new ArrayList<BanknoteSlotSoftware>();
 	public static ArrayList<ScanAndBag> scanAndBagConnected = new ArrayList<ScanAndBag>();
 	public static int numOfStations = 0;
@@ -27,8 +27,8 @@ public class AttendantStation {
 
 	
     // Connect the station and software to the attendant machine
-    public void connectToAttendantStation(SelfCheckoutStation scs, SelfCheckoutStationSoftware stationSoftware, ElectronicScaleSoftware scaleSoftware,
-    		BarcodeScannerSoftware barcodeScannerSoftware, BanknoteSlotSoftware banknoteSlotSoftware, ScanAndBag scanAndBag) {
+    public void connectToAttendantStation(SelfCheckoutStation scs, SelfCheckoutStationSoftware stationSoftware, ScanAndBag scaleSoftware,
+    		ScanAndBag barcodeScannerSoftware, BanknoteSlotSoftware banknoteSlotSoftware, ScanAndBag scanAndBag) {
     	
     	stationConnected.add(scs);
     	softwareStationConnected.add(stationSoftware);

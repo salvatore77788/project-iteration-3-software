@@ -381,4 +381,9 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 		return this.weightAtLastEvent;
 	}
 
+	public void setAttendantRemovedItem() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

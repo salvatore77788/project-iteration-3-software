@@ -11,7 +11,6 @@ import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
 import org.lsmr.selfcheckout.software.AttendantStation;
-import org.lsmr.selfcheckout.software.ElectronicScaleSoftware;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 import org.lsmr.selfcheckout.software.TouchScreenSoftware;
 
