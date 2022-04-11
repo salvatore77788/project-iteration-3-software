@@ -22,6 +22,8 @@ public class PartialPaymentTest {
         testHardware.scs.printer.addInk(10000);
         testHardware.scs.printer.addPaper(300);
         ;
+        
+        software.startScanGUI();
 
         TestItems testItems = new TestItems();
         BarcodedItem guitarItem = testItems.lookupItem(new Barcode(new Numeral[] { Numeral.nine }));
