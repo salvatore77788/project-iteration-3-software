@@ -158,4 +158,4 @@ for the SENG 300 Winter 2022 Introduction to Software Engineering course.
 * Cebrail Durna
 
 ## LICENSE
-[MIT](https://github.com/salvatore77788/Social-Engineering-Quiz/blob/main/LICENSE)
+[MIT]()
