@@ -60,7 +60,7 @@ public class ReceiptPrintTest {
 	public void testEmptyInk() throws EmptyException, OverloadException, InterruptedException
 	{
 		rcpt.setpaperAmount(1<<10);
-		rcpt.detectLowInk(rcpt.getinkAmount());
+		rcpt.detectLowInk(rcpt.getInkAmount());
 		software.checkout();
 	}	
 	
@@ -96,6 +96,6 @@ public class ReceiptPrintTest {
 	{
 		rcpt.setinkAmount(1<<20);
 		rcpt.setpaperAmount(1);
-		assertTrue("ink amount expected (1<<20)", rcpt.getinkAmount() == 1<<20 );		
+		assertTrue("ink amount expected (1<<20)", rcpt.getInkAmount() == 1<<20 );		
 	}
 }
