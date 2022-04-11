@@ -116,6 +116,10 @@ for the SENG 300 Winter 2022 Introduction to Software Engineering course.
                 + This tests our implementation for TouchScreenSoftware. 
                 + This testing is for "how should adding bags communicate with electronic scale and the station.".
 
+            + ScanMembershipCardTest.java
+                + Tests when a member card gets swiped.
+                + Checking that non-registered users and invalid types of cards do not get set as memberNumber in SelfCheckoutStationSoftware, which will later be used                   to print member number in receipt.
+
 ## Downloading the project:
 * Easiest way is to clone the repository:
     + [SENG 300 Iteration3 GitHub](https://github.com/salvatore77788/project-iteration-3-software)
