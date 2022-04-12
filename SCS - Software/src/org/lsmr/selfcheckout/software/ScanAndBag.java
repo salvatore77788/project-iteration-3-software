@@ -301,7 +301,9 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 		}
 		else {
 			this.itemsScanned.add(info);
-			scanGUI.addItem();
+			if(scanGUI != null) {
+				scanGUI.addItem();
+			}
 			mainScanner.disable();
 			handheldScanner.disable();
 			ScanAndBag.t.schedule( 
