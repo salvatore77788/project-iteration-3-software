@@ -24,6 +24,7 @@ public class EnterMemberCard implements ActionListener{
 	// needs to be able to "dispose" of frame from the other class.
 	static JFrame keyPadFrame;
 	JButton enterMemberNumberButton;
+	JButton exitButton;
 	public String memberNumberProvided;
 
 	public EnterMemberCard(SelfCheckoutStationSoftware aSCSsoftware) {
@@ -54,7 +55,12 @@ public class EnterMemberCard implements ActionListener{
 		
 		enterMemberNumberButton.addActionListener(this);
 
-	
+		exitButton = new JButton("x");
+		exitButton.setSize(50,50);
+		stationFrame.add(exitButton);
+		exitButton.setLocation(650,0);
+		exitButton.addActionListener(this);
+		
 	}
 	
 	
@@ -78,6 +84,12 @@ public class EnterMemberCard implements ActionListener{
 			 
 			keyPadFrame.pack();
 			keyPadFrame.setVisible(true);
+		}
+		
+		
+		if(e.getSource() == exitButton) {
+			stationFrame.dispose();
+			System.exit(0);
 		}
 		
 	}

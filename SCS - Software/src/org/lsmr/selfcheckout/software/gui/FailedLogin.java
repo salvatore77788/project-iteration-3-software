@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
@@ -44,14 +45,16 @@ public class FailedLogin extends JDialog {
 	public FailedLogin() {
 		setModal(true);
 		setTitle("Login Failed");
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 354, 164);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JTextArea txtrLoginFailedPlease = new JTextArea();
+		txtrLoginFailedPlease.setEditable(false);
 		txtrLoginFailedPlease.setText("Login failed, please try again");
 		txtrLoginFailedPlease.setBackground(UIManager.getColor("Button.background"));
 		txtrLoginFailedPlease.setBounds(39, 25, 258, 22);

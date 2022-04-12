@@ -6,12 +6,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
@@ -47,10 +49,11 @@ public class Login extends JDialog {
 	public Login() {
 		setModal(true);
 		setTitle("Attendant Login");
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 525, 363);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -61,6 +64,7 @@ public class Login extends JDialog {
 		textFieldUserID.setColumns(10);
 
 		JTextArea txtrUserid = new JTextArea();
+		txtrUserid.setEditable(false);
 		txtrUserid.setText("UserID");
 		txtrUserid.setBackground(UIManager.getColor("Button.background"));
 		txtrUserid.setForeground(UIManager.getColor("CheckBox.foreground"));
@@ -68,7 +72,8 @@ public class Login extends JDialog {
 		contentPane.add(txtrUserid);
 
 		JTextArea txtrPassword = new JTextArea();
-		txtrPassword.setText("password");
+		txtrPassword.setEditable(false);
+		txtrPassword.setText("Password");
 		txtrPassword.setBackground(UIManager.getColor("Button.background"));
 		txtrPassword.setBounds(101, 142, 74, 22);
 		contentPane.add(txtrPassword);
@@ -94,6 +99,8 @@ public class Login extends JDialog {
 	private void verifyLogin() {
 		String u = textFieldUserID.getText();
 		if(u.compareToIgnoreCase("bad") == 0) {
+			passwordField.setText("");
+			textFieldUserID.setText("");
 			loginFailedDialog.setVisible(true);
 		}
 		else {
