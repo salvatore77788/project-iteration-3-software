@@ -1,5 +1,3 @@
-package org.lsmr.selfcheckout.software;
-
 import java.util.ArrayList;
 
 import org.lsmr.selfcheckout.PriceLookupCode;
@@ -25,7 +23,7 @@ public class LookupNoBarcode
     return products;
     }
     
-    public ArrayList <PLUCodedProduct> searchByNamePlu(String userInput)
+    public ArrayList <PLUCodedProduct> searchByPlu(String userInput)
         {
         ArrayList <PLUCodedProduct> products = new ArrayList<PLUCodedProduct>();
         
@@ -42,4 +40,22 @@ public class LookupNoBarcode
             }
         return products;
         }
+    
+    public ArrayList <PLUCodedProduct> searchByNamePlu(String userInput)
+    {
+    ArrayList <PLUCodedProduct> products = new ArrayList<PLUCodedProduct>();
+    
+    for (PLUCodedProduct value : ProductDatabases.PLU_PRODUCT_DATABASE.values()) 
+        {
+        String productString = value.getDescription();
+        if (productString.contains(userInput))
+            {
+            products.add(value);
+            System.out.println(value.getDescription());
+            }
+        }
+    return products;
+    }
+    
+
     }
