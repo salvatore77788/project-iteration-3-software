@@ -26,6 +26,7 @@ public class BaggingAreaSoftwareTest {
 	public void setup() throws Exception {
 		testHardware = new TestHardware();
 		scss = new SelfCheckoutStationSoftware(testHardware.scs);
+		scss.scanAndBag.startGUI();
 				
 		Barcode barcode1 = new Barcode(new Numeral[] { Numeral.one });
 		Barcode barcode2 = new Barcode(new Numeral[] { Numeral.two });

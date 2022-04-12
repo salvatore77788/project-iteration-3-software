@@ -115,7 +115,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 
 	public void startScanGUI() {
-		scanAndBag = new ScanAndBag(scs, db, this);
+		scanAndBag.startGUI();
 	}
 	
 	public void continueScanGUI() {
