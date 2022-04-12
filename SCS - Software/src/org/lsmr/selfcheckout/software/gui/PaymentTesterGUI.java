@@ -29,12 +29,14 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
 	private Card membershipCard;
 	private Coin[] coins;
 	private Banknote[] banknotes;
+	private SelfCheckoutStationSoftware scss;
 	
     /**
      * Creates new form PaymentTesterGUI
      */
     public PaymentTesterGUI(SelfCheckoutStationSoftware software) {
         initComponents();
+        scss = software;
         
         station = software.scs;
         cardIssuer = software.cardSoftware.cardIssuer;
@@ -254,6 +256,7 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     private void jButtonSwipeCreditCardActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         try {
 			station.cardReader.swipe(creditCard);
+			scss.addAmountPaid(scss.getAmountLeftToPay());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -272,6 +275,7 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     private void jButtonInsertCreditCardActionPerformed(java.awt.event.ActionEvent evt) {                                                        
         try {
 			station.cardReader.insert(creditCard, "1234");
+			scss.addAmountPaid(scss.getAmountLeftToPay());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -308,6 +312,7 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     private void jButtonSwipeDebitCardActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         try {
 			station.cardReader.swipe(debitCard);
+			scss.addAmountPaid(scss.getAmountLeftToPay());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -317,6 +322,7 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     private void jButtonTapDebitCardActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         try {
 			station.cardReader.tap(debitCard);
+			scss.addAmountPaid(scss.getAmountLeftToPay());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -326,6 +332,7 @@ public class PaymentTesterGUI extends javax.swing.JFrame {
     private void jButtonInsertDebitCardActionPerformed(java.awt.event.ActionEvent evt) {                                                       
         try {
 			station.cardReader.insert(debitCard, "4321");
+			scss.addAmountPaid(scss.getAmountLeftToPay());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

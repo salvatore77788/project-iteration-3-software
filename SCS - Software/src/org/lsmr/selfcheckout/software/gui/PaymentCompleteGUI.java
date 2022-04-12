@@ -64,6 +64,7 @@ public class PaymentCompleteGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				scs.resetVars();
 				dispose();
+				//scs.scanAndBag.startGUI();
 				SelfCheckoutSystemSoftwareGUI scssGUI = new SelfCheckoutSystemSoftwareGUI(scs.scs, scs);
 				scssGUI.setVisible(true);
 				

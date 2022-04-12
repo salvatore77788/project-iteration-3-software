@@ -83,6 +83,9 @@ public class ScanningItemGUI extends JFrame {
 	SelfCheckoutStationSoftware scss;
 	
 	boolean bagPromptedAlready = false;
+	
+	int barcodedAdded = 0;
+	int pluAdded = 0;
 
 	/**
 	 * Launch the application.
@@ -263,6 +266,8 @@ public class ScanningItemGUI extends JFrame {
 		lookupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Lookup Product");
+				MainFrame search = new MainFrame(scss);
+				search.setVisible(true);
 			}
 		});
 		lookupButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
@@ -351,6 +356,27 @@ public class ScanningItemGUI extends JFrame {
 		
 	}
 	
+	public void updateMainframe() {
+		Data d = Data.getInstance();
+		int j = 0;
+		for(BarcodedProduct i :d.getBarcodeScanned()) {
+			if(j < barcodedAdded) {
+				continue;
+			}
+			itemsScanned.add(new ItemInfo(i.getPrice(), i.getExpectedWeight(), i.getDescription()));
+			barcodedAdded++;
+		}
+		
+		j = 0;
+		for(PLUCodedProduct i: d.getPluScanned()) {
+			if(j < pluAdded) {
+				continue;
+			}
+			itemsScanned.add(new ItemInfo(i.getPrice(), 1.00, i.getDescription()));
+			pluAdded++;	
+		}
+		
+	}
 	
 	public void updateItemText() {
 		ArrayList<JTextField> array = new ArrayList<JTextField>();
@@ -369,12 +395,14 @@ public class ScanningItemGUI extends JFrame {
 		//int arrayLength = items.size();
 		int arrayLength = itemsScanned.size();
 		int iterator = 0;
+		int itemTextCount = 0;
 		
 		for(JTextField text : array) {
 			if((iterator+ counter) >= arrayLength) {
 				text.setText("");
 			} else {
 				text.setText(itemsScanned.get(iterator+counter).description);
+				itemTextCount++;
 			}
 			
 			text.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -384,6 +412,7 @@ public class ScanningItemGUI extends JFrame {
 			itemOneText.setColumns(10);
 			iterator++;
 		}
+		
 
 		
 		
@@ -407,6 +436,7 @@ public class ScanningItemGUI extends JFrame {
 		int iterator = 0;
 		
 		double total = 0;
+		int itemTextCount = 0;
 		
 		// For formatting double to 2 decimal 
 		DecimalFormat format = new DecimalFormat("0.00");
@@ -424,7 +454,8 @@ public class ScanningItemGUI extends JFrame {
 				text.setText("$" + format.format(val));
 				//text.setText("$" + priceList.get(iterator+counter));
 				total += val;
-				totalBig.add(bigDecVal);
+				itemTextCount++;
+				//totalBig.add(bigDecVal);
 			}
 			
 			text.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -434,6 +465,17 @@ public class ScanningItemGUI extends JFrame {
 			itemOneText.setColumns(10);
 			iterator++;
 		}
+		
+		Data d = Data.getInstance();
+		
+		//total = scss.total().doubleValue();
+		total = 0;
+		for(ItemInfo i: itemsScanned) {
+			BigDecimal bigDecVal = i.price;
+			double val = bigDecVal.doubleValue();
+			total += val;
+		}
+		
 		
 		totalPriceText.setText("Total: $" + format.format(total));
 		totalPriceText.setFont(new Font("Tahoma", Font.PLAIN, 25));
