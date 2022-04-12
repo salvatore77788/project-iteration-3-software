@@ -1,572 +1,418 @@
 package org.lsmr.selfcheckout.software.gui;
 
-import org.lsmr.selfcheckout.software.*;
-
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.products.*;
+import org.lsmr.selfcheckout.software.AttendantStation;
+import org.lsmr.selfcheckout.software.ItemInfo;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import java.awt.Font;
+import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
 
-public class ScanningItemGUI extends JFrame {
+public class StationItemGUI extends JFrame {
 
 	private JPanel contentPane;
+	private JTextField text;
+	
+	private JTextField itemOne = new JTextField();
+	private JTextField itemTwo = new JTextField();
+	private JTextField itemThree = new JTextField();
+	private JTextField itemFour = new JTextField();
+	private JTextField itemFive = new JTextField();
+	private JTextField itemSix = new JTextField();
+	private JTextField itemSeven = new JTextField();
+	private JTextField itemEight = new JTextField();
+	private JTextField itemNine = new JTextField();
+	private JTextField itemTen = new JTextField();
+	
+	private JButton buttonOne = new JButton("Remove");
+	private JButton buttonTwo = new JButton("Remove");
+	private JButton buttonThree = new JButton("Remove");
+	private JButton buttonFour = new JButton("Remove");
+	private JButton buttonFive = new JButton("Remove");
+	private JButton buttonSix = new JButton("Remove");
+	private JButton buttonSeven = new JButton("Remove");
+	private JButton buttonEight = new JButton("Remove");
+	private JButton buttonNine = new JButton("Remove");
+	private JButton buttonTen = new JButton("Remove");
 
-	// Fixed Texts
-	private JTextField scanText;
-	private JTextField scannedItemText;
-
-	// Total Price Text
-	private JTextField totalPriceText = new JTextField();
-
-
-	// Item Description Text
-	private JTextField itemOneText = new JTextField();
-	private JTextField itemTwoText = new JTextField();
-	private JTextField itemThreeText = new JTextField();
-	private JTextField itemFourText = new JTextField();
-	private JTextField itemFiveText = new JTextField();
-	private JTextField itemSixText = new JTextField();
-	private JTextField itemSevenText = new JTextField();
-	private JTextField itemEightText = new JTextField();
-	private JTextField itemNineText = new JTextField();
-	private JTextField itemTenText = new JTextField();
-
-	// Item Price Text
-	private JTextField itemOnePriceText = new JTextField();
-	private JTextField itemTwoPriceText = new JTextField();
-	private JTextField itemThreePriceText = new JTextField();
-	private JTextField itemFourPriceText = new JTextField();
-	private JTextField itemFivePriceText = new JTextField();
-	private JTextField itemSixPriceText = new JTextField();
-	private JTextField itemSevenPriceText = new JTextField();
-	private JTextField itemEightPriceText = new JTextField();
-	private JTextField itemNinePriceText = new JTextField();
-	private JTextField itemTenPriceText = new JTextField();
-
-	// Display counter
-	public int counter = 0;
-
-	public ArrayList<String> items = new ArrayList<String>();
-	public ArrayList<String> priceList = new ArrayList<String>();
-	public ArrayList<ItemInfo> itemsScanned = new ArrayList<ItemInfo>();
-
-	RequestAssistanceGUI requestGUI;
-
-	WrongWeightGUI wrongWeightGUI;
-
-	ScanLargeItemGUI scanLargeItemGUI;
-
-	RemoveItemPromptGUI removeItemPromptGUI;
-
-	BagsGUI bagsGUI;
-
-	PersonalBagPromptGUI personalBagGUI;
-
-	PaymentGUI paymentGUI;
-
-	SelfCheckoutStationSoftware scss;
-
-	MainFrame mainFrame;
-
-	boolean bagPromptedAlready = false;
-
+	
+	private JScrollPane scrollPane;
+	private JButton button;
+	public int counter = 1;
+	
+	public int itemToRemove = 0;
+	private JTextField pageNumber = new JTextField();
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		/*
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ScanningItemGUI frame = new ScanningItemGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		*/
+
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ScanningItemGUI(ArrayList<ItemInfo> is, SelfCheckoutStationSoftware software) {
-		if(is != null) {
-			itemsScanned = is;
-		}
-
-		scss = software;
-		/*
-		items.add("2L Milk $5 1");
-		items.add("2L Milk $5 2");
-		items.add("2L Milk $5 3");
-		items.add("2L Milk $5 4");
-		items.add("2L Milk $5 5");
-		items.add("2L Milk $5 6");
-		items.add("2L Milk $5 7");
-		items.add("2L Milk $5 8");
-		items.add("2L Milk $5 9");
-		items.add("2L Milk $5 10");
-		//items.add("2L Milk $5 11");
-
-		priceList.add("1.1");
-		priceList.add("2");
-		priceList.add("3");
-		priceList.add("4");
-		priceList.add("5");
-		priceList.add("6");
-		priceList.add("7");
-		priceList.add("8");
-		priceList.add("9");
-		priceList.add("10");
-		//priceList.add("11");
-		*/
-
-
+	public StationItemGUI(ArrayList<ItemInfo> items, int stationNum) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1415, 1000);
+		setBounds(100, 100, 1054, 600);
 		contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		displayItem(items);
+		
 
-
-
-
-		scanText = new JTextField();
-		scanText.setFont(new Font("Tahoma", Font.BOLD, 25));
-		scanText.setText("Scan Item and Place into Bagging Area");
-		scanText.setBounds(861, 40, 505, 159);
-		scanText.setEditable(false);
-		contentPane.add(scanText);
-		scanText.setColumns(10);
-
-
-
-		scannedItemText = new JTextField();
-		scannedItemText.setFont(new Font("Tahoma", Font.BOLD, 30));
-		scannedItemText.setText("Scanned Items:");
-		scannedItemText.setBounds(41, 40, 557, 74);
-		scannedItemText.setEditable(false);
-		contentPane.add(scannedItemText);
-		scannedItemText.setColumns(10);
-
-
-		// Display items and text
-		updateItemText();
-		updatePriceText();
-
-
-		// region Button Code
-
-
-
-
-		JButton checkoutButton = new JButton("Checkout");
-		checkoutButton.addActionListener(new ActionListener() {
+	
+		
+		
+		// Add Remove Buttons
+		// ============================================================================== //
+		
+		buttonOne.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Checkout");
-				System.out.println(software.total());
-
-				if(itemsScanned.size() == 0) {
-					JOptionPane.showMessageDialog(null, "You must scan an item before checking out!","No Items Scanned", JOptionPane.WARNING_MESSAGE);
-				} else if(bagPromptedAlready) {
-					// If customer already entered number of bags
-					checkoutOn();
-					dispose();
-				} else {
-
-					// Ask if customer used bags
-					int usedBags = JOptionPane.showConfirmDialog(null, "Did you use store bags?", "Bag Prompt", JOptionPane.YES_NO_OPTION);
-					if(usedBags == JOptionPane.YES_NO_OPTION) {
-						System.out.println("used bags");
-						bagsOn();
-
-						bagPromptedAlready = true;
-
-					} else {
-						checkoutOn();
-						dispose();
-					}
-				}
-
-
-				// Close this window
-			}
-		});
-		checkoutButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		checkoutButton.setBounds(853, 786, 505, 123);
-		contentPane.add(checkoutButton);
-
-
-
-		JButton removeButton = new JButton("Remove Item");
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Remove Item");
-				removeItemOn();
-
-
-			}
-		});
-		removeButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		removeButton.setBounds(1115, 384, 243, 74);
-		contentPane.add(removeButton);
-
-
-
-		JButton requestButton = new JButton("Request Assistance");
-		requestButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Request Assistance");
-				requestAssistanceOn();
-			}
-		});
-		requestButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		requestButton.setBounds(853, 384, 243, 74);
-		contentPane.add(requestButton);
-
-
-
-		JButton scanLargeButton = new JButton("Scan Large Item");
-		scanLargeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Scan Large Item");
-				scanLargeItemOn();
-
-
-			}
-		});
-		scanLargeButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		scanLargeButton.setBounds(1115, 507, 243, 74);
-		contentPane.add(scanLargeButton);
-
-
-
-		JButton lookupButton = new JButton("Lookup Product");
-		lookupButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Lookup Product");
-				lookupItemOn();
-			}
-		});
-		lookupButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lookupButton.setBounds(1115, 268, 243, 74);
-		contentPane.add(lookupButton);
-
-
-
-		JButton upButton = new JButton("Up");
-		upButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		upButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Up");
-
-				// Displaying beginning of list already
-				if(counter == 0) {
-					JOptionPane.showMessageDialog(null, "Cannot go up further","Cannot go up", JOptionPane.WARNING_MESSAGE);
+				if(itemOne.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
+				itemToRemove = 0 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        System.out.println("stat num" + stationNum);
+		        
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+		        System.out.println("here");
 
+			}
+		});
+		buttonOne.setBounds(639, 21 + (0 * 40), 124, 37);
+		contentPane.add(buttonOne);
+		
+		
+		buttonTwo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemTwo.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 1 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonTwo.setBounds(639, 21 + (1 * 40), 124, 37);
+		contentPane.add(buttonTwo);
+		
+		buttonThree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemThree.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 2 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonThree.setBounds(639, 21 + (2 * 40), 124, 37);
+		contentPane.add(buttonThree);
+		
+		buttonFour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemFour.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 3 + ((counter-1) * 10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonFour.setBounds(639, 21 + (3 * 40), 124, 37);
+		contentPane.add(buttonFour);
+		
+		buttonFive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemFive.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 4 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonFive.setBounds(639, 21 + (4 * 40), 124, 37);
+		contentPane.add(buttonFive);
+		
+		buttonSix.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemSix.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 5 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonSix.setBounds(639, 21 + (5 * 40), 124, 37);
+		contentPane.add(buttonSix);
+		
+		
+		buttonSeven.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemSeven.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 6 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonSeven.setBounds(639, 21 + (6 * 40), 124, 37);
+		contentPane.add(buttonSeven);
+		
+		
+		buttonEight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemEight.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 7 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonEight.setBounds(639, 21 + (7 * 40), 124, 37);
+		contentPane.add(buttonEight);
+		
+		
+		buttonNine.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(itemNine.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 8 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonNine.setBounds(639, 21 + (8 * 40), 124, 37);
+		contentPane.add(buttonNine);
+		
+		
+		buttonTen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String test = itemTen.getText();
+				if(itemTen.getText().isEmpty()) {
+					System.out.println("Invalid item selection");
+			        JOptionPane.showMessageDialog(null, "Item does not exist. Please select a valid one.","Invalid Item", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				itemToRemove = 9 + ((counter-1)*10);
+				System.out.println("Remove item# = " + itemToRemove);	
+				items.remove(itemToRemove);
+				counter = 1;
+				displayItem(items);
+		        JOptionPane.showMessageDialog(null, "Item successfully removed","Item Removed", JOptionPane.INFORMATION_MESSAGE);
+		        AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItem();
+
+			}
+		});
+		buttonTen.setBounds(639, 21 + (9 * 40), 124, 37);
+		contentPane.add(buttonTen);
+		
+		
+		// ================================================================================ //
+		// End of Adding Remove Buttons
+		
+		
+		JButton backButton = new JButton("Back");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Back");
+				if(counter == 1) {
+					System.out.println("Counter cannot go lower");
+			        JOptionPane.showMessageDialog(null, "Cannot go back anymore","Invalid Action", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 				counter--;
+				displayItem(items);
+				System.out.println("Counter == " + counter);
 
-				// Update screen item and price
-				updateItemText();
-				updatePriceText();
 			}
 		});
-		upButton.setBounds(644, 180, 95, 84);
-		contentPane.add(upButton);
-
-
-
-		JButton downButton = new JButton("Down");
-		downButton.addActionListener(new ActionListener() {
+		backButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		backButton.setBounds(100, 477, 202, 60);
+		contentPane.add(backButton);
+		
+		JButton nextButton = new JButton("Next");
+		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Down");
-
-				System.out.println(itemsScanned.size());
-				System.out.println("counter = " + counter);
-				if(counter + 1 + 10 > itemsScanned.size()) {
-					JOptionPane.showMessageDialog(null, "Cannot go down further","Cannot go down", JOptionPane.WARNING_MESSAGE);
+				System.out.println("Next");
+				if(counter*10 >= items.size() ) {
+					System.out.println("No more items to view");
+			        JOptionPane.showMessageDialog(null, "No more items to display","Invalid Action", JOptionPane.WARNING_MESSAGE);
 					return;
+					
 				}
-
 				counter++;
-
-				// Update screen item and price
-				updateItemText();
-				updatePriceText();
-
+				displayItem(items);
+				System.out.println("Counter == " + counter);
 			}
 		});
-		downButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		downButton.setBounds(644, 673, 106, 84);
-		contentPane.add(downButton);
-
-		JButton personalBagButton = new JButton("Use Personal Bags");
-		personalBagButton.addActionListener(new ActionListener() {
+		
+		nextButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		nextButton.setBounds(400, 477, 202, 60);
+		contentPane.add(nextButton);
+		
+		JButton cancelButton = new JButton("Done");
+		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Use personal bags");
-				personalBagsOn();
+				AttendantStation.scanAndBagConnected.get(stationNum).scanGUI.removeItemOff();
+				dispose();
 			}
 		});
-		personalBagButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		personalBagButton.setBounds(853, 507, 243, 74);
-		contentPane.add(personalBagButton);
-
-
-
-
-		JButton pluButton = new JButton("Enter PLU");
-		pluButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Enter plu");
-				lookupItemOn();
-			}
-		});
-		pluButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		pluButton.setBounds(853, 268, 243, 74);
-		contentPane.add(pluButton);
-
-		// endregion
-
+		cancelButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		cancelButton.setBounds(800, 477, 202, 60);
+		contentPane.add(cancelButton);
+		
+		
 	}
-
-
-	public void updateItemText() {
-		ArrayList<JTextField> array = new ArrayList<JTextField>();
-		array.add(itemOneText);
-		array.add(itemTwoText);
-		array.add(itemThreeText);
-		array.add(itemFourText);
-		array.add(itemFiveText);
-		array.add(itemSixText);
-		array.add(itemSevenText);
-		array.add(itemEightText);
-		array.add(itemNineText);
-		array.add(itemTenText);
-
-
-		//int arrayLength = items.size();
+	
+	
+	public void displayItem(ArrayList<ItemInfo> itemsScanned) {
 		int arrayLength = itemsScanned.size();
-		int iterator = 0;
+		System.out.println("array len" + arrayLength);
+		
+		ArrayList<JTextField> textArray = new ArrayList<JTextField>();
+		textArray.add(itemOne);
+		textArray.add(itemTwo);
+		textArray.add(itemThree);
+		textArray.add(itemFour);
+		textArray.add(itemFive);
+		textArray.add(itemSix);
+		textArray.add(itemSeven);
+		textArray.add(itemEight);
+		textArray.add(itemNine);
+		textArray.add(itemTen);
 
-		for(JTextField text : array) {
-			if((iterator+ counter) >= arrayLength) {
+		int num = 0;
+		int placementCounter = 0;
+		
+		for(JTextField text : textArray) {
+			if ((counter-1)*10 + num >= arrayLength)  {
 				text.setText("");
 			} else {
-				text.setText(itemsScanned.get(iterator+counter).description);
+				text.setText(itemsScanned.get((counter-1) * 10 + num).description);
 			}
-
 			text.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			text.setBounds(28, 180 + (60*iterator), 436, 37);
 			text.setEditable(false);
 			contentPane.add(text);
-			itemOneText.setColumns(10);
-			iterator++;
+			text.setColumns(10);
+			text.setBounds(34, (21 + (placementCounter * 40)), 570, 37);
+			
+			placementCounter++;
+			num++;
 		}
-
-
-
-	}
-
-	public void updatePriceText() {
-		ArrayList<JTextField> array = new ArrayList<JTextField>();
-		array.add(itemOnePriceText);
-		array.add(itemTwoPriceText);
-		array.add(itemThreePriceText);
-		array.add(itemFourPriceText);
-		array.add(itemFivePriceText);
-		array.add(itemSixPriceText);
-		array.add(itemSevenPriceText);
-		array.add(itemEightPriceText);
-		array.add(itemNinePriceText);
-		array.add(itemTenPriceText);
-
-		int arrayLength = itemsScanned.size();
-
-		int iterator = 0;
-
-		double total = 0;
-
-		// For formatting double to 2 decimal
-		DecimalFormat format = new DecimalFormat("0.00");
-
-		BigDecimal totalBig = new BigDecimal(0.00);
-
-		for(JTextField text : array) {
-			if((iterator+ counter) >= arrayLength) {
-				text.setText("");
-			} else {
-				BigDecimal bigDecVal = itemsScanned.get(iterator+counter).price;
-				double val = bigDecVal.doubleValue();
-				format.format(val);
-
-				text.setText("$" + format.format(val));
-				//text.setText("$" + priceList.get(iterator+counter));
-				total += val;
-				totalBig.add(bigDecVal);
-			}
-
+		
+		pageNumber.setFont(new Font("Tahoma", Font.BOLD, 45));
+		pageNumber.setText("Page " + String.valueOf(counter));
+		pageNumber.setBounds(789, 34, 241, 78);
+		pageNumber.setEditable(false);
+		pageNumber.setColumns(10);
+		contentPane.add(pageNumber);
+		
+		/*
+		
+		for(int i = 0; i < items.size(); i++) {
+			text = new JTextField();
+			text.setText(items.get(i));
 			text.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			text.setBounds(502, 180 + (60*iterator), 95, 37);
+			text.setBounds(34, (21 + (i * 40)), 570, 37);
 			text.setEditable(false);
 			contentPane.add(text);
-			itemOneText.setColumns(10);
-			iterator++;
+			text.setColumns(10);
+			
+			button = new JButton("Remove");
+			button.setBounds(639, 21 + (i * 40), 124, 37);
+			contentPane.add(button);
 		}
-
-		totalPriceText.setText("Total: $" + format.format(total));
-		totalPriceText.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		totalPriceText.setBounds(420, 811, 250, 43);
-		totalPriceText.setEditable(false);
-		contentPane.add(totalPriceText);
-		totalPriceText.setColumns(10);
-
-	}
-
-	// Call when adding item
-	// Updates GUI
-	public void addItem() {
-		System.out.println("added");
-
-		if(itemsScanned.size() > 10) {
-			counter++;
-		}
-
-		updateItemText();
-		updatePriceText();
-	}
-
-
-	// Call when removing item
-	// Updates GUI
-	public void removeItem() {
-		if(counter > 0) {
-			counter--;
-		}
-		updateItemText();
-		updatePriceText();
-	}
-
-	public void requestAssistanceOn() {
-		requestGUI = new RequestAssistanceGUI();
-		requestGUI.setVisible(true);
-
-	}
-
-	public void requestAssistanceOff() {
-		if(requestGUI != null) {
-			requestGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
-	}
-
-	public void wrongWeightOn() {
-		wrongWeightGUI = new WrongWeightGUI();
-		wrongWeightGUI.setVisible(true);
-	}
-
-	public void wrongWeightOff() {
-		if(wrongWeightGUI != null) {
-			wrongWeightGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
-
-	}
-
-	public void scanLargeItemOn() {
-		scanLargeItemGUI = new ScanLargeItemGUI();
-		scanLargeItemGUI.setVisible(true);
-	}
-
-	public void scanLargeItemOff() {
-		if(scanLargeItemGUI != null) {
-			scanLargeItemGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
-	}
-
-	public void removeItemOn() {
-		removeItemPromptGUI = new RemoveItemPromptGUI();
-		removeItemPromptGUI.setVisible(true);
-	}
-
-	public void removeItemOff() {
-		if(removeItemPromptGUI != null) {
-			removeItemPromptGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
-	}
-
-	public void lookupItemOn() {
-		mainFrame = new MainFrame();
-		mainFrame.setVisible(true);
-	}
-
-	public void lookupItemOff() {
-
-	}
-
-	public void checkoutOn() {
-		paymentGUI = null;
-		paymentGUI = new PaymentGUI(scss);
-		//checkoutGUI = new FakeCheckoutGUI(itemsScanned);
-		//checkoutGUI.setVisible(true);
-
-	}
-
-	public void checkoutOff() {
-
-	}
-
-	public void bagsOn() {
-		bagsGUI = new BagsGUI(this);
-		bagsGUI.setVisible(true);
-	}
-
-	public void bagsOff() {
-		if(bagsGUI != null) {
-			bagsGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
-	}
-
-	public void personalBagsOn() {
-		personalBagGUI = new PersonalBagPromptGUI();
-		personalBagGUI.setVisible(true);
-	}
-
-	public void personalBagsOff() {
-		if(personalBagGUI != null) {
-			personalBagGUI.dispose();
-		} else {
-			System.out.println("Prompt is already off");
-		}
+		*/
 	}
 
 }
