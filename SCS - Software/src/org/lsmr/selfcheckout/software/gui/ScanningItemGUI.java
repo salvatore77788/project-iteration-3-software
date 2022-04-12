@@ -266,7 +266,7 @@ public class ScanningItemGUI extends JFrame {
 		lookupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Lookup Product");
-				MainFrame search = new MainFrame(scss);
+				SearchProductsGUI search = new SearchProductsGUI(scss);
 				search.setVisible(true);
 			}
 		});

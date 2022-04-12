@@ -1,3 +1,6 @@
+package org.lsmr.selfcheckout.software;
+
+import org.lsmr.selfcheckout.software.gui.*;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 
@@ -19,13 +22,7 @@ public class SearchProduct
      */
     public static void main (String[] args)
         {
-        java.awt.EventQueue.invokeLater (new Runnable ()
-            {
-            public void run ()
-                {
-                (new SearchProductsGUI ()).setVisible (true);
-                }
-            });
+ 
        // MainFrame.main(args);
         //EventQueue.invokeLater(new Runnable()
         //     {
