@@ -99,4 +99,8 @@ public class ElectronicScaleSoftware implements ElectronicScaleObserver{
 	public void setAttendantRemovedItem() {
 		this.attendantRemoved = true;
 	}
+	
+	public boolean getIsDisabled() {
+		return isDisabled;
+	}
 }
