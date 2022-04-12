@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
 
 
 public class AttendantRemoveItemGUI extends JFrame {
@@ -201,7 +202,13 @@ public class AttendantRemoveItemGUI extends JFrame {
 		cancelButton.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		cancelButton.setBounds(900, 50, 233, 64);
 		contentPane.add(cancelButton);
+		
+		JTextArea txtrAttendantRemovalScreen = new JTextArea();
+		txtrAttendantRemovalScreen.setEditable(false);
+		txtrAttendantRemovalScreen.setFont(new Font("Monospaced", Font.BOLD, 13));
+		txtrAttendantRemovalScreen.setText("Attendant Item Removal Screen");
+		txtrAttendantRemovalScreen.setBounds(879, 312, 244, 64);
+		contentPane.add(txtrAttendantRemovalScreen);
 	
 	}
-
 }

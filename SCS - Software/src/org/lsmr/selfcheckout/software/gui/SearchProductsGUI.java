@@ -210,6 +210,13 @@ public class SearchProductsGUI extends javax.swing.JFrame
         });
 
         u.setText("U");
+        u.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                uActionPerformed(evt);
+            }
+        });
 
         i.setText("I");
         i.addActionListener(new java.awt.event.ActionListener()
@@ -789,9 +796,9 @@ public class SearchProductsGUI extends javax.swing.JFrame
         							.addPreferredGap(ComponentPlacement.RELATED)
         							.addComponent(w, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(e, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(e, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(r, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE))
+        							.addComponent(r, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE))
         						.addGroup(layout.createSequentialGroup()
         							.addComponent(a, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
@@ -841,7 +848,7 @@ public class SearchProductsGUI extends javax.swing.JFrame
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addComponent(key9, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
         					.addGap(163)
-        					.addComponent(cancelButton, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
+        					.addComponent(cancelButton, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
         				.addComponent(key0, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
         				.addGroup(layout.createSequentialGroup()
         					.addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -984,6 +991,13 @@ public class SearchProductsGUI extends javax.swing.JFrame
     addText("t");
     }                                 
 
+    
+    private void uActionPerformed(java.awt.event.ActionEvent evt)                                  
+    {                                      
+        // TODO add your handling code here:
+    addText("u");
+    } 
+    
     private void iActionPerformed(java.awt.event.ActionEvent evt)                                  
     {                                      
         // TODO add your handling code here:

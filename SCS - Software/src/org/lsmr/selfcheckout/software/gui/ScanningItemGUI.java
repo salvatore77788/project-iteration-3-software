@@ -338,19 +338,6 @@ public class ScanningItemGUI extends JFrame {
 		
 		
 		
-		JButton pluButton = new JButton("Enter PLU");
-		pluButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Use personal bags");
-				personalBagsOn();
-			}
-		});
-		pluButton.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		pluButton.setBounds(853, 268, 243, 74);
-		contentPane.add(pluButton);
-		
-		
-		
 		// END BUTTONS CODE
 		//=======================================================================================================================\\
 		
