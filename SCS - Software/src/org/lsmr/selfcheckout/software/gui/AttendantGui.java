@@ -90,6 +90,9 @@ public class AttendantGui {
         frame.setLocation(1000, 300);
         frame.setVisible(true);
         
+        AttendantRemoveItemGUI ar = new AttendantRemoveItemGUI();
+        ar.setVisible(true);
+        
         loginDialog = new Login();
         loginDialog.setLocationRelativeTo(jPanel2);
         if(useLogin)
