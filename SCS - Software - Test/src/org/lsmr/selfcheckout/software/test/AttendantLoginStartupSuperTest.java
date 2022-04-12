@@ -15,16 +15,23 @@ import org.lsmr.selfcheckout.software.AttendantStation;
 import org.lsmr.selfcheckout.software.PasswordDatabase;
 import org.lsmr.selfcheckout.software.TouchScreenSoftware;
 
+
+/**
+ * Tests the startup and shutdown functionality of AttendantLoginStartup in the context of starting up and shutting down SupervisionStations. 
+ * IMPORTANT: UserID = "admin", password = "admin"
+ * 
+ */
 public class AttendantLoginStartupSuperTest {
 	AttendantLoginStartup als;
 	PasswordDatabase pd;
 	AttendantStation as;
-	SupervisionStation ss;
+	SupervisionStation ss1;
+	SupervisionStation ss2;
 	TouchScreenSoftware tss;
+	SupervisionStation nullStation;
 	
 	ArrayList<TouchScreenObserver> screenObservers;
 	ArrayList<KeyboardObserver> keyboardObservers;
-	
 	
 	
 	@Before
@@ -32,7 +39,8 @@ public class AttendantLoginStartupSuperTest {
 		als = new AttendantLoginStartup();
 		pd = new PasswordDatabase(new HashMap<String, String>());
 		as = new AttendantStation();
-		ss = new SupervisionStation();
+		ss1 = new SupervisionStation();
+		ss2 = new SupervisionStation();
 		tss = new TouchScreenSoftware(as);
 		
 		screenObservers = new ArrayList<TouchScreenObserver>();
@@ -42,82 +50,169 @@ public class AttendantLoginStartupSuperTest {
 	
 	@Test
 	public void addStandard() {
-		//als.login(ss, pd);
-		als.addStation(ss, screenObservers, keyboardObservers);
-		als.startup(ss);
-		ss.screen.disable();
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(true, tss.getIsDisabled());
 	}
 	
 	@Test
 	public void addLoggedOut() {
-		als.addStation(ss, screenObservers, keyboardObservers);
-		als.startup(ss);
-		ss.screen.disable();
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(false, tss.getIsDisabled());
 	}
 	
 	@Test
 	public void addStationAlreadyThere() {
-		als.login(ss, pd);
-		als.addStation(ss, screenObservers, keyboardObservers);
-		als.startup(ss);
-		ss.screen.disable();
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(true, tss.getIsDisabled());
 		
 		int stationCountA = als.getAllSuperStations().size();
 		
 		ArrayList<TouchScreenObserver> newScreenObservers = new ArrayList<TouchScreenObserver>();
-		als.addStation(ss, newScreenObservers, keyboardObservers);
+		als.addStation(ss2, newScreenObservers, keyboardObservers);
 		
 		//test that list of stations didn't grow
 		int stationCountB = als.getAllSuperStations().size();
 		Assert.assertEquals(stationCountA, stationCountB);
 		
 		//test that observers not overwritten
-		ss.screen.enable();
+		ss2.screen.enable();
 		Assert.assertEquals(false, tss.getIsDisabled());
 	}
 	
 	@Test
+	public void addNullStation() {
+		als.login(ss1, pd);
+		als.addStation(nullStation, screenObservers, keyboardObservers);
+		Assert.assertEquals(false, als.getAllSuperStations().contains(null));
+	}
+	
+	@Test
 	public void removeStandard() {
-		//als.login(ss, pd);
-		als.addStation(ss, screenObservers, keyboardObservers);
-		als.removeStation(ss);
-		als.startup(ss);
-		ss.screen.disable();
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.removeStation(ss2);
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(false, tss.getIsDisabled());
 	}
 	
 	@Test
 	public void removeLoggedOut() {
-		//als.login(ss, pd);
-		als.addStation(ss, screenObservers, keyboardObservers);
-		als.logout(ss);
-		als.removeStation(ss);
-		als.startup(ss);
-		ss.screen.disable();
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.logout(ss1);
+		als.removeStation(ss2);
+		als.login(ss1, pd);
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(true, tss.getIsDisabled());
 	}
 	
 	
 	@Test
 	public void removeStationMissing() {
-		//als.login(ss, pd);
-		als.removeStation(ss);
+		als.login(ss1, pd);
+		als.removeStation(ss2);
 		
 		// test passes if no exception is thrown
 	}
 	
 	@Test
+	public void removeNullStation() {
+		als.login(ss1, pd);
+		als.removeStation(nullStation);
+		
+		//test passes if no exception is thrown
+	}
+	
+	@Test
 	public void startupStandard() {
-		//als.login(ss, pd);
-		als.addStation(ss, screenObservers, keyboardObservers);
-		ss.screen.disable();
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		ss2.screen.disable();
 		Assert.assertEquals(false, tss.getIsDisabled());
-		als.startup(ss);
-		ss.screen.disable();
+		als.startup(ss2);
+		ss2.screen.disable();
 		Assert.assertEquals(true, tss.getIsDisabled());
 	}
 	
+	@Test
+	public void startupLoggedOut() {
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.logout(ss1);
+		als.startup(ss2);
+		als.login(ss1, pd);
+		ss2.screen.disable();
+		Assert.assertEquals(false, tss.getIsDisabled());
+	}
+	
+	@Test
+	public void startupStationMissing() {
+		als.login(ss1, pd);
+		als.startup(ss2);
+		ss2.screen.disable();
+		Assert.assertEquals(false, tss.getIsDisabled());
+	}
+	
+	@Test
+	public void startupNullStation() {
+		als.login(ss1, pd);
+		als.addStation(nullStation, screenObservers, keyboardObservers);
+		als.startup(nullStation);
+		
+		// test passes if no exception is thrown
+	}
+	
+	@Test
+	public void shutdownStandard() {
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		als.shutdown(ss2);
+		ss2.screen.disable();
+		Assert.assertEquals(false, tss.getIsDisabled());
+	}
+	
+	@Test
+	public void shutdownLoggedOut() {
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		als.logout(ss1);
+		als.shutdown(ss2);
+		als.login(ss1, pd);
+		ss2.screen.disable();
+		Assert.assertEquals(true, tss.getIsDisabled());
+	}
+	
+	@Test
+	public void shutdownMissingStation() {
+		als.login(ss1, pd);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		als.startup(ss2);
+		als.removeStation(ss2);
+		als.shutdown(ss2);
+		als.addStation(ss2, screenObservers, keyboardObservers);
+		ss2.screen.disable();
+		Assert.assertEquals(true, tss.getIsDisabled());
+	}
+	
+	@Test
+	public void shutdownNullStation() {
+		als.login(ss1, pd);
+		als.addStation(nullStation, screenObservers, keyboardObservers);
+		als.startup(nullStation);
+		als.shutdown(nullStation);
+		
+		// test passes if no exception is thrown
+	}
 }

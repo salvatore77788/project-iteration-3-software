@@ -104,6 +104,7 @@ public class AttendantLoginStartup {
     	
 		if (!isLoggedIn) return;
 		if (allSuperStations.contains(ss)) return;
+		if (ss == null) return;
 		
 		allSuperStations.add(ss);
 		allSuperTouchScreenObservers.put(ss, superTouchScreenObservers);
@@ -131,6 +132,7 @@ public class AttendantLoginStartup {
     	
     	if (!isLoggedIn) return;
     	if (allSelfStations.contains(scs)) return;
+    	if (scs == null) return;
     	
     	allSelfStations.add(scs);
     	allSelfBaggingAreaObservers.put(scs, selfBaggingAreaObservers);
@@ -152,10 +154,11 @@ public class AttendantLoginStartup {
     	allSelfCoinTrayObservers.put(scs, selfCoinTrayObservers);
     }
 	
-    // remove supervison station from allSuperStationObservers
+    // remove supervision station from allSuperStationObservers
 	public void removeStation(SupervisionStation ss) {
 		if (!isLoggedIn) return;
 		if (!allSuperStations.contains(ss)) return;
+		if (ss == null) return;
 		
 		allSuperStations.remove(ss);
 		allSuperTouchScreenObservers.remove(ss);
@@ -166,6 +169,7 @@ public class AttendantLoginStartup {
 	public void removeStation(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
 		if (!allSelfStations.contains(scs)) return;
+		if (scs == null) return;
 		
 		allSelfStations.remove(scs);
 		allSelfBaggingAreaObservers.remove(scs);
@@ -191,6 +195,7 @@ public class AttendantLoginStartup {
 	public void startup(SupervisionStation ss) {
 		if (!isLoggedIn) return;
 		if (!allSuperStations.contains(ss)) return;
+		if (ss == null) return;
 		
 		ArrayList<TouchScreenObserver> screenObservers = allSuperTouchScreenObservers.get(ss);
 		for (TouchScreenObserver observer: screenObservers) {
@@ -207,6 +212,7 @@ public class AttendantLoginStartup {
 	public void startup(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
 		if (!allSelfStations.contains(scs)) return;
+		if (scs == null) return;
 		
 		AttendantActions attendantActions = new AttendantActions();
 		attendantActions.attendantUnBlockStation(scs);
@@ -286,8 +292,9 @@ public class AttendantLoginStartup {
 	
 	// shut supervisor station down by detaching its observers
 	public void shutdown(SupervisionStation ss) {
-		if (isLoggedIn) return;
+		if (isLoggedIn && superStation.equals(ss)) return;
 		if (!allSuperStations.contains(ss)) return;
+		if (ss == null) return;
 		
 		ss.screen.detachAll();
 		ss.keyboard.detachAll();
@@ -297,6 +304,7 @@ public class AttendantLoginStartup {
 	public void shutdown(SelfCheckoutStation scs) {
 		if (!isLoggedIn) return;
 		if (!allSelfStations.contains(scs)) return;
+		if (scs == null) return;
 		
 		AttendantActions attendantActions = new AttendantActions();
 		attendantActions.attendantBlockStation(scs); 
@@ -326,6 +334,8 @@ public class AttendantLoginStartup {
 	
 	public void login(SupervisionStation superStation, PasswordDatabase database) {
 		if (isLoggedIn) return;
+		if (superStation == null) return;
+		
         database.AddLoginDetails("admin","admin");
         loginFrame.unPressed();
         while (loginFrame.isPressed()== false)
@@ -448,6 +458,4 @@ public class AttendantLoginStartup {
 	  public ArrayList<CoinTrayObserver> getSelfCoinTrayObservers(SelfCheckoutStation scs) {
 		  return allSelfCoinTrayObservers.get(scs);
 	  }
-	  
-	  
 }
