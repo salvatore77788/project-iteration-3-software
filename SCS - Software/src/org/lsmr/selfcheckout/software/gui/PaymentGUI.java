@@ -107,7 +107,6 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 	public void updatePaymentLabels() {
 		jLabelAmountDue.setText("Amount Due: $" + software.amountDue);
 		jLabelAmountPaid.setText("Amount Paid: $" + software.getAmountPaid());
-		finishPayment();
 	}
 
 	private void switchToPaymentPanel() {
@@ -144,6 +143,7 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 		jButtonPayCredit = new javax.swing.JButton();
 		jLabel3 = new javax.swing.JLabel();
 		jButtonScanMembershipCard = new javax.swing.JButton();
+		jButtonEnterMembershipNumber = new javax.swing.JButton();
 		jButtonPaymentGoBack = new javax.swing.JButton();
 		jPanelPaymentInfoScreen = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
@@ -218,6 +218,14 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 			}
 		});
 
+		jButtonEnterMembershipNumber.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+		jButtonEnterMembershipNumber.setText("Enter Membership Number");
+		jButtonEnterMembershipNumber.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jButtonEnterMembershipNumberActionPerformed(evt);
+			}
+		});
+
 		javax.swing.GroupLayout jPanelPaymentSelectionLayout = new javax.swing.GroupLayout(jPanelPaymentSelection);
 		jPanelPaymentSelection.setLayout(jPanelPaymentSelectionLayout);
 		jPanelPaymentSelectionLayout.setHorizontalGroup(jPanelPaymentSelectionLayout
@@ -239,6 +247,8 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 												.addComponent(jButtonPaymentGoBack)
 												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
 														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(jButtonEnterMembershipNumber)
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 												.addComponent(jButtonScanMembershipCard)))
 						.addContainerGap()));
 		jPanelPaymentSelectionLayout.setVerticalGroup(jPanelPaymentSelectionLayout
@@ -251,7 +261,8 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 						.addGap(49, 49, 49)
 						.addGroup(jPanelPaymentSelectionLayout
 								.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(jButtonScanMembershipCard).addComponent(jButtonPaymentGoBack))
+								.addComponent(jButtonScanMembershipCard).addComponent(jButtonPaymentGoBack)
+								.addComponent(jButtonEnterMembershipNumber))
 						.addContainerGap()));
 
 		jPanelPaymentTop.add(jPanelPaymentSelection, "card2");
@@ -390,25 +401,25 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 		switchToPaymentPanel();
 	}
 
+	private void jButtonEnterMembershipNumberActionPerformed(java.awt.event.ActionEvent evt) {
+		// TODO add your handling code here:
+	}
+
 	/**
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new PaymentGUI(new SelfCheckoutStationSoftware(
-							SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		try {
+			new PaymentGUI(
+					new SelfCheckoutStationSoftware(SelfCheckoutStationSetup.createSelfCheckoutStationFromInit()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// Variables declaration - do not modify
+	public javax.swing.JButton jButtonEnterMembershipNumber;
 	public javax.swing.JButton jButtonInfoScreenBack;
 	public javax.swing.JButton jButtonPayCash;
 	public javax.swing.JButton jButtonPayCredit;
@@ -449,9 +460,8 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 		updatePaymentLabels();
 		// An amount was paid
 
-		// TODO: Finish checkout here; i.e. print receipt and go to closing screen
 		if (software.amountDue.compareTo(software.getAmountPaid()) <= 0)
-			System.out.println("Payment complete. Ready to checkout.");
+			finishPayment();
 
 		if (state != PaymentGUIState.CASH) {
 			state = PaymentGUIState.SELECTION;
