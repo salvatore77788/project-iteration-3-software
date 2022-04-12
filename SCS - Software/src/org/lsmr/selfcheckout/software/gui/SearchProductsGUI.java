@@ -1182,13 +1182,13 @@ public class SearchProductsGUI extends javax.swing.JFrame
     private void eActionPerformed(java.awt.event.ActionEvent evt)                                  
     {                                      
         // TODO add your handling code here:
-    addText("E");
+    addText("e");
     }                                 
 
     private void yActionPerformed(java.awt.event.ActionEvent evt)                                  
     {                                      
         // TODO add your handling code here:
-    addText("Y");
+    addText("y");
     }                                 
 
     
