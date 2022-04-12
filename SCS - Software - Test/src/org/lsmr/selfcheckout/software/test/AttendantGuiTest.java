@@ -23,7 +23,7 @@ public class AttendantGuiTest {
 
 	@Before
 	public void setUp() throws Exception {
-		gui = new AttendantGui();
+		gui = new AttendantGui(false);
 	}
 
 	@Test

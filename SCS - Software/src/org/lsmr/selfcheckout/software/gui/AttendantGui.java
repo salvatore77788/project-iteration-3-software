@@ -55,6 +55,10 @@ public class AttendantGui {
      * Creates new form TestFrame
      */
     public AttendantGui() {
+    	this(true);
+    }
+    
+    public AttendantGui(boolean useLogin) {
     	superStation = new SupervisionStation();
     	frame = superStation.screen.getFrame();
     	
@@ -68,7 +72,8 @@ public class AttendantGui {
         
         loginDialog = new Login();
         loginDialog.setLocationRelativeTo(jPanel2);
-        loginDialog.setVisible(true);
+        if(useLogin)
+        	loginDialog.setVisible(true);
     }
 
     private void initGUI() {
