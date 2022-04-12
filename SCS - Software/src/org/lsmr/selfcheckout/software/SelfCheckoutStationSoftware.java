@@ -45,7 +45,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	private String memberNumber;
 	public MembersDatabase membersRecord;
 	public int stationNumber;
-	
+
 	public Boolean isShutdown = true;
 	public Boolean isBlocked = true;
 	public SCSStatus status = SCSStatus.GOOD;
@@ -107,7 +107,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 
 		// Assign the station a number
 		this.stationNumber = aStation.assignStationNumber();
-		
+
 		// Connect the software to the attendant station
 		aStation.connectToAttendantStation(scs,this, ess, bss, banknoteSlotSoftware, scanAndBag);
 		// create new change class
@@ -116,11 +116,11 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public void startScanGUI() {
 		scanAndBag = new ScanAndBag(scs, db, this);
 	}
-	
+
 	public void continueScanGUI() {
 		scanAndBag.continueGUI();
 	}
-	
+
 	public BigDecimal total() {
 		BigDecimal total = BigDecimal.ZERO;
 		itemsScanned = scanAndBag.getItemsScanned();
@@ -132,9 +132,9 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 			total = total.add(p.getPrice());
 		}
 
-		ArrayList<PLUCodedProduct> pluItems = d.getPluScanned();
-		for (PLUCodedProduct p : pluItems){
-			total = total.add(p.getPrice());
+		ArrayList<BigDecimal> pluPrice = d.getPluPrice();
+		for (BigDecimal p : pluPrice){
+			total = total.add(p);
 		}
 
 		total = total.add(priceOfBags.multiply(new BigDecimal(Integer.toString(bagsUsed))));
@@ -145,24 +145,24 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public BigDecimal getAmountReturned() {
 		return amountReturned;
 	}
-	
+
 	public BigDecimal getAmountLeftToPay() {
 		return amountDue.subtract(amountPaid[0]);
 	}
-	
+
 	public void addAmountPaid(BigDecimal amount) {
 		amountPaid[0] = amountPaid[0].add(amount);
 		notifyAmountPaid(amount);
 	}
-	
+
 	public BigDecimal getAmountPaid() {
 		return amountPaid[0];
 	}
-	
+
 	public int getPercentageInkLeft() {
 		return rp.noInk ? 0 : 100; // Receipt printer doesn't give an actual count and the ReceiptPrinter class doesn't keep track automatically
 	}
-	
+
 	public int getPercentagePaperLeft() {
 		return rp.noPaper ? 0 : 100;
 	}
@@ -170,7 +170,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	/**
 	 * Purpose: return the correct amount of change to the user, giving them the
 	 * highest denominations first.
-	 * 
+	 *
 	 * @param totalChange is the amount of change that should be provided to the
 	 *                    user.
 	 * @return void
@@ -351,9 +351,9 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		String memberHeader = "Member Number:";
 		detectLowInkPaper(memberHeader.toCharArray().length, 1);
 		for (char c : memberHeader.toCharArray()) {
-		scs.printer.print(c);
-		ink--;
-		paper--;
+			scs.printer.print(c);
+			ink--;
+			paper--;
 		}
 		System.out.println(memberHeader);
 
@@ -361,9 +361,9 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		// member card or entering manually through Touchscreen.
 		detectLowInkPaper(memberNumber.toCharArray().length, 1);
 		for(char c : memberNumber.toCharArray()) {
-		scs.printer.print(c);
-		ink--;
-		paper--;
+			scs.printer.print(c);
+			ink--;
+			paper--;
 		}
 		System.out.println(memberNumber);
 
@@ -459,7 +459,7 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	}
 
 	public void resetVars() {
-		
+
 		this.itemsScanned = new ArrayList<ItemInfo>();
 		this.amountDue = BigDecimal.ZERO;
 		this.amountPaid = new BigDecimal[1];
@@ -490,31 +490,31 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 	public void setTotalGUI(BigDecimal totalGUI) {
 		this.totalGUI = totalGUI;
 	}
-	
+
 	public void startUp() {
 		funds.attachAll();
 		isShutdown = false;
 		isBlocked = true;
 		status = SCSStatus.GOOD;
-		
+
 		softwareGUI = new SelfCheckoutSystemSoftwareGUI(scs, this);
 		softwareGUI.setVisible(true);
 	}
-	
+
 	public void shutDown() {
 		funds.detachAll();
 		isShutdown = true;
 		status = SCSStatus.OFF;
-		
+
 		if(softwareGUI != null)
 			softwareGUI.setVisible(false);
 	}
-	
+
 	private void notifyAmountPaid(BigDecimal amount) {
 		for(SelfCheckoutSystemSoftwareObserver l: observers)
 			l.amountPaid(this, amount);
 	}
-	
+
 	private void notifyMembershipCardScanned(String memberCN) {
 		for(SelfCheckoutSystemSoftwareObserver l: observers)
 			l.membershipCardScanned(this, memberCN);
