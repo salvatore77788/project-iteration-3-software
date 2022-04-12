@@ -3,7 +3,6 @@ package org.lsmr.selfcheckout.software.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
@@ -21,8 +20,6 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
-import org.lsmr.selfcheckout.software.AttendantStation;
-import org.lsmr.selfcheckout.software.AvailableFunds;
 import org.lsmr.selfcheckout.software.ItemInfo;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
 

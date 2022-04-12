@@ -211,7 +211,7 @@ public class AvailableFunds {
 		@Override
 		public void coinsFull(CoinDispenser dispenser) {
 			// TODO Auto-generated method stub
-			count = station.COIN_DISPENSER_CAPACITY;
+			count = SelfCheckoutStation.COIN_DISPENSER_CAPACITY;
 		}
 
 		@Override

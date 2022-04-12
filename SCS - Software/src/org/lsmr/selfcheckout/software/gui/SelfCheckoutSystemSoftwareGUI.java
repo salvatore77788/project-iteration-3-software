@@ -1,26 +1,19 @@
 package org.lsmr.selfcheckout.software.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.math.BigDecimal;
-import java.util.Currency;
-import java.util.Locale;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.software.ItemInfo;
-import org.lsmr.selfcheckout.software.ScanAndBag;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSetup;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
-
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 
@@ -32,22 +25,11 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		SelfCheckoutStation testStation = 
-				new SelfCheckoutStation(
-				Currency.getInstance(Locale.CANADA),
-				new int[]{5, 10, 20, 50, 100},
-				new BigDecimal[]{
-		        		new BigDecimal("0.05"), 
-		        		new BigDecimal("0.10"),
-		        		new BigDecimal("0.25"),
-		        		new BigDecimal("1.00"),
-		        		new BigDecimal("2.00"),
-		        		},
-				5000,2);
+		//SelfCheckoutStation testStation = SelfCheckoutStationSetup.createSelfCheckoutStationFromInit();
 		//SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testStation);
 		//DemoGUI demo = new DemoGUI(software);
 		//demo.setVisible(true);
-		AttendantGui ag = new AttendantGui(true);
+		new AttendantGui(true);
 		
 		/*
 		EventQueue.invokeLater(new Runnable() {

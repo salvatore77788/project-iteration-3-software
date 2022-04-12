@@ -15,8 +15,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 // Modified code from the following source: https://learn-java-by-example.com/java/calculator-keypad/
 
-import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
-
 
 public class VirtualKeypad extends JPanel implements ActionListener {
 

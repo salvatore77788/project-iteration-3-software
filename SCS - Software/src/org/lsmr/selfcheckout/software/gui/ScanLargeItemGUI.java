@@ -1,11 +1,5 @@
 package org.lsmr.selfcheckout.software.gui;
 
-import org.lsmr.selfcheckout.*;
-import org.lsmr.selfcheckout.devices.*;
-import org.lsmr.selfcheckout.devices.observers.*;
-import org.lsmr.selfcheckout.products.*;
-
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 

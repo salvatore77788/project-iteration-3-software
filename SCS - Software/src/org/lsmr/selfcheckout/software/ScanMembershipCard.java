@@ -1,16 +1,13 @@
 package org.lsmr.selfcheckout.software;
 
+import java.util.Random;
+
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Card.CardSwipeData;
-import org.lsmr.selfcheckout.devices.CardReader;
-import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.CardReader;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
-import org.lsmr.selfcheckout.software.exceptions.InvalidCardTypeException;
-
-import java.io.IOException;
-import java.util.Random;
+import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
 
 /**
  * Class ScanMembershipCard that reads and verifies the costumer's membership card

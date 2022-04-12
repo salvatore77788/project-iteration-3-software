@@ -5,27 +5,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
+import org.lsmr.selfcheckout.devices.observers.BanknoteDispenserObserver;
+import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
+import org.lsmr.selfcheckout.devices.observers.BanknoteStorageUnitObserver;
+import org.lsmr.selfcheckout.devices.observers.BanknoteValidatorObserver;
+import org.lsmr.selfcheckout.devices.observers.BarcodeScannerObserver;
+import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
+import org.lsmr.selfcheckout.devices.observers.CoinDispenserObserver;
+import org.lsmr.selfcheckout.devices.observers.CoinSlotObserver;
+import org.lsmr.selfcheckout.devices.observers.CoinStorageUnitObserver;
+import org.lsmr.selfcheckout.devices.observers.CoinTrayObserver;
+import org.lsmr.selfcheckout.devices.observers.CoinValidatorObserver;
 import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 import org.lsmr.selfcheckout.devices.observers.KeyboardObserver;
 import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
 import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
 import org.lsmr.selfcheckout.software.gui.FailedLogin;
 import org.lsmr.selfcheckout.software.gui.Login;
-import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
-import org.lsmr.selfcheckout.devices.observers.BanknoteDispenserObserver;
-import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
-import org.lsmr.selfcheckout.devices.observers.BanknoteValidatorObserver;
-import org.lsmr.selfcheckout.devices.observers.BarcodeScannerObserver;
-import org.lsmr.selfcheckout.devices.observers.CardReaderObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinDispenserObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinSlotObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinTrayObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinValidatorObserver;
-import org.lsmr.selfcheckout.devices.observers.BanknoteStorageUnitObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinStorageUnitObserver;
 
 public class AttendantLoginStartup {
 	private boolean isLoggedIn = false;
@@ -214,8 +212,7 @@ public class AttendantLoginStartup {
 		if (!allSelfStations.contains(scs)) return;
 		if (scs == null) return;
 		
-		AttendantActions attendantActions = new AttendantActions();
-		attendantActions.attendantUnBlockStation(scs);
+		AttendantActions.attendantUnBlockStation(scs);
 		
 		ArrayList<ElectronicScaleObserver> baggingAreaObservers = allSelfBaggingAreaObservers.get(scs);
 		for (ElectronicScaleObserver observer: baggingAreaObservers)
@@ -306,8 +303,7 @@ public class AttendantLoginStartup {
 		if (!allSelfStations.contains(scs)) return;
 		if (scs == null) return;
 		
-		AttendantActions attendantActions = new AttendantActions();
-		attendantActions.attendantBlockStation(scs); 
+		AttendantActions.attendantBlockStation(scs); 
 		
 		scs.baggingArea.detachAll();
 		scs.scanningArea.detachAll();

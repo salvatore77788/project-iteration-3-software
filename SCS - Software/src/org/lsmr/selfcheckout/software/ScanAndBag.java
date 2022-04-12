@@ -1,15 +1,19 @@
 package org.lsmr.selfcheckout.software;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Timer;
 
-import org.lsmr.selfcheckout.*;
-import org.lsmr.selfcheckout.devices.*;
-import org.lsmr.selfcheckout.devices.observers.*;
-import org.lsmr.selfcheckout.products.*;
+import org.lsmr.selfcheckout.Barcode;
+import org.lsmr.selfcheckout.SimulationException;
+import org.lsmr.selfcheckout.devices.AbstractDevice;
+import org.lsmr.selfcheckout.devices.BarcodeScanner;
+import org.lsmr.selfcheckout.devices.ElectronicScale;
+import org.lsmr.selfcheckout.devices.OverloadException;
+import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
+import org.lsmr.selfcheckout.devices.observers.BarcodeScannerObserver;
+import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 import org.lsmr.selfcheckout.software.gui.ScanningItemGUI;
-
-import java.util.ArrayList;
 
 /**
  * Class ScanAndBag that represents the use case of when the customer scans and bags the items.
@@ -22,7 +26,6 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	private double scannedItemWeight;	// Keeps track of the latest item's weight that has been scanned
 	private double latestScaleWeight;	// Keeps track of the scale's latest known weight 
 	private double scaleSensitivity;	// Keeps track of the scale sensitivity
-	private double scaleWeightLimit; 	//Keeps track of the scale weight limit
 	private boolean systemLock;	// Boolean that keeps track of whether or not the system is locked
 	private static ScanAndBag scanNbag;
 	private int sensitiveWeights;		// Keeps track of the total weight that has been placed on the scale since weightChanged()
@@ -36,7 +39,6 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	private boolean addingOwnBags;
 	private int bagsInStock = 2;
 	private int storeOwnedBagsUsed = 0;
-	private double currentWeight;
 	private double weightAtLastEvent;
 //	private int storeBagWeightInGrams;
 //	private ArrayList<Bag> bags = new ArrayList<Bag>();
@@ -63,7 +65,6 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	{
 		this.scss = scss;
 		
-		this.currentWeight = 0;
 		this.weightAtLastEvent = 0;
 		this.db = db;
 		ScanAndBag.scanNbag = this;
@@ -77,7 +78,6 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 		this.sensitiveWeights = 0;
 		this.itemsScanned = new ArrayList<ItemInfo>();
 		this.scaleSensitivity = theStation.baggingArea.getSensitivity();
-		this.scaleWeightLimit = theStation.baggingArea.getWeightLimit();
 //		this.hashMapItem = itemMap;
 //		this.hashMapProduct = productMap;
 		try {

@@ -1,6 +1,5 @@
 package org.lsmr.selfcheckout.software.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 

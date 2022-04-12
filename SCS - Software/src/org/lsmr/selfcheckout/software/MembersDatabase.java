@@ -1,6 +1,5 @@
 package org.lsmr.selfcheckout.software;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lsmr.selfcheckout.Card.CardData;
@@ -13,7 +12,7 @@ public class MembersDatabase {
 	
 	// Constructor.
 	public MembersDatabase() {
-		this.members = new HashMap();
+		this.members = new HashMap<String, String>();
 	}
 	
 	

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Card.CardData;
-import org.lsmr.selfcheckout.Card.CardInsertData;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.CardReader;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;

@@ -6,7 +6,6 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.ReceiptPrinterObserver;
-import org.lsmr.selfcheckout.software.AttendantActions;
 
 
 public class ReceiptPrint implements ReceiptPrinterObserver {

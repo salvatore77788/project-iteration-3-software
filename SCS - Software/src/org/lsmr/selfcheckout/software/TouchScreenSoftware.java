@@ -9,8 +9,6 @@
 
 package org.lsmr.selfcheckout.software;
 
-import java.util.Scanner;
-
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.DisabledException;
 import org.lsmr.selfcheckout.devices.ElectronicScale;

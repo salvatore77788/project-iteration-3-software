@@ -1,21 +1,18 @@
 package org.lsmr.selfcheckout.software.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.lsmr.selfcheckout.software.ItemInfo;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
-
-import javax.swing.JButton;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 
 public class DemoGUI extends JFrame {
 

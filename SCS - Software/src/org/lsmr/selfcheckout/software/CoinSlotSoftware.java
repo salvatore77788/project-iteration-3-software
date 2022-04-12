@@ -1,7 +1,6 @@
 package org.lsmr.selfcheckout.software;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 
 import org.lsmr.selfcheckout.Coin;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
@@ -45,10 +44,6 @@ public class CoinSlotSoftware
     @Override
     public void validCoinDetected(CoinValidator validator, BigDecimal value) {
         software.addAmountPaid(value);
-    }
-
-    private BigDecimal valueof(BigDecimal value) {
-        return value;
     }
 
     /*

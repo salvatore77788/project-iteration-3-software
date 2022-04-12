@@ -2,7 +2,6 @@ package org.lsmr.selfcheckout.software;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Scanner;
 
 import org.lsmr.selfcheckout.Banknote;
 import org.lsmr.selfcheckout.Coin;
