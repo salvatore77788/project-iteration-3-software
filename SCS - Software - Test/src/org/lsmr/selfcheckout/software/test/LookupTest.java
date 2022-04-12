@@ -1,3 +1,5 @@
+package org.lsmr.selfcheckout.software.test;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -15,6 +17,7 @@ import org.lsmr.selfcheckout.devices.TouchScreen;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
+import org.lsmr.selfcheckout.software.LookupNoBarcode;
 
 public class LookupTest
     {
