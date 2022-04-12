@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 
@@ -48,6 +49,8 @@ public class AttendantGui {
 			new BigDecimal("1.00"), new BigDecimal("2.00")};
 	Currency currency = Currency.getInstance(Locale.CANADA);
 	
+	private JDialog loginDialog;
+	
     /**
      * Creates new form TestFrame
      */
@@ -62,6 +65,10 @@ public class AttendantGui {
         // Initialize 
         frame.setLocation(1500, 300);
         frame.setVisible(true);
+        
+        loginDialog = new Login();
+        loginDialog.setLocationRelativeTo(jPanel2);
+        loginDialog.setVisible(true);
     }
 
     private void initGUI() {
@@ -788,7 +795,7 @@ public class AttendantGui {
     }                                                      
 
     private void jMenuItemMBLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
+        loginDialog.setVisible(true);
     }
     
     private void jMenuItemMBQuitActionPerformed(java.awt.event.ActionEvent evt) {

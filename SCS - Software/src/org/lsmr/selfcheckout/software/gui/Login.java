@@ -13,15 +13,18 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login extends JFrame {
+public class Login extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textFieldUserID;
 	private JPasswordField passwordField;
 	private boolean pressed = false;
+	private JDialog loginFailedDialog;
 
 	/**
 	 * Launch the application.
@@ -38,13 +41,13 @@ public class Login extends JFrame {
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
 	public Login() {
+		setModal(true);
 		setTitle("Attendant Login");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 525, 363);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -73,16 +76,29 @@ public class Login extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(101, 175, 299, 20);
 		contentPane.add(passwordField);
+		
+		loginFailedDialog = new FailedLogin();
+		loginFailedDialog.setLocationRelativeTo(contentPane);
 
 		JButton LoginButton = new JButton("Login");
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				pressed = true;
-				setVisible(false);
+				verifyLogin();
 			}
 		});
 		LoginButton.setBounds(203, 224, 89, 23);
 		contentPane.add(LoginButton);
+	}
+	
+	private void verifyLogin() {
+		String u = textFieldUserID.getText();
+		if(u.compareToIgnoreCase("bad") == 0) {
+			loginFailedDialog.setVisible(true);
+		}
+		else {
+			setVisible(false);
+		}
 	}
 
 	public String getTextUserID() {

@@ -13,10 +13,12 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FailedLogin extends JFrame {
+public class FailedLogin extends JDialog {
 
 	private JPanel contentPane;
 
@@ -40,8 +42,9 @@ public class FailedLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public FailedLogin() {
+		setModal(true);
 		setTitle("Login Failed");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 354, 164);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
