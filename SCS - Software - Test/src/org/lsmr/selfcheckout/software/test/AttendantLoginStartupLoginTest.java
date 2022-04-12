@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Currency;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPasswordField;
@@ -45,21 +46,14 @@ public class AttendantLoginStartupLoginTest {
         station = new SelfCheckoutStation(currency, banknoteDenominations, coinDenominations, weightLimitInGrams,
                 sensitivity);
        loginStartup = new AttendantLoginStartup();
+       pdata = new PasswordDatabase(new HashMap<String, String>());
+       superStation = new SupervisionStation();
     }
 
     @Test
-    public void loginTest() {
-    	pdata.AddLoginDetails("0", "0");
-    	JTextField id = new JTextField("0");
-    	JPasswordField pass = (JPasswordField) new JTextField("0");
-    	
-    	loginStartup.loginFrame.setTextFieldUserID(id);
-    	loginStartup.loginFrame.setpasswordField(pass);
-    	
+    public void loginTest() {    	
         loginStartup.login(superStation, pdata); 
- 
-        Assert.assertTrue(loginStartup.getLoginStatus() == true);
-  
+        Assert.assertEquals(true, loginStartup.getLoginStatus());
     }
     
     

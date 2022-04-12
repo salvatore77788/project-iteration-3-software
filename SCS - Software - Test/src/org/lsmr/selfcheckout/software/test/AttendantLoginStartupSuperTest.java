@@ -22,10 +22,10 @@ import org.lsmr.selfcheckout.software.TouchScreenSoftware;
  * 
  */
 public class AttendantLoginStartupSuperTest {
-	AttendantLoginStartup als;
-	PasswordDatabase pd;
+	private AttendantLoginStartup als;
+	private PasswordDatabase pd;
 	AttendantStation as;
-	SupervisionStation ss1;
+	private SupervisionStation ss1;
 	SupervisionStation ss2;
 	TouchScreenSoftware tss;
 	SupervisionStation nullStation;
