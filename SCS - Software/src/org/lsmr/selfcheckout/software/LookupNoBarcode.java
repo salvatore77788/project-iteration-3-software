@@ -1,3 +1,5 @@
+package org.lsmr.selfcheckout.software;
+
 import java.util.ArrayList;
 
 import org.lsmr.selfcheckout.PriceLookupCode;

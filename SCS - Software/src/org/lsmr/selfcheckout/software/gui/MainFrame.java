@@ -1,3 +1,5 @@
+package org.lsmr.selfcheckout.software.gui;
+
 import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
+import org.lsmr.selfcheckout.software.Data;
+import org.lsmr.selfcheckout.software.LookupNoBarcode;
 
 
 public class MainFrame extends javax.swing.JFrame
