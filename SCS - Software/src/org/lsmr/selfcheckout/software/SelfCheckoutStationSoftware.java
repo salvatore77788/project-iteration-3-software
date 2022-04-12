@@ -111,7 +111,6 @@ public class SelfCheckoutStationSoftware extends AbstractDevice<SelfCheckoutSyst
 		// Connect the software to the attendant station
 		aStation.connectToAttendantStation(scs,this, ess, bss, banknoteSlotSoftware, scanAndBag);
 		// create new change class
-		startScanGUI();
 	}
 
 	public void startScanGUI() {
