@@ -19,7 +19,10 @@ import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
 import org.lsmr.selfcheckout.software.Data;
+import org.lsmr.selfcheckout.software.ItemInfo;
 import org.lsmr.selfcheckout.software.LookupNoBarcode;
+import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
+
 import javax.swing.JButton;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
@@ -39,10 +42,13 @@ public class MainFrame extends javax.swing.JFrame
     ArrayList <BarcodedProduct> barcoded_products;
     ArrayList <PLUCodedProduct> plu_products;
     Data p = Data.getInstance();
+    
+    SelfCheckoutStationSoftware scss;
 
     
-    public MainFrame ()
+    public MainFrame (SelfCheckoutStationSoftware scss)
         {
+    	this.scss = scss;
         initComponents ();
         populateBarcodeDatabase();
         populatePluDatabase(); 
@@ -238,6 +244,7 @@ public class MainFrame extends javax.swing.JFrame
                     PLUCodedProduct selected = plu_products.get(selectedIndex);
                     ArrayList <PLUCodedProduct> scannedItems = p.getPluScanned();
                     scannedItems.add(selected);
+                    
 			        JOptionPane.showMessageDialog(null, selected.getDescription() + " Added Sucessfully","Item Added!", JOptionPane.INFORMATION_MESSAGE);
 
                     p.set_plu_product_scanned(true);
@@ -306,7 +313,12 @@ public class MainFrame extends javax.swing.JFrame
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		scss.scanAndBag.scanGUI.updateMainframe();
+        		scss.scanAndBag.scanGUI.addItem();
+
+
         		dispose();
+        		
         	}
         });
         cancelButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -415,7 +427,7 @@ public class MainFrame extends javax.swing.JFrame
             {
             public void run ()
                 {
-                new MainFrame ().setVisible (true);
+                //new MainFrame ().setVisible (true);
                 }
             });
         }

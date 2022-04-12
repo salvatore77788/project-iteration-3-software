@@ -44,7 +44,12 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 		        		new BigDecimal("2.00"),
 		        		},
 				5000,2);
-		SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testStation);
+		//SelfCheckoutStationSoftware software = new SelfCheckoutStationSoftware(testStation);
+		//DemoGUI demo = new DemoGUI(software);
+		//demo.setVisible(true);
+		AttendantGui ag = new AttendantGui(true);
+		
+		/*
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -55,6 +60,7 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 				}
 			}
 		});
+		*/
 	}
 
 	/**
@@ -82,8 +88,9 @@ public class SelfCheckoutSystemSoftwareGUI extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				software.startScanGUI();
-				ItemInfo item = new ItemInfo(new BigDecimal("2.00"), 1.0, "testRemove1");
-				software.scanAndBag.addToList(item);
+				//ItemInfo item = new ItemInfo(new BigDecimal("2.00"), 1.0, "testRemove1");
+				//software.scanAndBag.addToList(item);
+				software.scanAndBag.startGUI();
 				System.out.println(software.scanAndBag.getCurrentWeight());
 				dispose();
 				//ScanAndBag scan = new ScanAndBag(scs, software.db, software);

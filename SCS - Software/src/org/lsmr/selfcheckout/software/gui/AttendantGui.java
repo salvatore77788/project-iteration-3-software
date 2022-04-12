@@ -21,6 +21,7 @@ import org.lsmr.selfcheckout.devices.ReceiptPrinter;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SupervisionStation;
 import org.lsmr.selfcheckout.software.AttendantActions;
+import org.lsmr.selfcheckout.software.AttendantStation;
 import org.lsmr.selfcheckout.software.AvailableFunds;
 import org.lsmr.selfcheckout.software.ItemInfo;
 import org.lsmr.selfcheckout.software.SelfCheckoutStationSoftware;
@@ -50,14 +51,33 @@ public class AttendantGui {
 	Currency currency = Currency.getInstance(Locale.CANADA);
 	
 	private JDialog loginDialog;
+
 	
     /**
      * Creates new form TestFrame
      */
+	/*
     public AttendantGui() {
-    	this(true);
-    }
+    	superStation = new SupervisionStation();
+    	frame = superStation.screen.getFrame();
+    	
+        initComponents();
+        
+        initGUI();
+        
+        AttendantRemoveItemGUI ar = new AttendantRemoveItemGUI();
+        ar.setVisible(true);
+        
+        // Initialize 
+        frame.setLocation(1000, 300);
+        frame.setVisible(true);
+        System.out.println(AttendantStation.softwareStationConnected.size());
+    } */
     
+	public AttendantGui() {
+    	this(true);
+	}
+	
     public AttendantGui(boolean useLogin) {
     	superStation = new SupervisionStation();
     	frame = superStation.screen.getFrame();
@@ -67,7 +87,7 @@ public class AttendantGui {
         initGUI();
         
         // Initialize 
-        frame.setLocation(1500, 300);
+        frame.setLocation(1000, 300);
         frame.setVisible(true);
         
         loginDialog = new Login();
@@ -109,6 +129,7 @@ public class AttendantGui {
     		superStation.add(s);
     		try {
 				stationSoftwares[i] = new SelfCheckoutStationSoftware(s);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -152,14 +173,19 @@ public class AttendantGui {
     	// Set up buttons
     	boolean isStationNull = currentSoftware == null;
     	
-    	jButtonBlockStation.setEnabled(!isStationNull && !currentSoftware.isBlocked && !currentSoftware.isShutdown);
-		jButtonUnblockStation.setEnabled(!isStationNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
-		jButtonShutdown.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	//jButtonBlockStation.setEnabled(!isStationNull && !currentSoftware.isBlocked && !currentSoftware.isShutdown);
+		//jButtonUnblockStation.setEnabled(!isStationNull && currentSoftware.isBlocked && !currentSoftware.isShutdown);
+    	jButtonBlockStation.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	jButtonUnblockStation.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	jButtonShutdown.setEnabled(!isStationNull && !currentSoftware.isShutdown);
 		jButtonStartUp.setEnabled(!isStationNull && currentSoftware.isShutdown);
     	jButtonRefillBanknoteDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
     	jButtonRefillCoinDispenser.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
-    	jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
-    	jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	//jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	//jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
+    	jButtonRefillInk.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	jButtonRefillPaper.setEnabled(!isStationNull && !currentSoftware.isShutdown);
+    	
     	jButtonRefresh.setEnabled(!isStationNull && !currentSoftware.isShutdown);
     	jButtonUnloadBanknoteStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
     	jButtonUnloadCoinStorage.setEnabled(!isStationNull && !currentSoftware.isShutdown && !currentSoftware.isBlocked);
@@ -692,6 +718,7 @@ public class AttendantGui {
     private void jButtonBlockStationActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // Block the current station
     	currentSoftware.isBlocked = true;
+    	currentSoftware.scanAndBag.scanGUI.requestAssistanceOn();
     	AttendantActions.attendantBlockStation(currentSoftware.scs);
     	setStation();
     }                                                   
@@ -700,6 +727,11 @@ public class AttendantGui {
     	// Unblock the current station
     	currentSoftware.isBlocked = false;
     	AttendantActions.attendantUnBlockStation(currentSoftware.scs);
+    	currentSoftware.scanAndBag.scanGUI.wrongWeightOff();
+    	currentSoftware.scanAndBag.scanGUI.requestAssistanceOff();
+    	currentSoftware.scanAndBag.scanGUI.scanLargeItemOff();
+    	currentSoftware.scanAndBag.scanGUI.personalBagsOff();
+    	currentSoftware.scanAndBag.scanGUI.bagsOff();
     	setStation();
     }                                                     
 
@@ -745,11 +777,15 @@ public class AttendantGui {
     	currentSoftware.startUp();
     	jListStations.updateUI();
     	setStation();
+
+    	DemoGUI demo = new DemoGUI(currentSoftware);
+    	demo.setVisible(true);
     }                                              
 
     private void jButtonShutdownActionPerformed(java.awt.event.ActionEvent evt) {                                                
     	// Shut down the station and software
     	currentSoftware.shutDown();
+    	currentSoftware.scanAndBag.scanGUI.setVisible(false);
     	jListStations.updateUI();
     	setStation();
     	
@@ -800,7 +836,7 @@ public class AttendantGui {
     }                                                      
 
     private void jMenuItemMBLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        loginDialog.setVisible(true);
+        // TODO add your handling code here:
     }
     
     private void jMenuItemMBQuitActionPerformed(java.awt.event.ActionEvent evt) {
