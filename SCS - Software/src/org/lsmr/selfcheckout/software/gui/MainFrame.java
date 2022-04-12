@@ -1,5 +1,4 @@
-package org.lsmr.selfcheckout.software.gui;
-
+import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -16,33 +15,28 @@ import org.lsmr.selfcheckout.PriceLookupCode;
 import org.lsmr.selfcheckout.external.ProductDatabases;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.products.PLUCodedProduct;
-import org.lsmr.selfcheckout.software.*;
-import javax.swing.JButton;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class MainFrame extends javax.swing.JFrame
     {
 
     DefaultListModel model_plu;
-    DefaultListModel model_barcode;
+    DefaultListModel model_search;
     LookupNoBarcode x;
     
     ArrayList <BarcodedProduct> barcoded_products;
     ArrayList <PLUCodedProduct> plu_products;
     Data p = Data.getInstance();
 
-
+    
     public MainFrame ()
         {
         initComponents ();
+        populateBarcodeDatabase();
+        populatePluDatabase(); 
         //populateBarcodeDatabase();
         //populatePluDatabase();
-        model_barcode = new DefaultListModel();
+        model_search = new DefaultListModel();
         model_plu     = new DefaultListModel();
         x = new LookupNoBarcode();
         
@@ -99,7 +93,7 @@ public class MainFrame extends javax.swing.JFrame
         }
 
         public void getText() {
-        model_barcode.removeAllElements();
+        model_search.removeAllElements();
         
         System.out.println("inside get text");
         String noResults = "No results";
@@ -113,23 +107,39 @@ public class MainFrame extends javax.swing.JFrame
            
            barcoded_products = x.searchByNameBarcode(input); 
            if (barcoded_products.size() > 0)
-               model_barcode.removeElement(noResults);
+               model_search.removeElement(noResults);
            else
                {
-               model_barcode.addElement(noResults); 
+               model_search.addElement(noResults); 
                }
            
            for (int i = 0; i < barcoded_products.size(); i++)
                {
                //DefaultListModel model = (DefaultListModel) productsList.getModel();
-               model_barcode.addElement(barcoded_products.get(i).getDescription());
+               model_search.addElement(barcoded_products.get(i).getDescription());
+               //System.out.println("Added " + products.get(i).getDescription());
+               
+               }
+           
+           plu_products = x.searchByNamePlu(input); 
+           if (plu_products.size() > 0)
+               model_search.removeElement(noResults);
+           else
+               {
+               model_search.addElement(noResults); 
+               }
+           
+           for (int i = 0; i < plu_products.size(); i++)
+               {
+               //DefaultListModel model = (DefaultListModel) productsList.getModel();
+               model_search.addElement(plu_products.get(i).getDescription());
                //System.out.println("Added " + products.get(i).getDescription());
                
                }
            
            }
 
-           searchList.setModel(model_barcode);
+           searchList.setModel(model_search);
         }
       });
         
@@ -150,7 +160,7 @@ public class MainFrame extends javax.swing.JFrame
         public void getText() {
         model_plu.removeAllElements();
         
-        System.out.println("inside get text");
+        //System.out.println("inside get text");
         String noResults = "No results";
            String input = pluBar.getText();
            
@@ -159,7 +169,7 @@ public class MainFrame extends javax.swing.JFrame
                // "Error: Please enter number bigger than 0", "Error Massage",
                 //JOptionPane.ERROR_MESSAGE);
            
-           plu_products = x.searchByNamePlu(input); 
+           plu_products = x.searchByPlu(input); 
            if (plu_products.size() > 0)
                model_plu.removeElement(noResults);
            else
@@ -172,7 +182,6 @@ public class MainFrame extends javax.swing.JFrame
                //DefaultListModel model = (DefaultListModel) productsList.getModel();
                model_plu.addElement(plu_products.get(i).getDescription());
                //System.out.println("Added " + products.get(i).getDescription());
-               
                }
            
            }
@@ -188,18 +197,37 @@ public class MainFrame extends javax.swing.JFrame
         public void valueChanged (ListSelectionEvent e)
             {
             int selectedIndex = searchList.getSelectedIndex();
-            System.out.println("in value changed, selected index is: " + selectedIndex);
+            //System.out.println("in value changed, selected index is: " + selectedIndex);
             if (!searchList.getValueIsAdjusting())
                 {
                 if (selectedIndex < 0)
                     return;
                 // TODO Auto-generated method stub
-                BarcodedProduct selected = barcoded_products.get(selectedIndex);
-                //System.out.println("selected: " + selected.getDescription());
-                //ADD TO ITEMS SCANNED
-              
-                ArrayList <BarcodedProduct> scannedItems = p.getBarcodeScanned();
-                scannedItems.add(selected);
+                
+                if (selectedIndex > (barcoded_products.size() - 1))
+                    {
+                    selectedIndex -= barcoded_products.size();
+                    PLUCodedProduct selected = plu_products.get(selectedIndex);
+                    ArrayList <PLUCodedProduct> scannedItems = p.getPluScanned();
+                    scannedItems.add(selected);
+                    
+                    
+                    
+                     //for (int i = 0; i < scannedItems.size(); i++)
+                      // System.out.println("barcoded items: " + scannedItems.get(i).getDescription());
+                    }
+                else
+                    {
+                    BarcodedProduct selected = barcoded_products.get(selectedIndex);
+                    //System.out.println("selected: " + selected.getDescription());
+                    //ADD TO ITEMS SCANNED
+                  
+                    ArrayList <BarcodedProduct> scannedItems = p.getBarcodeScanned();
+                    scannedItems.add(selected);
+                    
+                    //for (int i = 0; i < scannedItems.size(); i++)
+                        //System.out.println("PLU coded items: " + scannedItems.get(i).getDescription());
+                    }
                 
                // for (int i = 0; i < scannedItems.size(); i++)
                  //   System.out.println("scanned items array: " + scannedItems.get(i).getDescription());
@@ -213,7 +241,7 @@ public class MainFrame extends javax.swing.JFrame
         public void valueChanged (ListSelectionEvent e)
             {
             int selectedIndex = pluList.getSelectedIndex();
-            System.out.println("in value changed, selected index is: " + selectedIndex);
+            //System.out.println("in value changed, selected index is: " + selectedIndex);
             if (!pluList.getValueIsAdjusting())
                 {
                 if (selectedIndex < 0)
@@ -223,7 +251,10 @@ public class MainFrame extends javax.swing.JFrame
                 //System.out.println("selected: " + selected.getDescription());
                 //ADD TO ITEMS SCANNED
                 
-                
+                JLabel label = new JLabel("Added " + selected.getDescription() + " to cart");
+                Dimension size = label.getPreferredSize();
+                label.setBounds(400, 400, size.width, size.height);
+               
                 ArrayList <PLUCodedProduct> scannedPluItems = p.getPluScanned();
                 scannedPluItems.add(selected);
                 
@@ -236,60 +267,47 @@ public class MainFrame extends javax.swing.JFrame
         
 
         jScrollPane2.setViewportView(pluList);
-        
-        cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		dispose();
-        	}
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-        	layout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-        				.addGroup(layout.createSequentialGroup()
-        					.addGap(12)
-        					.addComponent(searchBarLabel))
-        				.addGroup(layout.createSequentialGroup()
-        					.addContainerGap()
-        					.addComponent(searchBar, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
-        				.addGroup(layout.createSequentialGroup()
-        					.addContainerGap()
-        					.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-        			.addPreferredGap(ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(pluBarLabel, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-        				.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
-        					.addComponent(pluBar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-        					.addComponent(jScrollPane2, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-        			.addGap(53))
-        		.addGroup(Alignment.LEADING, layout.createSequentialGroup()
-        			.addGap(126)
-        			.addComponent(cancelButton, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(166, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(searchBarLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(searchBar, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pluBarLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(pluBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addGap(53, 53, 53))
         );
         layout.setVerticalGroup(
-        	layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addContainerGap()
-        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(searchBarLabel)
-        				.addComponent(pluBarLabel))
-        			.addGap(2)
-        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(searchBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(pluBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addGap(18)
-        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addGap(39)
-        			.addComponent(cancelButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(35, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchBarLabel)
+                    .addComponent(pluBarLabel))
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pluBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
-        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>                        
@@ -362,9 +380,32 @@ public class MainFrame extends javax.swing.JFrame
     private javax.swing.JList<String> searchList;
     private javax.swing.JTextField searchBar;
     private javax.swing.JLabel searchBarLabel;
-    private JButton cancelButton;
+    private javax.swing.JLabel addedPlu;
+    private javax.swing.JLabel addedSearch;
     // End of variables declaration   
     
+    public void populateBarcodeDatabase()
+        {
+        Numeral[] n = {Numeral.one, Numeral.two, Numeral.three, Numeral.four, Numeral.five, Numeral.six, Numeral.seven, Numeral.eight, Numeral.nine};
+        for(int i = 1; i < 3; i++) {
+            Numeral [] numerals = {n[i-1]};
+            Barcode barcode = new Barcode (numerals);
+            ProductDatabases.BARCODED_PRODUCT_DATABASE.put(barcode, new BarcodedProduct(barcode, ("itema"+i), new BigDecimal(i*10), i*100));
+            
+        }
+        Numeral [] numerals = {n[4]};
+        Barcode barcode = new Barcode (numerals);
+        ProductDatabases.BARCODED_PRODUCT_DATABASE.put(barcode, new BarcodedProduct(barcode, ("barcoded a"), new BigDecimal(10), 100));
+        }
+    
+    public void populatePluDatabase()
+        {
+        Numeral[] n = {Numeral.one, Numeral.two, Numeral.three, Numeral.four, Numeral.five, Numeral.six, Numeral.seven, Numeral.eight, Numeral.nine};
+            ProductDatabases.PLU_PRODUCT_DATABASE.put(new PriceLookupCode ("0001"), new PLUCodedProduct(new PriceLookupCode ("0001"), "aa", new BigDecimal(10)));
+            ProductDatabases.PLU_PRODUCT_DATABASE.put(new PriceLookupCode ("0002"), new PLUCodedProduct(new PriceLookupCode ("0002"), "ab", new BigDecimal(10)));
+            ProductDatabases.PLU_PRODUCT_DATABASE.put(new PriceLookupCode ("0003"), new PLUCodedProduct(new PriceLookupCode ("0003"), "c", new BigDecimal(10)));
+            ProductDatabases.PLU_PRODUCT_DATABASE.put(new PriceLookupCode ("0004"), new PLUCodedProduct(new PriceLookupCode ("0004"), "d", new BigDecimal(10)));
+        }  
      
     
     }
