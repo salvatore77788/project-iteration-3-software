@@ -49,6 +49,8 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	
 	private boolean attendantRemoved = false; 
 	
+	public SelfCheckoutStationSoftware scss;
+	
 	/**
 	 * Constructor for the class ScanAndBag 
 	 * The constructor, the checkout station and the respective hashMaps for the Items and Products should be passed into it
@@ -59,6 +61,8 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 	 */
 	public ScanAndBag(SelfCheckoutStation theStation, TestDatabase db, SelfCheckoutStationSoftware scss)
 	{
+		this.scss = scss;
+		
 		this.currentWeight = 0;
 		this.weightAtLastEvent = 0;
 		this.db = db;
@@ -85,12 +89,14 @@ public class ScanAndBag implements ElectronicScaleObserver, BarcodeScannerObserv
 //			this.overloaded = true;
 		}
 		
-		scanGUI = new ScanningItemGUI(itemsScanned, scss);
-		scanGUI.setVisible(true);
-		
 		theStation.baggingArea.attach(this);
 		theStation.handheldScanner.attach(this);
 		theStation.mainScanner.attach(this);
+	}
+	
+	public void startGUI() {
+		scanGUI = new ScanningItemGUI(itemsScanned, scss);
+		scanGUI.setVisible(true);
 	}
 	
 	public void continueGUI() {
