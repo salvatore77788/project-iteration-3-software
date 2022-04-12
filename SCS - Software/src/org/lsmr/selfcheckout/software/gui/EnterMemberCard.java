@@ -69,7 +69,7 @@ public class EnterMemberCard implements ActionListener{
 			keyPadFrame = new JFrame("Keypad");
 			keyPadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			// Creates Pane with buttons along with its own Action Listener.
-			VirtualKeypad theKeypad = new VirtualKeypad();
+			VirtualKeypad theKeypad = new VirtualKeypad(keyPadFrame);
 			keyPadFrame.getContentPane().add(theKeypad);
 			
 			memberNumberProvided = theKeypad.getMemberNumber();
@@ -96,12 +96,13 @@ public class EnterMemberCard implements ActionListener{
 		return memberNumberProvided;
 	}
 	
-	
+	/*
 	// so far not used.
 	public void showKeypad() {
 		VirtualKeypad theKeypad = new VirtualKeypad();
 		theKeypad.createAndShowGUI();
 	}
+	*/
 	
 	
 	public static void main(String[] args) throws Exception {

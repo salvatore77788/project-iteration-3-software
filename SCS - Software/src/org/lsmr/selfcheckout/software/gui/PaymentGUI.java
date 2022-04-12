@@ -221,6 +221,20 @@ public class PaymentGUI implements SelfCheckoutSystemSoftwareObserver {
 		jButtonEnterMembershipNumber.setText("Enter Membership Number");
 		jButtonEnterMembershipNumber.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JFrame frame = new JFrame("Keypad");
+
+			      // We want the application to exit when the window is closed
+
+			      frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+			      // Add the key pad to window
+
+			      frame.getContentPane().add(new VirtualKeypad(frame));
+
+			      // Display the window.
+
+			      frame.pack();
+			      frame.setVisible(true);
 				jButtonEnterMembershipNumberActionPerformed(evt);
 			}
 		});

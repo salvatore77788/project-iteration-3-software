@@ -23,15 +23,20 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	JButton enterButton;
 	JButton returnMenuButton;
 	JTextField displayField;
-	JFrame frame;
+	public JFrame keyPadFrame = new JFrame("Keypad");
 	
 	private String memberNumberProvided;
 	
 	
 
-	public VirtualKeypad() {
+	public VirtualKeypad(JFrame aKeyPadFrame) {
+		
+		
+		  
+		 	
 	      super(new BorderLayout());
 
+	      keyPadFrame = aKeyPadFrame;
 	      
 	      
 	      // Create a panel for the buttons
@@ -105,23 +110,26 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	    * Create and setup the main window
 	    */
 
-	   public static void createAndShowGUI() {
-	      JFrame frame = new JFrame("Keypad");
+	   /*
+	   public void createAndShowGUI() {
+	      //frame = ;
 
 	      // We want the application to exit when the window is closed
 
-	      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		   keyPadFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	      // Add the key pad to window
 
-	      frame.getContentPane().add(new VirtualKeypad());
+		   keyPadFrame.getContentPane().add(new VirtualKeypad());
 
 	      // Display the window.
 
-	      frame.pack();
-	      frame.setVisible(true);
+		   keyPadFrame.pack();
+		   keyPadFrame.setVisible(true);
 	   }
 
+	   */
+	   
 	   /**
 	    * Called when a button is pressed
 	    */
@@ -137,7 +145,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 					memberNumberProvided = new String(display.getText(0,display.getLength()));
 					System.out.println("Member number provided is:\n" + memberNumberProvided);
 					// close Frame.
-					EnterMemberCard.keyPadFrame.dispose();
+					keyPadFrame.dispose();
 					
 				} 
 				catch (BadLocationException e) {
@@ -149,7 +157,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 		   }
 		   
 		   if(event.getSource() == returnMenuButton) {
-			   EnterMemberCard.keyPadFrame.dispose();
+			   keyPadFrame.dispose();
 		   }
 		   
 		   
@@ -167,7 +175,8 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	   }
 
 	   // main method.
-	   public static void main(String[] args) {
+	   /*
+	   public void main(String[] args) {
 	      SwingUtilities.invokeLater(new Runnable() {
 	         public void run() {
 	            createAndShowGUI();
@@ -175,7 +184,7 @@ public class VirtualKeypad extends JPanel implements ActionListener {
 	      });
 	   }
 
-
+*/
 
 
 
