@@ -831,7 +831,8 @@ public class AttendantGui {
     private void jMenuItemMBShutDownAllActionPerformed(java.awt.event.ActionEvent evt) {                                                       
     	for(int i = 0; i < stationSoftwares.length; i++) {
     		SelfCheckoutStationSoftware sw = stationSoftwares[i];
-        	if(!sw.isShutdown)
+        	sw.scanAndBag.scanGUI.setVisible(false);
+    		if(!sw.isShutdown)
         		sw.shutDown();
         }
     	jListStations.updateUI();
